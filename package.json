@@ -4,8 +4,10 @@
   "description": "CreditHopper Credit Repair Platform - Backend API",
   "main": "src/index.js",
   "scripts": {
-    "build": "prisma generate",
-    "start": "prisma migrate deploy && node src/index.js",
+    "build": "prisma generate --schema=./prisma/schema.prisma || true",
+    "migrate": "prisma migrate deploy",
+    "start": "node src/index.js",
+    "start:prod": "npm run migrate && npm run start",
     "dev": "nodemon src/index.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -45,5 +47,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
   }
 }
