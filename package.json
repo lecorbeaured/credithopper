@@ -4,6 +4,7 @@
   "description": "CreditHopper Credit Repair Platform - Backend API",
   "main": "src/index.js",
   "scripts": {
+    "build": "prisma generate && prisma migrate deploy",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "db:generate": "prisma generate",
@@ -12,9 +13,6 @@
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
     "db:reset": "prisma migrate reset"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.js"
   },
   "keywords": [
     "credit-repair",
