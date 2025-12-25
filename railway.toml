@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "npm run db:generate && npm run db:push && npm start"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

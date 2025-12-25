@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Critical steps to take before starting your credit repair journey. Protect yourself and maximize your success.">
+  
+  <title>Before You Start - CreditHopper</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- Auth Check - Redirect if not logged in -->
+  <script>
+    (function() {
+      const isLoggedIn = localStorage.getItem('credithopper_logged_in') === 'true';
+      if (!isLoggedIn) {
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
+
+  <style>
+    .prep-content {
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .prep-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .prep-header-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .prep-header-icon i {
+      width: 40px;
+      height: 40px;
+      color: #ef4444;
+    }
+
+    .prep-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .prep-header p {
+      color: var(--dark-400);
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .prep-warning {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(249, 115, 22, 0.1));
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .prep-warning-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(239, 68, 68, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .prep-warning-icon i {
+      width: 24px;
+      height: 24px;
+      color: #ef4444;
+    }
+
+    .prep-warning-content h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .prep-warning-content p {
+      color: var(--dark-300);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* Steps */
+    .prep-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .prep-step {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-700);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .prep-step-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .prep-step-header:hover {
+      background: var(--dark-750);
+    }
+
+    .prep-step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-500), var(--electric-500));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .prep-step-number.danger {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+    }
+
+    .prep-step-info {
+      flex: 1;
+    }
+
+    .prep-step-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .prep-step-title .badge {
+      font-size: 0.625rem;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .prep-step-subtitle {
+      color: var(--dark-400);
+      font-size: 0.875rem;
+    }
+
+    .prep-step-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--dark-700);
+      border: none;
+      color: var(--dark-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .prep-step-toggle:hover {
+      background: var(--dark-600);
+      color: #fff;
+    }
+
+    .prep-step-toggle i {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s;
+    }
+
+    .prep-step.expanded .prep-step-toggle i {
+      transform: rotate(180deg);
+    }
+
+    .prep-step-content {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--dark-700);
+    }
+
+    .prep-step.expanded .prep-step-content {
+      display: block;
+    }
+
+    /* Why Section */
+    .why-section {
+      background: var(--dark-900);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .why-section h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent-400);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .why-section h4 i {
+      width: 16px;
+      height: 16px;
+    }
+
+    .why-section p {
+      color: var(--dark-300);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+
+    .why-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+    }
+
+    .why-section ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      color: var(--dark-300);
+      font-size: 0.875rem;
+      padding: 0.375rem 0;
+    }
+
+    .why-section ul li i {
+      width: 16px;
+      height: 16px;
+      color: #ef4444;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* How To Section */
+    .howto-section {
+      margin-top: 1.25rem;
+    }
+
+    .howto-section h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .howto-section h4 i {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-400);
+    }
+
+    .bureau-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .bureau-card {
+      background: var(--dark-900);
+      border: 1px solid var(--dark-700);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+
+    .bureau-card:hover {
+      border-color: var(--accent-500);
+    }
+
+    .bureau-card h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .bureau-card p {
+      font-size: 0.8125rem;
+      color: var(--dark-400);
+      margin-bottom: 0.75rem;
+    }
+
+    .bureau-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--accent-400);
+      font-weight: 500;
+    }
+
+    .bureau-card a:hover {
+      text-decoration: underline;
+    }
+
+    .bureau-card a i {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Checklist */
+    .prep-checklist {
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .prep-checklist h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .prep-checklist h3 i {
+      width: 20px;
+      height: 20px;
+      color: var(--accent-400);
+    }
+
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent-500);
+      cursor: pointer;
+    }
+
+    .checklist-item label {
+      color: var(--dark-300);
+      font-size: 0.9375rem;
+      cursor: pointer;
+    }
+
+    .checklist-item input:checked + label {
+      color: var(--accent-400);
+      text-decoration: line-through;
+    }
+
+    /* CTA */
+    .prep-cta {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--dark-700);
+    }
+
+    .prep-cta p {
+      color: var(--dark-400);
+      margin-bottom: 1rem;
+    }
+
+    /* Inline warnings */
+    .inline-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .inline-warning i {
+      width: 18px;
+      height: 18px;
+      color: #ef4444;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .inline-warning p {
+      color: var(--dark-300);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .inline-warning strong {
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .prep-content {
+        padding: 1rem;
+      }
+
+      .prep-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .prep-warning {
+        flex-direction: column;
+      }
+
+      .bureau-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Banned Collectors List Styles */
+    .banned-list-container {
+      border: 1px solid var(--dark-700);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .banned-list-toggle {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--dark-900);
+      border: none;
+      color: #fff;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.2s;
+    }
+
+    .banned-list-toggle:hover {
+      background: var(--dark-800);
+    }
+
+    .banned-list-toggle span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .banned-list-toggle .toggle-icon {
+      transition: transform 0.3s;
+    }
+
+    .banned-list-toggle.expanded .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .banned-list-content {
+      display: none;
+      max-height: 400px;
+      overflow-y: auto;
+      background: var(--dark-950);
+    }
+
+    .banned-list-content.expanded {
+      display: block;
+    }
+
+    .banned-list-header {
+      display: flex;
+      padding: 0.75rem 1.25rem;
+      background: var(--dark-900);
+      border-bottom: 1px solid var(--dark-700);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--dark-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .banned-col-name {
+      flex: 1;
+    }
+
+    .banned-col-link {
+      width: 80px;
+      text-align: right;
+    }
+
+    .banned-list-item {
+      display: flex;
+      align-items: center;
+      padding: 0.625rem 1.25rem;
+      border-bottom: 1px solid var(--dark-800);
+      font-size: 0.8125rem;
+      transition: background 0.15s;
+    }
+
+    .banned-list-item:hover {
+      background: var(--dark-900);
+    }
+
+    .banned-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .banned-item-name {
+      flex: 1;
+      color: var(--dark-300);
+    }
+
+    .banned-item-name.highlight {
+      color: #fff;
+      background: rgba(52, 211, 153, 0.2);
+      padding: 0.125rem 0.25rem;
+      border-radius: 3px;
+    }
+
+    .banned-item-link {
+      width: 80px;
+      text-align: right;
+    }
+
+    .banned-item-link a {
+      font-size: 0.75rem;
+      color: var(--accent-400);
+      text-decoration: none;
+    }
+
+    .banned-item-link a:hover {
+      text-decoration: underline;
+    }
+
+    .banned-list-empty {
+      padding: 2rem;
+      text-align: center;
+      color: var(--dark-500);
+      font-size: 0.875rem;
+    }
+
+    .banned-list-empty i {
+      display: block;
+      margin: 0 auto 0.5rem;
+      width: 32px;
+      height: 32px;
+      color: var(--dark-600);
+    }
+
+    /* Letter navigation (A-Z) */
+    .banned-list-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--dark-900);
+      border-bottom: 1px solid var(--dark-700);
+    }
+
+    .banned-list-nav button {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 4px;
+      background: var(--dark-800);
+      color: var(--dark-400);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .banned-list-nav button:hover {
+      background: var(--dark-700);
+      color: #fff;
+    }
+
+    .banned-list-nav button.active {
+      background: var(--accent-500);
+      color: #fff;
+    }
+
+    .banned-list-nav button.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
+            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="logo-text">Credit<span>Hopper</span></span>
+      </a>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title">Main</span>
+        <a href="dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="prep-steps.html" class="nav-item active">
+          <i data-lucide="shield-alert"></i>
+          <span>Before You Start</span>
+          <span class="nav-badge" style="background: #ef4444;">!</span>
+        </a>
+        <a href="engine.html" class="nav-item">
+          <i data-lucide="scan"></i>
+          <span>Credit Engine</span>
+        </a>
+        <a href="bundles.html" class="nav-item">
+          <i data-lucide="folder"></i>
+          <span>Letter Library</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <span class="nav-section-title">Resources</span>
+        <a href="guide.html" class="nav-item">
+          <i data-lucide="book-open"></i>
+          <span>Credit Guide</span>
+        </a>
+        <a href="help.html" class="nav-item">
+          <i data-lucide="help-circle"></i>
+          <span>Help Center</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <span class="nav-section-title">Account</span>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+    </nav>
+    
+    <!-- User Menu -->
+    <div class="sidebar-user">
+      <div class="user-avatar">JD</div>
+      <div class="user-info">
+        <span class="user-name">John Doe</span>
+        <span class="user-email">user@example.com</span>
+      </div>
+      <button class="btn-icon" id="userMenuBtn">
+        <i data-lucide="chevron-down"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="btn-icon mobile-menu-btn" id="sidebarToggle">
+        <i data-lucide="menu"></i>
+      </button>
+      
+      <div class="topbar-title">Before You Start</div>
+      
+      <div class="topbar-actions">
+        <a href="engine.html" class="btn btn-primary btn-sm">
+          <i data-lucide="arrow-right"></i>
+          Continue to Engine
+        </a>
+      </div>
+    </header>
+
+    <!-- Prep Content -->
+    <div class="prep-content">
+      <div class="prep-header">
+        <div class="prep-header-icon">
+          <i data-lucide="shield-alert"></i>
+        </div>
+        <h1>Critical Steps Before You Dispute</h1>
+        <p>Complete these steps BEFORE uploading your credit report or sending any letters. Skipping these can sabotage your entire credit repair journey.</p>
+      </div>
+
+      <!-- Warning Banner -->
+      <div class="prep-warning">
+        <div class="prep-warning-icon">
+          <i data-lucide="alert-triangle"></i>
+        </div>
+        <div class="prep-warning-content">
+          <h3>Do NOT Skip This Section</h3>
+          <p>The credit bureaus and collectors have systems designed to make disputing harder. They track your behavior, flag "problem" consumers, and use your own actions against you. These steps protect you and dramatically increase your success rate.</p>
+        </div>
+      </div>
+
+      <!-- Prep Steps -->
+      <div class="prep-steps">
+        
+        <!-- Step 1: Freeze Secondary Bureaus -->
+        <div class="prep-step expanded">
+          <div class="prep-step-header" onclick="toggleStep(this)">
+            <div class="prep-step-number">1</div>
+            <div class="prep-step-info">
+              <div class="prep-step-title">
+                Freeze Your Secondary Bureau Reports
+                <span class="badge badge-accent">Critical</span>
+              </div>
+              <div class="prep-step-subtitle">Prevent creditors from pulling alternative reports to verify disputed info</div>
+            </div>
+            <button class="prep-step-toggle">
+              <i data-lucide="chevron-down"></i>
+            </button>
+          </div>
+          <div class="prep-step-content">
+            <div class="why-section">
+              <h4><i data-lucide="help-circle"></i> Why This Matters</h4>
+              <p>When you dispute items with the Big 3 bureaus (Equifax, Experian, TransUnion), they often verify information by checking <strong>secondary bureaus</strong> - smaller credit reporting agencies you've probably never heard of. If these secondary bureaus have records of the same accounts, the Big 3 will use that to "verify" the disputed item and deny your dispute.</p>
+              <p style="margin-top: 0.75rem;">By freezing your secondary bureau reports FIRST, you cut off this verification path. When the creditor or collection agency can't verify through these channels, they're more likely to fail verification - and items that can't be verified <strong>must be deleted</strong>.</p>
+            </div>
+
+            <div class="howto-section">
+              <h4><i data-lucide="list-checks"></i> Freeze These 4 Secondary Bureaus</h4>
+              <div class="bureau-grid">
+                <div class="bureau-card">
+                  <h5>LexisNexis</h5>
+                  <p>Major data broker used by creditors and collectors</p>
+                  <a href="https://consumer.risk.lexisnexis.com/freeze" target="_blank" rel="noopener">
+                    Freeze Now <i data-lucide="external-link"></i>
+                  </a>
+                </div>
+                <div class="bureau-card">
+                  <h5>ChexSystems</h5>
+                  <p>Tracks banking history, used for account verification</p>
+                  <a href="https://www.chexsystems.com/security-freeze" target="_blank" rel="noopener">
+                    Freeze Now <i data-lucide="external-link"></i>
+                  </a>
+                </div>
+                <div class="bureau-card">
+                  <h5>Innovis</h5>
+                  <p>4th largest bureau, often used for soft verification</p>
+                  <a href="https://www.innovis.com/securityFreeze" target="_blank" rel="noopener">
+                    Freeze Now <i data-lucide="external-link"></i>
+                  </a>
+                </div>
+                <div class="bureau-card">
+                  <h5>NCTUE (National Consumer Telecom)</h5>
+                  <p>Tracks utility and telecom payment history</p>
+                  <a href="https://www.nctue.com/consumers" target="_blank" rel="noopener">
+                    Freeze Now <i data-lucide="external-link"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="inline-warning">
+              <i data-lucide="alert-circle"></i>
+              <p><strong>Do this BEFORE disputing anything.</strong> If you've already sent disputes, freeze these immediately - it will still help with future disputes and re-investigations.</p>
+            </div>
+
+            <!-- Unfreeze Reminder -->
+            <div class="unfreeze-reminder" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1)); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem;">
+              <h4 style="font-size: 0.9375rem; font-weight: 600; color: #fff; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="calendar-clock" style="width: 18px; height: 18px; color: #3b82f6;"></i>
+                Remember to Unfreeze When Needed
+              </h4>
+              <p style="color: var(--dark-300); font-size: 0.875rem; line-height: 1.6; margin-bottom: 0.75rem;">These freezes will block legitimate credit checks too. You'll need to <strong>temporarily unfreeze</strong> these bureaus when you:</p>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--dark-300); font-size: 0.8125rem; padding: 0.375rem 0;">
+                  <i data-lucide="home" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span><strong>Apply for a mortgage or auto loan</strong> - Lenders check LexisNexis and Innovis</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--dark-300); font-size: 0.8125rem; padding: 0.375rem 0;">
+                  <i data-lucide="credit-card" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span><strong>Open a new credit card</strong> - Some issuers use secondary bureaus</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--dark-300); font-size: 0.8125rem; padding: 0.375rem 0;">
+                  <i data-lucide="building-2" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span><strong>Open a bank account</strong> - Banks use ChexSystems to verify banking history</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--dark-300); font-size: 0.8125rem; padding: 0.375rem 0;">
+                  <i data-lucide="zap" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span><strong>Sign up for utilities</strong> - Electric, gas, and water companies check NCTUE</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--dark-300); font-size: 0.8125rem; padding: 0.375rem 0;">
+                  <i data-lucide="smartphone" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span><strong>Get a cell phone plan</strong> - Carriers check NCTUE for payment history</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--dark-300); font-size: 0.8125rem; padding: 0.375rem 0;">
+                  <i data-lucide="key" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                  <span><strong>Rent an apartment</strong> - Landlords may use LexisNexis for tenant screening</span>
+                </li>
+              </ul>
+              <p style="color: var(--dark-400); font-size: 0.8125rem; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid rgba(59, 130, 246, 0.15);">
+                <i data-lucide="lightbulb" style="width: 14px; height: 14px; display: inline; vertical-align: middle; margin-right: 0.25rem; color: #3b82f6;"></i>
+                <strong>Tip:</strong> Unfreeze 2-3 days before applying, then re-freeze immediately after. Each bureau lets you set a temporary lift for a specific date range.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: No Online Accounts -->
+        <div class="prep-step">
+          <div class="prep-step-header" onclick="toggleStep(this)">
+            <div class="prep-step-number danger">2</div>
+            <div class="prep-step-info">
+              <div class="prep-step-title">
+                Do NOT Create Online Accounts with Bureaus
+                <span class="badge" style="background: #ef4444; color: #fff;">Danger</span>
+              </div>
+              <div class="prep-step-subtitle">Avoid Equifax, Experian, TransUnion, and Credit Karma accounts</div>
+            </div>
+            <button class="prep-step-toggle">
+              <i data-lucide="chevron-down"></i>
+            </button>
+          </div>
+          <div class="prep-step-content">
+            <div class="why-section">
+              <h4><i data-lucide="help-circle"></i> Why This Matters</h4>
+              <p>When you create an account with a credit bureau or monitoring service, you agree to their <strong>Terms of Service</strong>. Buried in that fine print are clauses that can hurt you:</p>
+              <ul>
+                <li><i data-lucide="x"></i> <strong>Arbitration clauses</strong> - You waive your right to sue them in court</li>
+                <li><i data-lucide="x"></i> <strong>E-OSCAR verification</strong> - They can use their electronic system to "verify" items in seconds (no real investigation)</li>
+                <li><i data-lucide="x"></i> <strong>Data sharing</strong> - They share your activity with creditors and collectors</li>
+                <li><i data-lucide="x"></i> <strong>Dispute limitations</strong> - Some ToS limit how you can dispute or what you can dispute</li>
+              </ul>
+              <p style="margin-top: 0.75rem;">By staying off their platforms, you preserve all your legal rights under the FCRA. You force them to do REAL investigations via mail, which takes time and effort - and often results in deletions because they can't be bothered.</p>
+            </div>
+
+            <div class="inline-warning">
+              <i data-lucide="alert-circle"></i>
+              <p><strong>If you already have accounts:</strong> Don't panic. But stop using them for disputes. Always dispute by certified mail going forward. Consider closing the accounts if possible.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Never Dispute Online -->
+        <div class="prep-step">
+          <div class="prep-step-header" onclick="toggleStep(this)">
+            <div class="prep-step-number danger">3</div>
+            <div class="prep-step-info">
+              <div class="prep-step-title">
+                NEVER Dispute Online
+                <span class="badge" style="background: #ef4444; color: #fff;">Danger</span>
+              </div>
+              <div class="prep-step-subtitle">Online disputes are designed to fail - always use certified mail</div>
+            </div>
+            <button class="prep-step-toggle">
+              <i data-lucide="chevron-down"></i>
+            </button>
+          </div>
+          <div class="prep-step-content">
+            <div class="why-section">
+              <h4><i data-lucide="help-circle"></i> Why This Matters</h4>
+              <p>The bureaus WANT you to dispute online. Why? Because their online system (E-OSCAR) is automated and designed to reject disputes quickly:</p>
+              <ul>
+                <li><i data-lucide="x"></i> <strong>No paper trail</strong> - You can't prove what you submitted or when</li>
+                <li><i data-lucide="x"></i> <strong>Automated "verification"</strong> - E-OSCAR sends electronic pings to creditors who auto-verify in seconds</li>
+                <li><i data-lucide="x"></i> <strong>Limited dispute reasons</strong> - You're forced to pick from a dropdown menu, limiting your legal arguments</li>
+                <li><i data-lucide="x"></i> <strong>No documentation</strong> - You can't attach supporting evidence effectively</li>
+                <li><i data-lucide="x"></i> <strong>Harder to sue</strong> - Without certified mail receipts, you have weak evidence in court</li>
+              </ul>
+              <p style="margin-top: 0.75rem;"><strong>Certified mail disputes force a real investigation.</strong> Someone has to actually open your letter, read it, and manually process it. This takes time and resources - and when creditors can't or won't provide verification documents, the item gets deleted.</p>
+            </div>
+
+            <div class="inline-warning">
+              <i data-lucide="alert-circle"></i>
+              <p><strong>Always use certified mail with return receipt requested.</strong> This creates legal proof of delivery and starts the 30-day investigation clock. Keep copies of EVERYTHING you send.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Never Agree to Anything on Phone -->
+        <div class="prep-step">
+          <div class="prep-step-header" onclick="toggleStep(this)">
+            <div class="prep-step-number danger">4</div>
+            <div class="prep-step-info">
+              <div class="prep-step-title">
+                NEVER Agree to Anything Over the Phone
+                <span class="badge" style="background: #ef4444; color: #fff;">Danger</span>
+              </div>
+              <div class="prep-step-subtitle">Collectors record calls and will use your words against you</div>
+            </div>
+            <button class="prep-step-toggle">
+              <i data-lucide="chevron-down"></i>
+            </button>
+          </div>
+          <div class="prep-step-content">
+            <div class="why-section">
+              <h4><i data-lucide="help-circle"></i> Why This Matters</h4>
+              <p>When collectors or creditors call you, they're fishing for information and admissions. Everything you say can and will be used against you:</p>
+              <ul>
+                <li><i data-lucide="x"></i> <strong>"Is this your debt?"</strong> - Saying yes restarts the statute of limitations in some states</li>
+                <li><i data-lucide="x"></i> <strong>"Can you make a small payment?"</strong> - Any payment, even $1, can restart the clock and validate the debt</li>
+                <li><i data-lucide="x"></i> <strong>"We'll settle for 50%"</strong> - Verbal agreements aren't enforceable and they'll still report the full amount</li>
+                <li><i data-lucide="x"></i> <strong>Recorded calls</strong> - They record everything and use it as evidence of debt acknowledgment</li>
+              </ul>
+              <p style="margin-top: 0.75rem;"><strong>Everything in writing. Always.</strong> If someone calls about a debt, tell them to send all communication in writing and hang up. Never confirm any information, never acknowledge any debt, never agree to anything verbally.</p>
+            </div>
+
+            <div class="howto-section">
+              <h4><i data-lucide="message-square"></i> What to Say When They Call</h4>
+              <div style="background: var(--dark-900); border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.875rem; color: var(--dark-300);">
+                "I do not discuss financial matters over the phone. Please send all communications in writing to my address. Do not call me again. Goodbye."
+              </div>
+              <p style="margin-top: 0.75rem; color: var(--dark-400); font-size: 0.875rem;">Then hang up. Don't engage further. If they continue calling, that's a FDCPA violation you can sue for.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Never Sign Dispute Letters -->
+        <div class="prep-step">
+          <div class="prep-step-header" onclick="toggleStep(this)">
+            <div class="prep-step-number">5</div>
+            <div class="prep-step-info">
+              <div class="prep-step-title">
+                Do NOT Sign Your Dispute Letters
+                <span class="badge badge-outline">Important</span>
+              </div>
+              <div class="prep-step-subtitle">Your signature can be used to verify accounts and validate debts</div>
+            </div>
+            <button class="prep-step-toggle">
+              <i data-lucide="chevron-down"></i>
+            </button>
+          </div>
+          <div class="prep-step-content">
+            <div class="why-section">
+              <h4><i data-lucide="help-circle"></i> Why This Matters</h4>
+              <p>Your signature is a valuable piece of verification data. When you sign dispute letters:</p>
+              <ul>
+                <li><i data-lucide="x"></i> <strong>Signature comparison</strong> - Creditors can compare it to account applications to "verify" the account is yours</li>
+                <li><i data-lucide="x"></i> <strong>Acknowledges receipt</strong> - It confirms you received and read their correspondence</li>
+                <li><i data-lucide="x"></i> <strong>Identity confirmation</strong> - It proves you are who you say you are, validating their records</li>
+              </ul>
+              <p style="margin-top: 0.75rem;"><strong>Just type your name.</strong> A typed name is sufficient for dispute letters. The law doesn't require a handwritten signature for FCRA disputes. Including your ID copy is enough for identity verification.</p>
+            </div>
+
+            <div class="inline-warning">
+              <i data-lucide="info"></i>
+              <p><strong>Note:</strong> Our letter templates don't include signature lines. Just type your full name at the bottom. Include a copy of your ID and a utility bill for identity verification.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Check FTC Banned Collectors -->
+        <div class="prep-step">
+          <div class="prep-step-header" onclick="toggleStep(this)">
+            <div class="prep-step-number">6</div>
+            <div class="prep-step-info">
+              <div class="prep-step-title">
+                Check the FTC Banned Collectors List
+                <span class="badge badge-accent">Before Disputing</span>
+              </div>
+              <div class="prep-step-subtitle">If your collector is banned, you may have additional legal options</div>
+            </div>
+            <button class="prep-step-toggle">
+              <i data-lucide="chevron-down"></i>
+            </button>
+          </div>
+          <div class="prep-step-content">
+            <div class="why-section">
+              <h4><i data-lucide="help-circle"></i> Why This Matters</h4>
+              <p>The FTC maintains a list of debt collectors who have been <strong>permanently banned</strong> by federal court orders from participating in the debt collection business. These companies and individuals engaged in practices so egregious - fake debts, threats, harassment, fraud - that courts banned them entirely.</p>
+              <p style="margin-top: 0.75rem;">If a collector on your credit report is on this list:</p>
+              <ul>
+                <li><i data-lucide="check" style="color: var(--accent-400);"></i> <strong>The debt may be invalid</strong> - Many banned collectors dealt in "phantom debts" that consumers never actually owed</li>
+                <li><i data-lucide="check" style="color: var(--accent-400);"></i> <strong>Stronger dispute grounds</strong> - You can cite their banned status in your dispute letters</li>
+                <li><i data-lucide="check" style="color: var(--accent-400);"></i> <strong>Potential legal action</strong> - If they're still operating, they're violating a federal court order</li>
+                <li><i data-lucide="check" style="color: var(--accent-400);"></i> <strong>FTC refunds</strong> - You may be entitled to refunds if you paid a banned collector</li>
+              </ul>
+            </div>
+
+            <div class="howto-section">
+              <h4><i data-lucide="search"></i> Search the Banned Collectors List</h4>
+              <p style="color: var(--dark-400); font-size: 0.875rem; margin-bottom: 1rem;">Search by company name or individual name. This list is sourced from the official FTC database and includes 200+ banned entities.</p>
+              
+              <!-- Search Box -->
+              <div class="banned-search-box" style="margin-bottom: 1rem;">
+                <div style="display: flex; gap: 0.5rem; align-items: center; background: var(--dark-900); border: 1px solid var(--dark-700); border-radius: 8px; padding: 0.75rem 1rem;">
+                  <i data-lucide="search" style="width: 18px; height: 18px; color: var(--dark-500);"></i>
+                  <input type="text" id="bannedCollectorSearch" placeholder="Search collector name..." style="flex: 1; background: none; border: none; color: #fff; font-size: 0.9375rem; outline: none;">
+                  <button onclick="clearBannedSearch()" id="clearSearchBtn" style="display: none; background: none; border: none; color: var(--dark-500); cursor: pointer; padding: 0;">
+                    <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                  </button>
+                </div>
+                <div id="searchResultCount" style="font-size: 0.75rem; color: var(--dark-500); margin-top: 0.5rem;"></div>
+              </div>
+
+              <!-- Expandable List -->
+              <div class="banned-list-container">
+                <button type="button" class="banned-list-toggle" id="bannedListToggle" onclick="toggleBannedList()">
+                  <span><i data-lucide="list" style="width: 18px; height: 18px;"></i> View Full FTC Banned Collectors List</span>
+                  <i data-lucide="chevron-down" class="toggle-icon" style="width: 18px; height: 18px;"></i>
+                </button>
+                
+                <div class="banned-list-content" id="bannedListContent">
+                  <div class="banned-list-header">
+                    <span class="banned-col-name">Company / Individual</span>
+                    <span class="banned-col-link">FTC Case</span>
+                  </div>
+                  <div class="banned-list-items" id="bannedListItems">
+                    <!-- Items populated by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(6, 182, 212, 0.1)); border: 1px solid rgba(52, 211, 153, 0.25); border-radius: 12px; padding: 1rem; margin-top: 1.25rem;">
+              <p style="color: var(--dark-300); font-size: 0.875rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+                <i data-lucide="external-link" style="width: 16px; height: 16px; color: var(--accent-400); flex-shrink: 0; margin-top: 2px;"></i>
+                <span>View the official FTC list at <a href="https://www.ftc.gov/legal-library/browse/cases-proceedings/banned-debt-collectors/list" target="_blank" rel="noopener" style="color: var(--accent-400);">ftc.gov/banned-debt-collectors</a> for case details and court orders.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Checklist -->
+      <div class="prep-checklist">
+        <h3><i data-lucide="check-square"></i> Pre-Dispute Checklist</h3>
+        <div class="checklist-items">
+          <div class="checklist-item">
+            <input type="checkbox" id="check1">
+            <label for="check1">Froze LexisNexis report</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check2">
+            <label for="check2">Froze ChexSystems report</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check3">
+            <label for="check3">Froze Innovis report</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check4">
+            <label for="check4">Froze NCTUE report</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check5">
+            <label for="check5">I understand: No online accounts with bureaus</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check6">
+            <label for="check6">I understand: All disputes via certified mail only</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check7">
+            <label for="check7">I understand: Never agree to anything over the phone</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check8">
+            <label for="check8">I understand: Type name, don't sign letters</label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check9">
+            <label for="check9">Checked FTC banned collectors list</label>
+          </div>
+        </div>
+      </div>
+          <div class="checklist-item">
+            <input type="checkbox" id="check8">
+            <label for="check8">I understand: Type name, don't sign letters</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="prep-cta">
+        <p>Completed all the steps? You're ready to start your credit repair journey.</p>
+        <a href="engine.html" class="btn btn-glow btn-lg">
+          <i data-lucide="scan"></i>
+          Continue to Credit Engine
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Scripts -->
+  <script>
+    function toggleStep(header) {
+      const step = header.closest('.prep-step');
+      step.classList.toggle('expanded');
+    }
+
+    // Save checklist to localStorage
+    document.querySelectorAll('.checklist-item input').forEach(checkbox => {
+      const saved = localStorage.getItem('prep_' + checkbox.id);
+      if (saved === 'true') checkbox.checked = true;
+
+      checkbox.addEventListener('change', () => {
+        localStorage.setItem('prep_' + checkbox.id, checkbox.checked);
+      });
+    });
+
+    // Sidebar toggle
+    document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('active');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    });
+
+    document.getElementById('sidebarOverlay')?.addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('active');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    });
+
+    // FTC Banned Collectors List (alphabetically sorted)
+    const bannedCollectors = [
+      { name: "4 Star Resolution LLC", case: "122-3202" },
+      { name: "6P Management Corporation", case: "162-3188" },
+      { name: "6P, LLC", case: "162-3188" },
+      { name: "10D Holdings, Inc.", case: "x190013" },
+      { name: "Absolute Financial Services Recovery, LLC", case: "202-3072" },
+      { name: "Absolute Financial Services, LLC", case: "202-3072" },
+      { name: "Advanced Mediation Group, LLC", case: "172-3160" },
+      { name: "AFSR Global Logistics", case: "202-3072" },
+      { name: "Alliance Law Group", case: "172-3125" },
+      { name: "American Check Processing, Inc.", case: "122-3273" },
+      { name: "American Credit Adjusters, LLC", case: "172-3160" },
+      { name: "American Credit Crunchers, LLC", case: "102-3191" },
+      { name: "American Mutual Holdings, Inc.", case: "132-3215" },
+      { name: "Andre Keith Sanders", case: "122-3051" },
+      { name: "Andrew Shaevel", case: "162-3188" },
+      { name: "Angela Burdorf", case: "142-3141" },
+      { name: "Angela J. Triplett", case: "132-3043" },
+      { name: "Ankh Ali", case: "x190013" },
+      { name: "Anthony Coppola", case: "1423140" },
+      { name: "Apex National Services, LLC", case: "172-3160" },
+      { name: "ARM WNY, LLC (Accredited Receivables Management)", case: "1423140" },
+      { name: "Ashton Asset Management, Inc.", case: "172-3125" },
+      { name: "Asset & Capital Management Group", case: "142-2315" },
+      { name: "Audubon Financial Bureau LLC (AFB)", case: "1423140" },
+      { name: "Aziza Ali", case: "x190013" },
+      { name: "BAM Financial, LLC", case: "142-2315" },
+      { name: "Barry Sussman", case: "x030068" },
+      { name: "Bobalew Management Corporation", case: "162-3188" },
+      { name: "Bobalew, LLC", case: "162-3188" },
+      { name: "Bonafied Payment Solutions, Inc.", case: "142-3141" },
+      { name: "Braclaire Management, LLC (Clear Credit Services)", case: "152-3136" },
+      { name: "Brett Fisher", case: "122-3051" },
+      { name: "Brian Charles McKenzie", case: "192-3192" },
+      { name: "Broadway Global Master, Inc. (BGM)", case: "1123215" },
+      { name: "Buffalo Staffing, Inc.", case: "132-3215" },
+      { name: "Capital Security Investments, LLC", case: "172-3160" },
+      { name: "Capitol Exchange, LLC", case: "132-3043" },
+      { name: "Carolina Orellana", case: "142-3159" },
+      { name: "Cedar Rose Holdings and Development, Inc.", case: "x190013" },
+      { name: "Central Check Processing, Inc.", case: "122-3273" },
+      { name: "Central Processing Services, Inc.", case: "122-3273" },
+      { name: "Centro Natural", case: "142-3159" },
+      { name: "Chantelle Dickey", case: "152-3048" },
+      { name: "Charles Blakely III", case: "122-3202" },
+      { name: "Charles Dickey", case: "152-3048" },
+      { name: "Charles Glander", case: "1423157" },
+      { name: "Charles Hutchins", case: "x030068" },
+      { name: "Check Enforcement, Inc.", case: "x030068" },
+      { name: "Check Fraud Service LLC", case: "122-3202" },
+      { name: "Check Investors, Inc.", case: "x030068" },
+      { name: "Check Processing, Inc.", case: "122-3273" },
+      { name: "Check Solution Services Inc.", case: "122-3202" },
+      { name: "Check Systems, LLC", case: "132-3215" },
+      { name: "CHM Capital Group, LLC (Capital Harris Miller)", case: "172-3125" },
+      { name: "Chris Lenyszyn", case: "132-3246" },
+      { name: "Commercial Receivables Acquisition, Inc.", case: "112-3035" },
+      { name: "Commercial Recovery Systems, Inc", case: "132-3000" },
+      { name: "Credit Clear Solutions, LLC", case: "152-3136" },
+      { name: "Credit MP, LLC", case: "122-3031" },
+      { name: "Credit Source Plus, LLC (Georgia)", case: "132-3043" },
+      { name: "Credit Source Plus, LLC (Ohio)", case: "132-3043" },
+      { name: "Critical Resolution Mediation, LLC", case: "192-3192" },
+      { name: "Crown Funding Company, LLC", case: "122-3031" },
+      { name: "Cynthia Powell", case: "172-3085" },
+      { name: "Damian Biondi", case: "142-3159" },
+      { name: "Daryl M. Hall", case: "172-3125" },
+      { name: "David Carr", case: "x190013" },
+      { name: "David Cohen", case: "992-3086" },
+      { name: "David J. Devany", case: "132-3000" },
+      { name: "David M. Hynes, II", case: "112-3035" },
+      { name: "Debtcom, Inc. (Cole, Tanner, & Wright)", case: "122-3096" },
+      { name: "DeMarra J. Massey", case: "132-3043" },
+      { name: "Dequan M. Sicard", case: "172-3125" },
+      { name: "Diane L. Bella", case: "132-3215" },
+      { name: "Diverse Financial Enterprises, Inc.", case: "172-3160" },
+      { name: "Domenico D'Angelo (Dominick D'Angelo)", case: "1423140" },
+      { name: "Dorian Wills", case: "132-3043" },
+      { name: "Ebeeze, LLC", case: "102-3191" },
+      { name: "eCapital Services, LLC", case: "132-3215" },
+      { name: "Eric Dennison", case: "202-3071" },
+      { name: "Eric J. Sanne", case: "capital-city-mortgage" },
+      { name: "Ernest Smith", case: "152-3173" },
+      { name: "Everton Financial, LLC", case: "x030068" },
+      { name: "Federal Check Processing, Inc.", case: "122-3273" },
+      { name: "Federal Processing Services, Inc.", case: "122-3273" },
+      { name: "Federal Processing, Inc.", case: "122-3273" },
+      { name: "Federal Recoveries, LLC", case: "122-3273" },
+      { name: "Flowing Streams, F.S., Inc.", case: "122-3273" },
+      { name: "Forensic Case Management Services, Inc. (Rumson, Bolling)", case: "112-3035" },
+      { name: "Fourstar Revenue Management LLC", case: "122-3202" },
+      { name: "Frank E. Lindstrom, Jr.", case: "112-3035" },
+      { name: "Freestar World, LLC", case: "132-3043" },
+      { name: "Gail Daniels", case: "1423158" },
+      { name: "Gaurav Mohindra", case: "152-3243" },
+      { name: "Gerald Wright", case: "122-3096" },
+      { name: "Glentis Wallace", case: "172-3160" },
+      { name: "Global Acceptance, LLC", case: "132-3043" },
+      { name: "Global Asset Financial Services Group, LLC", case: "x190013" },
+      { name: "Global Circulation, Inc.", case: "consumer-impact-recovery" },
+      { name: "Global Processing Solutions, LLC", case: "172-3160" },
+      { name: "Goldberg Maxwell, LLC", case: "132-3215" },
+      { name: "Goldman Schwartz Inc.", case: "122-3096" },
+      { name: "Green Fidelity Allegiance, Inc.", case: "122-3031" },
+      { name: "Gregory MacKinnon", case: "142-3141" },
+      { name: "Hardco Holding Group LLC", case: "172-3125" },
+      { name: "Harris County Check Recovery Inc.", case: "122-3096" },
+      { name: "Heather True", case: "112-3035" },
+      { name: "Heritage Capital Services, LLC", case: "132-3043" },
+      { name: "Heritage Management Services, LLC", case: "132-3043" },
+      { name: "Hirsh Mohindra", case: "152-3243" },
+      { name: "HKM Funding, Ltd.", case: "152-3243" },
+      { name: "Hope V. Wilson", case: "132-3043" },
+      { name: "Hylan Asset Management LLC", case: "162-3188" },
+      { name: "In-Arabia Solutions, Inc.", case: "1123215" },
+      { name: "Interchex Systems, LLC", case: "132-3215" },
+      { name: "International Credit Recovery, Inc. (ICR)", case: "172-3085" },
+      { name: "International Recovery Service LLC", case: "122-3202" },
+      { name: "Intrinsic Solutions, LLC", case: "172-3160" },
+      { name: "Jacob E. Kirbis", case: "1423157" },
+      { name: "Jahaan McDuffie", case: "172-3160" },
+      { name: "James Dennison", case: "202-3071" },
+      { name: "James Novella", case: "122-3031" },
+      { name: "James S. Hynes", case: "112-3035" },
+      { name: "Jaredco, Inc.", case: "x030068" },
+      { name: "Jason R. Begley", case: "112-3142" },
+      { name: "Javier Sumbre", case: "142-3159" },
+      { name: "Jean Cellent", case: "202-3071" },
+      { name: "Jennifer Zamora", case: "122-3096" },
+      { name: "Jeremy Scinta", case: "x190013" },
+      { name: "Jessica Anzola", case: "142-3159" },
+      { name: "Jim Tran Phelps", case: "122-3031" },
+      { name: "John Williams", case: "132-3246" },
+      { name: "Jon E. Purizhansky", case: "162-3188" },
+      { name: "Jonathan Braun", case: "192-3252" },
+      { name: "Joseph C. Bella, III", case: "132-3215" },
+      { name: "Joseph Ciffa", case: "142-3141" },
+      { name: "K.I.P., LLC (Payday Loan Recovery Group)", case: "152-3048" },
+      { name: "Kelly S. Brace", case: "152-3136" },
+      { name: "Kenneth Moody", case: "x190013" },
+      { name: "Kenneth Redon III", case: "consumer-impact-recovery" },
+      { name: "Kevin Medley", case: "112-3035" },
+      { name: "Kirit Patel", case: "1123215" },
+      { name: "Lamar Snow", case: "172-3160" },
+      { name: "Lashone Elam (Lashone Caldwell)", case: "202-3072" },
+      { name: "Legal Financial Consulting, LLC", case: "x030068" },
+      { name: "Liberty Solutions & Associates, LLC", case: "202-3071" },
+      { name: "Lisa J. Jeter", case: "132-3043" },
+      { name: "LLI Business Innovations, LLC", case: "x190013" },
+      { name: "Lorena Quiroz-Hynes", case: "112-3035" },
+      { name: "LSA Processing Systems, LLC", case: "202-3071" },
+      { name: "Luis A. Shaw", case: "132-3215" },
+      { name: "Luis O. Carrera", case: "x030068" },
+      { name: "Mark Briandi", case: "122-3273" },
+      { name: "Maurice Sessum", case: "122-3202" },
+      { name: "Merchant Recovery Service, Inc.", case: "122-3202" },
+      { name: "Midwestern Alliance, LLC", case: "x190013" },
+      { name: "Mirage Distribution, LLC", case: "172-3160" },
+      { name: "Mitchell & Maxwell, LLC", case: "172-3160" },
+      { name: "Morgan Jackson, LLC", case: "132-3215" },
+      { name: "Mullins & Kane, LLC", case: "132-3215" },
+      { name: "National Check Registry, LLC", case: "132-3215" },
+      { name: "National Client Services LLC (AFS Legal Services)", case: "152-3173" },
+      { name: "National Landmark Logistics, LLC", case: "202-3071" },
+      { name: "National Landmark Service of United Recovery, LLC", case: "202-3071" },
+      { name: "National Payment Processing LLC", case: "152-3173" },
+      { name: "National Processors Group, LLC", case: "132-3043" },
+      { name: "Nationwide Check Processing, Inc.", case: "122-3273" },
+      { name: "Nationwide Payment Processors, LLC", case: "132-3043" },
+      { name: "Nichole C. Anderson", case: "132-3043" },
+      { name: "North Center Collections, Inc.", case: "172-3160" },
+      { name: "Omar Hussain", case: "x190013" },
+      { name: "Omar Smith", case: "152-3173" },
+      { name: "One FC, LLC", case: "122-3031" },
+      { name: "Pacific Capital Holdings, Inc.", case: "152-3243" },
+      { name: "Parliament Services, LLC", case: "192-3192" },
+      { name: "Payment Management Solutions, Inc.", case: "142-3141" },
+      { name: "Performance Payment Processing, LLC", case: "132-3043" },
+      { name: "Pinnacle Payment Services, LLC", case: "132-3043" },
+      { name: "Pioneer Capital Services, LLC", case: "132-3043" },
+      { name: "Platium Express, LLC", case: "132-3043" },
+      { name: "Preetesh Patel", case: "152-3243" },
+      { name: "Premier Debt Acquisitions LLC (PDA Group)", case: "1423157" },
+      { name: "Premium Express Processing, LLC (Georgia)", case: "132-3043" },
+      { name: "Premium Express Processing, LLC (Ohio)", case: "132-3043" },
+      { name: "Prizm Debt Solutions LLC (PDS, LLC)", case: "1423157" },
+      { name: "Profile Management, Inc.", case: "122-3202" },
+      { name: "RAM Capital Funding LLC", case: "192-3252" },
+      { name: "Rapid Resolution, LLC", case: "132-3043" },
+      { name: "RCG Advances, LLC", case: "192-3252" },
+      { name: "Regional Asset Maintenance, LLC", case: "x190013" },
+      { name: "Richard Diorio, Jr.", case: "172-3085" },
+      { name: "Robert Heidenreich", case: "172-3057" },
+      { name: "Robert L. Giardina", case: "192-3252" },
+      { name: "Roberto Llaury", case: "142-2315" },
+      { name: "S&H Financial Group Inc.", case: "172-3125" },
+      { name: "Samuel Sole and Associates, LLC (SSA Group)", case: "1423157" },
+      { name: "Sanders Law, P.A.", case: "122-3051" },
+      { name: "Sanders Legal Group, P.A.", case: "122-3051" },
+      { name: "Silver Lake Landmark Recovery Group, LLC", case: "202-3071" },
+      { name: "SJ Capitol, LLC", case: "122-3031" },
+      { name: "Solidus Group, LLC", case: "152-3136" },
+      { name: "Solidus Solutions, LLC", case: "152-3136" },
+      { name: "Solution Processing, LLC", case: "132-3043" },
+      { name: "Specialized Recovery, Inc. (Joseph, Steven & Associates)", case: "152-3243" },
+      { name: "Stark Law, LLC (Stark Recovery)", case: "152-3243" },
+      { name: "Stark Legal, LLC", case: "152-3243" },
+      { name: "Starlette Foster", case: "122-3096" },
+      { name: "State Check Processing, Inc.", case: "122-3273" },
+      { name: "Sumore, LLC", case: "142-3159" },
+      { name: "Susana Sumbre", case: "142-3159" },
+      { name: "TACS I, LLC", case: "x190013" },
+      { name: "TACS II, LLC", case: "x190013" },
+      { name: "TACS III, LLC", case: "x190013" },
+      { name: "Talesia Neely", case: "202-3072" },
+      { name: "Thai Han", case: "122-3031" },
+      { name: "The G. Wright Group Inc. (The Wright Group)", case: "122-3096" },
+      { name: "The Primary Group Inc.", case: "1423158" },
+      { name: "Timothy L. Ford", case: "132-3000" },
+      { name: "Tobias Boyland", case: "132-3043" },
+      { name: "Tracey Dottrice Warren", case: "192-3192" },
+      { name: "Trans America Consumer Solutions, LLC", case: "x190013" },
+      { name: "Travell Thomas", case: "122-3202" },
+      { name: "Tzvi Reich", case: "192-3252" },
+      { name: "Unified Global Group, LLC", case: "1423140" },
+      { name: "United Check Processing, Inc.", case: "122-3273" },
+      { name: "US Check Processing, Inc.", case: "122-3273" },
+      { name: "Vantage Point Services, LLC", case: "142-3141" },
+      { name: "Varang K. Thaker", case: "102-3191" },
+      { name: "Velocity Payment Solutions, LLC", case: "132-3043" },
+      { name: "Wayne W. Lunsford", case: "112-3142" },
+      { name: "Western Capital Group, Inc.", case: "122-3031" },
+      { name: "William Moses", case: "122-3273" },
+      { name: "Williams, Scott & Associates, LLC", case: "132-3246" },
+      { name: "Windfall Management Systems, LLC", case: "132-3043" },
+      { name: "WSA, LLC (Warrant Services Association)", case: "132-3246" }
+    ];
+
+    // Sort alphabetically
+    bannedCollectors.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Render banned collectors list
+    function renderBannedList(filter = '') {
+      const container = document.getElementById('bannedListItems');
+      if (!container) return;
+
+      const filtered = filter 
+        ? bannedCollectors.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
+        : bannedCollectors;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="banned-list-empty">
+            <i data-lucide="search-x"></i>
+            No matches found for "${filter}"
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(collector => `
+        <div class="banned-list-item">
+          <span class="banned-item-name">${highlightMatch(collector.name, filter)}</span>
+          <span class="banned-item-link">
+            <a href="https://www.ftc.gov/legal-library/browse/cases-proceedings/banned-debt-collectors/list" target="_blank" rel="noopener">View</a>
+          </span>
+        </div>
+      `).join('');
+
+      // Update count
+      const countEl = document.getElementById('searchResultCount');
+      if (countEl) {
+        countEl.textContent = filter 
+          ? `${filtered.length} of ${bannedCollectors.length} collectors match your search`
+          : `${bannedCollectors.length} banned collectors total`;
+      }
+    }
+
+    function highlightMatch(text, query) {
+      if (!query) return text;
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function toggleBannedList() {
+      const toggle = document.getElementById('bannedListToggle');
+      const content = document.getElementById('bannedListContent');
+      
+      toggle.classList.toggle('expanded');
+      content.classList.toggle('expanded');
+      
+      // Render list on first open
+      if (content.classList.contains('expanded') && !content.dataset.rendered) {
+        renderBannedList();
+        content.dataset.rendered = 'true';
+      }
+      
+      lucide.createIcons();
+    }
+
+    function clearBannedSearch() {
+      const input = document.getElementById('bannedCollectorSearch');
+      input.value = '';
+      document.getElementById('clearSearchBtn').style.display = 'none';
+      renderBannedList();
+    }
+
+    // Search input handler
+    document.getElementById('bannedCollectorSearch')?.addEventListener('input', (e) => {
+      const query = e.target.value;
+      const clearBtn = document.getElementById('clearSearchBtn');
+      
+      clearBtn.style.display = query ? 'block' : 'none';
+      
+      // Auto-expand list when searching
+      const content = document.getElementById('bannedListContent');
+      const toggle = document.getElementById('bannedListToggle');
+      if (!content.classList.contains('expanded')) {
+        content.classList.add('expande

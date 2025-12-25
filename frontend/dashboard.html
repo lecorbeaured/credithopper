@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your CreditHopper dashboard - track disputes, monitor progress, and manage your credit repair journey.">
+  
+  <title>Dashboard - CreditHopper</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- Auth Check - Redirect if not logged in -->
+  <script>
+    (function() {
+      const isLoggedIn = localStorage.getItem('credithopper_logged_in') === 'true';
+      if (!isLoggedIn) {
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
+</head>
+<body class="dashboard-page">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
+            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="logo-text">Credit<span>Hopper</span></span>
+      </a>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title">Main</span>
+        <a href="dashboard.html" class="nav-item active">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="prep-steps.html" class="nav-item">
+          <i data-lucide="shield-alert"></i>
+          <span>Before You Start</span>
+          <span class="nav-badge" style="background: #ef4444;">!</span>
+        </a>
+        <a href="engine.html" class="nav-item">
+          <i data-lucide="scan"></i>
+          <span>Credit Engine</span>
+        </a>
+        <a href="#disputes" class="nav-item">
+          <i data-lucide="file-text"></i>
+          <span>My Disputes</span>
+        </a>
+        <a href="bundles.html" class="nav-item">
+          <i data-lucide="folder"></i>
+          <span>Letter Library</span>
+        </a>
+        <a href="credit-building.html" class="nav-item">
+          <i data-lucide="trending-up"></i>
+          <span>Credit Building</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <span class="nav-section-title">Account</span>
+        <a href="settings.html#subscription" class="nav-item">
+          <i data-lucide="credit-card"></i>
+          <span>Subscription</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </a>
+        <a href="help.html" class="nav-item">
+          <i data-lucide="help-circle"></i>
+          <span>Help Center</span>
+        </a>
+      </div>
+    </nav>
+    
+    <!-- Upgrade Card (for trial users) -->
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <div class="upgrade-icon">
+          <i data-lucide="clock"></i>
+        </div>
+        <h4>Trial: 5 days left</h4>
+        <p>Upgrade to generate letters and start disputing</p>
+        <a href="checkout.html?plan=pro" class="btn btn-primary btn-sm" style="width: 100%;">Upgrade to Pro</a>
+      </div>
+    </div>
+    
+    <!-- User Menu -->
+    <div class="sidebar-user">
+      <div class="user-avatar">JD</div>
+      <div class="user-info">
+        <span class="user-name">John Doe</span>
+        <span class="user-email">user@example.com</span>
+      </div>
+      <button class="btn-icon" id="userMenuBtn" onclick="toggleUserMenu()">
+        <i data-lucide="chevron-down"></i>
+      </button>
+      <!-- User Dropdown -->
+      <div class="user-dropdown" id="userDropdown">
+        <a href="settings.html" class="user-dropdown-item">
+          <i data-lucide="settings"></i>
+          Settings
+        </a>
+        <a href="help.html" class="user-dropdown-item">
+          <i data-lucide="help-circle"></i>
+          Help Center
+        </a>
+        <div class="user-dropdown-divider"></div>
+        <a href="#" class="user-dropdown-item logout" onclick="handleLogout(event)">
+          <i data-lucide="log-out"></i>
+          Log Out
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="btn-icon mobile-menu-btn" id="sidebarToggle">
+        <i data-lucide="menu"></i>
+      </button>
+      
+      <div class="topbar-search">
+        <i data-lucide="search"></i>
+        <input type="text" placeholder="Search disputes, letters...">
+      </div>
+      
+      <div class="topbar-actions">
+        <button class="btn-icon notification-btn">
+          <i data-lucide="bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="window.location.href='engine.html'">
+          <i data-lucide="plus"></i>
+          New Dispute
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <!-- Important: Before You Start Alert -->
+      <div class="prep-alert" id="prepAlert" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <i data-lucide="shield-alert" style="width: 20px; height: 20px; color: #ef4444;"></i>
+        </div>
+        <div style="flex: 1;">
+          <strong style="color: #fff; font-size: 0.9375rem;">Complete These Steps Before Disputing</strong>
+          <p style="color: var(--dark-400); font-size: 0.8125rem; margin-top: 0.125rem;">Critical steps that protect you and maximize your success rate</p>
+        </div>
+        <a href="prep-steps.html" class="btn btn-sm" style="background: #ef4444; color: #fff; flex-shrink: 0;">
+          View Steps
+        </a>
+        <button onclick="dismissPrepAlert()" class="btn-icon" style="flex-shrink: 0; width: 32px; height: 32px; background: transparent; border: none; color: var(--dark-500); cursor: pointer;">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+        <div class="welcome-text">
+          <h1>Welcome back, John! 👋</h1>
+          <p>Here's what's happening with your credit repair journey.</p>
+        </div>
+        <div class="welcome-date">
+          <i data-lucide="calendar"></i>
+          <span id="currentDate"></span>
+        </div>
+      </section>
+
+      <!-- Stats Grid -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon score">
+            <i data-lucide="trash-2"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">$3,247</span>
+            <span class="stat-label">Debt Eliminated</span>
+          </div>
+          <div class="stat-change positive">
+            <i data-lucide="arrow-up"></i>
+            <span>$892 this month</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon disputes">
+            <i data-lucide="file-text"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">7</span>
+            <span class="stat-label">Items Disputed</span>
+          </div>
+          <div class="stat-change neutral">
+            <span>3 pending, 4 removed</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon success">
+            <i data-lucide="check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">85%</span>
+            <span class="stat-label">Success Rate</span>
+          </div>
+          <div class="stat-change positive">
+            <i data-lucide="arrow-up"></i>
+            <span>+5% from average</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon letters">
+            <i data-lucide="mail"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">18</span>
+            <span class="stat-label">Letters Sent</span>
+          </div>
+          <div class="stat-change neutral">
+            <span>3 this week</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Grid -->
+      <div class="dashboard-grid">
+        <!-- Active Disputes -->
+        <section class="dashboard-card disputes-card">
+          <div class="card-header">
+            <h2>Active Disputes</h2>
+            <a href="#disputes" class="card-link">View all <i data-lucide="arrow-right"></i></a>
+          </div>
+          
+          <div class="disputes-list" id="disputesList">
+            <!-- Dispute Item 1 -->
+            <div class="dispute-item">
+              <div class="dispute-status pending">
+                <i data-lucide="clock"></i>
+              </div>
+              <div class="dispute-info">
+                <h4>Midland Credit Management</h4>
+                <p>Collection Account • Sent to Equifax</p>
+              </div>
+              <div class="dispute-meta">
+                <span class="dispute-date">Oct 15, 2024</span>
+                <span class="dispute-tag pending">Pending</span>
+              </div>
+            </div>
+            
+            <!-- Dispute Item 2 -->
+            <div class="dispute-item">
+              <div class="dispute-status in-progress">
+                <i data-lucide="loader"></i>
+              </div>
+              <div class="dispute-info">
+                <h4>Capital One Late Payment</h4>
+                <p>Late Payment • Sent to Experian</p>
+              </div>
+              <div class="dispute-meta">
+                <span class="dispute-date">Oct 8, 2024</span>
+                <span class="dispute-tag in-progress">In Review</span>
+              </div>
+            </div>
+            
+            <!-- Dispute Item 3 -->
+            <div class="dispute-item">
+              <div class="dispute-status pending">
+                <i data-lucide="clock"></i>
+              </div>
+              <div class="dispute-info">
+                <h4>Unknown Hard Inquiry</h4>
+                <p>Hard Inquiry • Sent to TransUnion</p>
+              </div>
+              <div class="dispute-meta">
+                <span class="dispute-date">Oct 3, 2024</span>
+                <span class="dispute-tag pending">Pending</span>
+              </div>
+            </div>
+            
+            <!-- Dispute Item 4 -->
+            <div class="dispute-item">
+              <div class="dispute-status success">
+                <i data-lucide="check"></i>
+              </div>
+              <div class="dispute-info">
+                <h4>Portfolio Recovery Associates</h4>
+                <p>Collection Account • Equifax</p>
+              </div>
+              <div class="dispute-meta">
+                <span class="dispute-date">Sep 20, 2024</span>
+                <span class="dispute-tag success">Removed</span>
+              </div>
+            </div>
+            
+            <!-- Dispute Item 5 -->
+            <div class="dispute-item">
+              <div class="dispute-status success">
+                <i data-lucide="check"></i>
+              </div>
+              <div class="dispute-info">
+                <h4>Chase Bank Late Payment</h4>
+                <p>Late Payment • Experian</p>
+              </div>
+              <div class="dispute-meta">
+                <span class="dispute-date">Sep 15, 2024</span>
+                <span class="dispute-tag success">Removed</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column -->
+        <div class="dashboard-right">
+          <!-- Wins Tracker Card -->
+          <section class="dashboard-card score-card">
+            <div class="card-header">
+              <h2>Your Wins</h2>
+              <span style="font-size: 0.75rem; color: var(--accent-400); background: rgba(52, 211, 153, 0.15); padding: 0.25rem 0.75rem; border-radius: 20px;">All Time</span>
+            </div>
+            
+            <div class="score-display">
+              <div class="score-circle">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" class="score-bg"/>
+                  <circle cx="60" cy="60" r="54" class="score-progress" style="--progress: 57"/>
+                </svg>
+                <div class="score-value">
+                  <span class="score-number" style="font-size: 2.5rem;">4</span>
+                  <span class="score-label">Items Removed</span>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                <div style="background: var(--dark-800); border-radius: 12px; padding: 1rem; text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-400);">$3,247</div>
+                  <div style="font-size: 0.75rem; color: var(--dark-400);">Debt Eliminated</div>
+                </div>
+                <div style="background: var(--dark-800); border-radius: 12px; padding: 1rem; text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: 700; color: #fff;">7</div>
+                  <div style="font-size: 0.75rem; color: var(--dark-400);">Total Disputed</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="score-history">
+              <span class="history-label">Items removed by month</span>
+              <div class="history-chart">
+                <div class="chart-bar" style="--height: 20%"><span>0</span></div>
+                <div class="chart-bar" style="--height: 40%"><span>1</span></div>
+                <div class="chart-bar" style="--height: 60%"><span>2</span></div>
+                <div class="chart-bar" style="--height: 40%"><span>1</span></div>
+                <div class="chart-bar" style="--height: 20%"><span>0</span></div>
+                <div class="chart-bar current" style="--height: 20%"><span>0</span></div>
+              </div>
+              <div class="chart-labels">
+                <span>May</span>
+                <span>Jun</span>
+                <span>Jul</span>
+                <span>Aug</span>
+                <span>Sep</span>
+                <span>Oct</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Quick Actions -->
+          <section class="dashboard-card quick-actions-card">
+            <div class="card-header">
+              <h2>Quick Actions</h2>
+            </div>
+            
+            <div class="quick-actions">
+              <a href="engine.html" class="quick-action">
+                <div class="action-icon">
+                  <i data-lucide="upload"></i>
+                </div>
+                <span>Upload Report</span>
+              </a>
+              <a href="bundles.html" class="quick-action">
+                <div class="action-icon">
+                  <i data-lucide="file-plus"></i>
+                </div>
+                <span>Browse Letters</span>
+              </a>
+              <a href="#" class="quick-action">
+                <div class="action-icon">
+                  <i data-lucide="download"></i>
+                </div>
+                <span>Download All</span>
+              </a>
+              <a href="#" class="quick-action">
+                <div class="action-icon">
+                  <i data-lucide="message-circle"></i>
+                </div>
+                <span>Get Help</span>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <section class="dashboard-card activity-card">
+        <div class="card-header">
+          <h2>Recent Activity</h2>
+          <button class="btn btn-ghost btn-sm">View all</button>
+        </div>
+        
+        <div class="activity-timeline">
+          <div class="activity-item">
+            <div class="activity-icon success">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Collection removed</strong> - Portfolio Recovery Associates was deleted from your Equifax report</p>
+              <span class="activity-time">2 days ago</span>
+            </div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon info">
+              <i data-lucide="mail"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Letter sent</strong> - Dispute letter sent to Experian regarding Capital One late payment</p>
+              <span class="activity-time">5 days ago</span>
+            </div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon warning">
+              <i data-lucide="alert-circle"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Response received</strong> - TransUnion requested additional documentation for inquiry dispute</p>
+              <span class="activity-time">1 week ago</span>
+            </div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon success">
+              <i data-lucide="trophy"></i>
+            </div>
+            <div class="activity-content">
+              <p><strong>Item removed!</strong> - Portfolio Recovery Associates collection ($892) deleted from Equifax</p>
+              <span class="activity-time">1 week ago</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Scripts -->
+  <script data-cf
