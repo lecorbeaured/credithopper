@@ -51,6 +51,9 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 # Copy source code
 COPY --from=builder /app/src ./src
 
+# Copy scripts folder (preflight checks)
+COPY --from=builder /app/scripts ./scripts
+
 # Copy entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

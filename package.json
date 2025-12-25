@@ -4,10 +4,11 @@
   "description": "CreditHopper Credit Repair Platform - Backend API",
   "main": "src/index.js",
   "scripts": {
+    "preflight": "node scripts/preflight.js",
     "build": "prisma generate --schema=./prisma/schema.prisma || true",
     "migrate": "prisma migrate deploy",
     "start": "node src/index.js",
-    "start:prod": "npm run migrate && npm run start",
+    "start:prod": "npm run preflight && npm run migrate && npm run start",
     "dev": "nodemon src/index.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
