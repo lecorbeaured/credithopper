@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete your CreditHopper purchase securely.">
+  
+  <title>Checkout - CreditHopper</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/auth.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <style>
+    .checkout-page {
+      min-height: 100vh;
+      background: var(--dark-950);
+      padding: 2rem 1rem;
+    }
+
+    .checkout-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .checkout-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .checkout-header .logo {
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .order-summary {
+        order: -1;
+      }
+    }
+
+    /* Order Summary */
+    .order-summary {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-700);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .order-summary h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--dark-700);
+    }
+
+    .order-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--dark-700);
+    }
+
+    .order-item-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-500), var(--electric-500));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .order-item-icon i {
+      width: 24px;
+      height: 24px;
+      color: #fff;
+    }
+
+    .order-item-details {
+      flex: 1;
+    }
+
+    .order-item-name {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .order-item-desc {
+      font-size: 0.875rem;
+      color: var(--dark-400);
+    }
+
+    .order-item-price {
+      font-weight: 600;
+      color: #fff;
+      text-align: right;
+    }
+
+    .order-item-price .period {
+      font-size: 0.75rem;
+      color: var(--dark-400);
+      font-weight: 400;
+    }
+
+    .order-features {
+      margin-bottom: 1.5rem;
+    }
+
+    .order-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--dark-300);
+      font-size: 0.875rem;
+      padding: 0.375rem 0;
+    }
+
+    .order-features li i {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-400);
+    }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--dark-700);
+    }
+
+    .order-total-label {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .order-total-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .order-total-amount .period {
+      font-size: 0.875rem;
+      color: var(--dark-400);
+      font-weight: 400;
+    }
+
+    .order-guarantee {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: rgba(52, 211, 153, 0.1);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      color: var(--accent-400);
+    }
+
+    .order-guarantee i {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Payment Form */
+    .payment-form-container {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-700);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .payment-form-container h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--dark-300);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-section-title i {
+      width: 18px;
+      height: 18px;
+      color: var(--accent-400);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--dark-300);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--dark-900);
+      border: 1px solid var(--dark-600);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-500);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--dark-500);
+    }
+
+    /* Card Input Styling */
+    .card-input-wrapper {
+      position: relative;
+    }
+
+    .card-input-wrapper .card-icons {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .card-icons img {
+      height: 20px;
+      opacity: 0.5;
+    }
+
+    /* Security badges */
+    .security-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--dark-700);
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--dark-400);
+    }
+
+    .security-badge i {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Submit Button */
+    .checkout-submit {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    .checkout-submit i {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Back Link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--dark-400);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--accent-400);
+    }
+
+    .back-link i {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Plan Selector */
+    .plan-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--dark-900);
+      padding: 0.25rem;
+      border-radius: 10px;
+    }
+
+    .plan-option {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      color: var(--dark-400);
+      font-weight: 500;
+    }
+
+    .plan-option:hover {
+      color: var(--dark-200);
+    }
+
+    .plan-option.active {
+      background: var(--dark-700);
+      color: #fff;
+    }
+
+    .plan-option .plan-name {
+      display: block;
+      font-size: 0.875rem;
+    }
+
+    .plan-option .plan-price {
+      display: block;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      color: var(--accent-400);
+    }
+  </style>
+</head>
+<body class="checkout-page">
+  
+  <div class="checkout-container">
+    <header class="checkout-header">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
+            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="logo-text">Credit<span>Hopper</span></span>
+      </a>
+    </header>
+
+    <a href="index.html#pricing" class="back-link">
+      <i data-lucide="arrow-left"></i>
+      Back to pricing
+    </a>
+
+    <div class="checkout-grid">
+      <!-- Payment Form -->
+      <div class="payment-form-container">
+        <h2>Complete Your Purchase</h2>
+
+        <form id="checkoutForm">
+          <!-- Account Info -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i data-lucide="user"></i>
+              Account Information
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-input" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" placeholder="Doe" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="john@example.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Create Password</label>
+              <input type="password" class="form-input" placeholder="••••••••" required minlength="8">
+            </div>
+          </div>
+
+          <!-- Payment Info -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i data-lucide="credit-card"></i>
+              Payment Information
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Card Number</label>
+              <div class="card-input-wrapper">
+                <input type="text" class="form-input" placeholder="1234 5678 9012 3456" required>
+                <div class="card-icons">
+                  <i data-lucide="credit-card" style="width: 20px; height: 20px; color: var(--dark-500);"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Expiry Date</label>
+                <input type="text" class="form-input" placeholder="MM / YY" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVC</label>
+                <input type="text" class="form-input" placeholder="123" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Name on Card</label>
+              <input type="text" class="form-input" placeholder="John Doe" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-glow checkout-submit" id="submitBtn">
+            <i data-lucide="lock"></i>
+            <span id="submitBtnText">Pay $47</span>
+          </button>
+
+          <div class="security-badges">
+            <div class="security-badge">
+              <i data-lucide="shield-check"></i>
+              <span>SSL Encrypted</span>
+            </div>
+            <div class="security-badge">
+              <i data-lucide="lock"></i>
+              <span>Secure Payment</span>
+            </div>
+            <div class="security-badge">
+              <i data-lucide="x-circle"></i>
+              <span>Cancel Anytime</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+
+        <!-- Plan Selector -->
+        <div class="plan-selector">
+          <button type="button" class="plan-option active" data-plan="bundles">
+            <span class="plan-name">Letter Bundles</span>
+            <span class="plan-price">$47 once</span>
+          </button>
+          <button type="button" class="plan-option" data-plan="pro">
+            <span class="plan-name">Pro</span>
+            <span class="plan-price">$29/mo</span>
+          </button>
+          <button type="button" class="plan-option" data-plan="premium">
+            <span class="plan-name">Premium</span>
+            <span class="plan-price">$59/mo</span>
+          </button>
+        </div>
+
+        <div class="order-item">
+          <div class="order-item-icon" id="orderIcon">
+            <i data-lucide="file-text"></i>
+          </div>
+          <div class="order-item-details">
+            <div class="order-item-name" id="orderName">Letter Bundles</div>
+            <div class="order-item-desc" id="orderDesc">All 55+ dispute letters</div>
+          </div>
+          <div class="order-item-price" id="orderPrice">
+            $47
+          </div>
+        </div>
+
+        <ul class="order-features" id="orderFeatures">
+          <li><i data-lucide="check"></i> All 55+ letter templates</li>
+          <li><i data-lucide="check"></i> Lifetime access</li>
+          <li><i data-lucide="check"></i> Future template updates</li>
+          <li><i data-lucide="check"></i> Download anytime</li>
+          <li><i data-lucide="check"></i> Email support</li>
+        </ul>
+
+        <div class="order-total">
+          <span class="order-total-label">Total</span>
+          <span class="order-total-amount" id="orderTotal">$47</span>
+        </div>
+
+        <div class="order-guarantee">
+          <i data-lucide="shield-check"></i>
+          <span id="guaranteeText">Secure payment. Cancel anytime.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Plan configurations
+    const plans = {
+      bundles: {
+        name: 'Letter Bundles',
+        desc: 'All 55+ dispute letters',
+        price: '$47',
+        priceNum: 47,
+        period: '',
+        icon: 'file-text',
+        note: 'One-time payment. Lifetime access.',
+        buttonText: 'Pay $47',
+        features: [
+          'All 55+ letter templates',
+          'Lifetime access',
+          'Future template updates',
+          'Download anytime',
+          'Email support'
+        ]
+      },
+      pro: {
+        name: 'Pro Plan',
+        desc: 'Credit Engine + All Letters',
+        price: '$29',
+        priceNum: 29,
+        period: '/month',
+        icon: 'zap',
+        note: 'Cancel anytime. No contracts.',
+        buttonText: 'Subscribe - $29/mo',
+        features: [
+          'All 55+ letter templates',
+          'Credit Repair Engine',
+          'Upload & analyze reports',
+          'Generate & send disputes',
+          'Dispute tracking dashboard',
+          'Priority support'
+        ]
+      },
+      premium: {
+        name: 'Premium Plan',
+        desc: 'Full-service credit repair',
+        price: '$59',
+        priceNum: 59,
+        period: '/month',
+        icon: 'crown',
+        note: 'Cancel anytime. No contracts.',
+        buttonText: 'Subscribe - $59/mo',
+        features: [
+          'Everything in Pro',
+          'Unlimited report uploads',
+          '3-bureau monitoring',
+          '1-on-1 strategy session',
+          'Advanced dispute sequences',
+          'Phone support'
+        ]
+      }
+    };
+
+    // Get plan from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentPlan = urlParams.get('plan') || 'bundles';
+    if (!plans[currentPlan]) currentPlan = 'bundles';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePlanDisplay(currentPlan);
+      
+      // Set active plan button
+      document.querySelectorAll('.plan-option').forEach(btn => {
+        if (btn.dataset.plan === currentPlan) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      lucide.createIcons();
+    });
+
+    // Plan selector
+    document.querySelectorAll('.plan-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.plan-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPlan = btn.dataset.plan;
+        updatePlanDisplay(currentPlan);
+      });
+    });
+
+    function updatePlanDisplay(planId) {
+      const plan = plans[planId];
+      
+      document.getElementById('orderName').textContent = plan.name;
+      document.getElementById('orderDesc').textContent = plan.desc;
+      document.getElementById('orderPrice').innerHTML = plan.price + (plan.period ? `<span class="period">${plan.period}</span>` : '');
+      document.getElementById('orderTotal').innerHTML = plan.price + (plan.period ? `<span class="period">${plan.period}</span>` : '');
+      document.getElementById('submitBtnText').textContent = plan.buttonText;
+      document.getElementById('guaranteeText').textContent = plan.note;
+      
+      // Update features
+      const featuresEl = document.getElementById('orderFeatures');
+      featuresEl.innerHTML = plan.features.map(f => `<li><i data-lucide="check"></i> ${f}</li>`).join('');
+      
+      // Update icon
+      const iconEl = document.getElementById('orderIcon');
+      iconEl.innerHTML = `<i data-lucide="${plan.icon}"></i>`;
+      
+      lucide.createIcons();
+    }
+
+    // Form submission
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Processing...';
+      lucide.createIcons();
+      
+      // Simulate payment processing
+      setTimeout(() => {
+        // In production, this would be Stripe checkout
+        // For demo, redirect to success
+        if (currentPlan === 'bundles') {
+          window.location.href = 'my-letters.html?welcome=true';
+        } else {
+          window.location.href = 'dashboard.html?welcome=true&plan=' + currentPlan;
+        }
+      }, 2000);
+    });
+  </script>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

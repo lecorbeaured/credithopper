@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build positive credit while repairing your report. Discover credit builder loans, secured cards, and tools to boost your score.">
+  <meta name="keywords" content="credit building, build credit, credit builder loan, secured credit card, improve credit score, positive credit history">
+  <meta name="robots" content="index, follow">
+  
+  <title>Credit Building Tools - Build Positive Credit | CreditHopper</title>
+  <link rel="canonical" href="https://credithopper.io/credit-building">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/resources.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <style>
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .tool-card {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-700);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .tool-card:hover {
+      border-color: var(--accent-400);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .tool-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--dark-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-400);
+      flex-shrink: 0;
+    }
+
+    .tool-logo.kikoff { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+    .tool-logo.self { background: linear-gradient(135deg, #10b981, #34d399); color: #fff; }
+    .tool-logo.moneylion { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #fff; }
+    .tool-logo.boom { background: linear-gradient(135deg, #3b82f6, #60a5fa); color: #fff; }
+    .tool-logo.experian { background: linear-gradient(135deg, #ef4444, #f87171); color: #fff; }
+    .tool-logo.chime { background: linear-gradient(135deg, #22c55e, #4ade80); color: #fff; }
+    .tool-logo.discover { background: linear-gradient(135deg, #f97316, #fb923c); color: #fff; }
+    .tool-logo.opensky { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; }
+
+    .tool-info h3 {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .tool-category {
+      font-size: 0.8125rem;
+      color: var(--accent-400);
+      font-weight: 500;
+    }
+
+    .tool-description {
+      color: var(--dark-400);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .tool-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tool-feature {
+      background: var(--dark-700);
+      color: var(--dark-300);
+      font-size: 0.75rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .tool-feature i {
+      width: 12px;
+      height: 12px;
+      color: var(--accent-400);
+    }
+
+    .tool-pricing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--dark-700);
+    }
+
+    .tool-price {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .tool-price span {
+      font-size: 0.875rem;
+      color: var(--dark-400);
+      font-weight: 400;
+    }
+
+    .tool-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-500);
+      color: var(--dark-900);
+      padding: 0.625rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .tool-cta:hover {
+      background: var(--accent-400);
+    }
+
+    .tool-cta i {
+      width: 16px;
+      height: 16px;
+    }
+
+    .category-section {
+      margin-bottom: 3rem;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-header h2 {
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    .category-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .category-icon i {
+      width: 24px;
+      height: 24px;
+      color: #fff;
+    }
+
+    .category-description {
+      color: var(--dark-400);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+
+    .strategy-box {
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .strategy-box h2 {
+      color: #fff;
+      font-size: 1.375rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .strategy-box h2 i {
+      width: 24px;
+      height: 24px;
+      color: var(--accent-400);
+    }
+
+    .strategy-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .strategy-step {
+      text-align: center;
+    }
+
+    .strategy-step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-500);
+      color: var(--dark-900);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+    }
+
+    .strategy-step h4 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 0.375rem;
+    }
+
+    .strategy-step p {
+      color: var(--dark-400);
+      font-size: 0.875rem;
+    }
+
+    .disclosure {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-700);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 3rem;
+      font-size: 0.8125rem;
+      color: var(--dark-400);
+      line-height: 1.6;
+    }
+
+    .disclosure strong {
+      color: var(--dark-300);
+    }
+
+    .best-for-badge {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-400);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: auto;
+    }
+
+    @media (max-width: 768px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .strategy-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-pricing {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .tool-cta {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
+            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="logo-text">Credit<span>Hopper</span></span>
+      </a>
+      
+      <div class="nav-links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="bundles.html">Letter Library</a>
+        <a href="help.html">Help</a>
+      </div>
+      
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost">Log In</a>
+        <a href="register.html" class="btn btn-primary">Get Started</a>
+      </div>
+      
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header guide-header">
+    <div class="container">
+      <span class="header-badge">Build & Repair</span>
+      <h1>Credit Building Tools</h1>
+      <p>Dispute negatives AND build positive history simultaneously. These tools help you add positive payment history to your credit report while we work on removing the bad stuff.</p>
+      <div class="header-stats">
+        <div class="header-stat">
+          <i data-lucide="trending-up"></i>
+          <span>Build Credit</span>
+        </div>
+        <div class="header-stat">
+          <i data-lucide="shield-check"></i>
+          <span>No Hard Pull</span>
+        </div>
+        <div class="header-stat">
+          <i data-lucide="credit-card"></i>
+          <span>Low Cost</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="guide-content">
+    <div class="container">
+      
+      <!-- Strategy Box -->
+      <div class="strategy-box">
+        <h2><i data-lucide="target"></i> The Two-Pronged Strategy</h2>
+        <p style="color: var(--dark-400); margin-bottom: 1.5rem;">Credit repair is most effective when you're removing negatives AND adding positives at the same time. Here's the approach:</p>
+        <div class="strategy-steps">
+          <div class="strategy-step">
+            <div class="strategy-step-number">1</div>
+            <h4>Dispute Negatives</h4>
+            <p>Use CreditHopper to remove inaccurate items</p>
+          </div>
+          <div class="strategy-step">
+            <div class="strategy-step-number">2</div>
+            <h4>Add Positive Accounts</h4>
+            <p>Open 1-2 credit builder accounts</p>
+          </div>
+          <div class="strategy-step">
+            <div class="strategy-step-number">3</div>
+            <h4>Pay On Time</h4>
+            <p>100% payment history is crucial</p>
+          </div>
+          <div class="strategy-step">
+            <div class="strategy-step-number">4</div>
+            <h4>Watch It Grow</h4>
+            <p>See your score rise in 3-6 months</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Credit Builder Accounts -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-icon">
+            <i data-lucide="piggy-bank"></i>
+          </div>
+          <h2>Credit Builder Accounts</h2>
+        </div>
+        <p class="category-description">These accounts report positive payment history to all 3 bureaus. No credit check required, so they won't hurt your score to open.</p>
+        
+        <div class="tools-grid">
+          <!-- Kikoff -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo kikoff">K</div>
+              <div class="tool-info">
+                <h3>Kikoff</h3>
+                <span class="tool-category">Credit Builder Account</span>
+              </div>
+              <span class="best-for-badge">Best Value</span>
+            </div>
+            <p class="tool-description">Build credit for just $5/month. Get a credit line to make small purchases in their store, and every payment reports to all 3 bureaus.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> Reports to 3 bureaus</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No credit check</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No interest</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Cancel anytime</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$5 <span>/month</span></div>
+              <a href="https://kikoff.com" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Self -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo self">S</div>
+              <div class="tool-info">
+                <h3>Self</h3>
+                <span class="tool-category">Credit Builder Loan</span>
+              </div>
+              <span class="best-for-badge">Most Popular</span>
+            </div>
+            <p class="tool-description">A credit builder loan that helps you save money while building credit. Your payments are held in a savings account and returned when complete.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> Reports to 3 bureaus</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Build savings</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No credit check</span>
+              <span class="tool-feature"><i data-lucide="check"></i> FDIC insured</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$25+ <span>/month</span></div>
+              <a href="https://self.inc" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- MoneyLion -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo moneylion">M</div>
+              <div class="tool-info">
+                <h3>MoneyLion</h3>
+                <span class="tool-category">Credit Builder Plus</span>
+              </div>
+            </div>
+            <p class="tool-description">Get a credit builder loan plus access to their full financial platform including banking, investing, and cash advances.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> Reports to 3 bureaus</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Full banking app</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Cash advances</span>
+              <span class="tool-feature"><i data-lucide="check"></i> 0% APR option</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$0-19.99 <span>/month</span></div>
+              <a href="https://moneylion.com" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Chime -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo chime">C</div>
+              <div class="tool-info">
+                <h3>Chime Credit Builder</h3>
+                <span class="tool-category">Secured Credit Card</span>
+              </div>
+              <span class="best-for-badge">No Fees</span>
+            </div>
+            <p class="tool-description">A secured card with no annual fee, no interest, and no credit check. Move money to your Credit Builder account and spend up to that amount.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> Reports to 3 bureaus</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No fees ever</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No credit check</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No minimum deposit</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$0 <span>+ deposit</span></div>
+              <a href="https://chime.com" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rent & Utility Reporting -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-icon">
+            <i data-lucide="home"></i>
+          </div>
+          <h2>Rent & Utility Reporting</h2>
+        </div>
+        <p class="category-description">Already paying rent and utilities on time? Get credit for it! These services report your existing payments to the bureaus.</p>
+        
+        <div class="tools-grid">
+          <!-- Experian Boost -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo experian">E</div>
+              <div class="tool-info">
+                <h3>Experian Boost</h3>
+                <span class="tool-category">Utility & Subscription Reporting</span>
+              </div>
+              <span class="best-for-badge">Free</span>
+            </div>
+            <p class="tool-description">Connect your bank account and get credit for on-time utility, phone, and streaming service payments. Instant score boost on Experian.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> 100% free</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Instant results</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Experian only</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Netflix, utilities, phone</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">Free</div>
+              <a href="https://experian.com/boost" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Boom Pay -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo boom">B</div>
+              <div class="tool-info">
+                <h3>Boom Pay</h3>
+                <span class="tool-category">Rent Reporting</span>
+              </div>
+            </div>
+            <p class="tool-description">Report your rent payments to all 3 credit bureaus. Can also report up to 24 months of past rent payments for an extra boost.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> Reports to 3 bureaus</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Past rent reporting</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Any landlord</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Works with Zelle/Venmo</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$2-10 <span>/month</span></div>
+              <a href="https://boompay.app" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Secured Credit Cards -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-icon">
+            <i data-lucide="credit-card"></i>
+          </div>
+          <h2>Secured Credit Cards</h2>
+        </div>
+        <p class="category-description">Put down a deposit that becomes your credit limit. Use responsibly and graduate to an unsecured card in 6-12 months.</p>
+        
+        <div class="tools-grid">
+          <!-- Discover Secured -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo discover">D</div>
+              <div class="tool-info">
+                <h3>Discover it® Secured</h3>
+                <span class="tool-category">Secured Credit Card</span>
+              </div>
+              <span class="best-for-badge">Best Rewards</span>
+            </div>
+            <p class="tool-description">The only secured card with cash back rewards. Earn 2% at gas stations & restaurants, 1% everywhere else. Automatic reviews for graduation.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> 2% cash back</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No annual fee</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Free FICO score</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Auto graduation</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$0 <span>+ $200 min deposit</span></div>
+              <a href="https://discover.com/credit-cards/secured" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- OpenSky -->
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-logo opensky">O</div>
+              <div class="tool-info">
+                <h3>OpenSky® Secured Visa</h3>
+                <span class="tool-category">Secured Credit Card</span>
+              </div>
+              <span class="best-for-badge">No Credit Check</span>
+            </div>
+            <p class="tool-description">No credit check required - not even a soft pull. Good option if you've been denied elsewhere or have a very thin file.</p>
+            <div class="tool-features">
+              <span class="tool-feature"><i data-lucide="check"></i> No credit check</span>
+              <span class="tool-feature"><i data-lucide="check"></i> Reports to 3 bureaus</span>
+              <span class="tool-feature"><i data-lucide="check"></i> No bank account needed</span>
+              <span class="tool-feature"><i data-lucide="check"></i> $200 min deposit</span>
+            </div>
+            <div class="tool-pricing">
+              <div class="tool-price">$35 <span>/year + deposit</span></div>
+              <a href="https://openskycc.com" target="_blank" rel="noopener" class="tool-cta">
+                Learn More <i data-lucide="external-link"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tips Section -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-icon">
+            <i data-lucide="lightbulb"></i>
+          </div>
+          <h2>Pro Tips for Success</h2>
+        </div>
+        
+        <div class="tools-grid">
+          <div class="tool-card" style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.05), rgba(6, 182, 212, 0.05));">
+            <h3 style="color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="check-circle" style="color: var(--accent-400); width: 20px; height: 20px;"></i>
+              Start with 1-2 Accounts
+            </h3>
+            <p class="tool-description" style="margin-bottom: 0;">Don't open too many at once. Pick one credit builder (Kikoff or Self) and optionally one secured card. More isn't better - consistency is.</p>
+          </div>
+
+          <div class="tool-card" style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.05), rgba(6, 182, 212, 0.05));">
+            <h3 style="color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="calendar" style="color: var(--accent-400); width: 20px; height: 20px;"></i>
+              Set Up Auto-Pay
+            </h3>
+            <p class="tool-description" style="margin-bottom: 0;">Payment history is 35% of your score. One late payment can undo months of progress. Set up automatic payments so you never miss.</p>
+          </div>
+
+          <div class="tool-card" style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.05), rgba(6, 182, 212, 0.05));">
+            <h3 style="color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="percent" style="color: var(--accent-400); width: 20px; height: 20px;"></i>
+              Keep Utilization Low
+            </h3>
+            <p class="tool-description" style="margin-bottom: 0;">If using a secured card, keep your balance under 30% of your limit. Under 10% is even better. Pay down before statement closes.</p>
+          </div>
+
+          <div class="tool-card" style="background: linear-gradient(135deg, rgba(52, 211, 153, 0.05), rgba(6, 182, 212, 0.05));">
+            <h3 style="color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="clock" style="color: var(--accent-400); width: 20px; height: 20px;"></i>
+              Be Patient
+            </h3>
+            <p class="tool-description" style="margin-bottom: 0;">Most accounts need 3-6 months of history before significantly impacting your score. Stay consistent and the results will come.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Disclosure -->
+      <div class="disclosure">
+        <strong>Disclosure:</strong> CreditHopper may receive compensation from some of the companies listed on this page. This does not influence our recommendations, which are based on extensive research and user feedback. All opinions are our own. We only recommend products we believe will genuinely help our users build credit. Always read terms and conditions before signing up for any financial product.
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-simple">
+    <div class="container">
+      <div class="footer-content">
+        <p>&copy; <span class="current-year">2024</span> CreditHopper. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="help.html">Help Center</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Mobile menu
+    document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+    
+    lucide.createIcons();
+  </script>
+</body>
+</html>
