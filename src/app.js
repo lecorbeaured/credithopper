@@ -73,6 +73,16 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
+    status: 'ok',
+    message: 'CreditHopper API is running',
+    timestamp: new Date().toISOString(),
+    environment: config.env,
+  });
+});
+
 // ===========================================
 // API ROUTES
 // ===========================================

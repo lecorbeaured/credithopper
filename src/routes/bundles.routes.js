@@ -33,6 +33,18 @@ router.get(
 );
 
 /**
+ * POST /api/bundles/generate-all
+ * Generate all bundle PDFs (admin only)
+ * 
+ * Headers:
+ * - x-admin-key: string (required)
+ */
+router.post(
+  '/generate-all',
+  bundlesController.generateAllBundles
+);
+
+/**
  * GET /api/bundles/letters/:id
  * Get full letter content
  */
@@ -73,22 +85,6 @@ router.get(
 router.post(
   '/:idOrSlug/request',
   bundlesController.requestBundle
-);
-
-// ===========================================
-// ADMIN ROUTES
-// ===========================================
-
-/**
- * POST /api/bundles/generate-all
- * Generate all bundle PDFs (admin only)
- * 
- * Headers:
- * - x-admin-key: string (required)
- */
-router.post(
-  '/generate-all',
-  bundlesController.generateAllBundles
 );
 
 module.exports = router;
