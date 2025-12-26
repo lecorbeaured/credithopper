@@ -1,68 +1,75 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
-import dotenv from "dotenv";
+// ===========================================
+// CREDITHOPPER - SERVER ENTRY POINT
+// ===========================================
 
-import { connectDB } from "./db.js";
-import config from "./config.js";
+const app = require('./app');
+const config = require('./config');
+const prisma = require('./config/database');
 
-// Load env vars
-dotenv.config();
+// ===========================================
+// DATABASE CONNECTION
+// ===========================================
 
-const app = express();
-
-/* -------------------- Middleware -------------------- */
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 300,
-  })
-);
-
-/* -------------------- Health + Root -------------------- */
-app.get("/", (req, res) => {
-  res.status(200).send("CreditHopper backend is live");
-});
-
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    ok: true,
-    service: "credithopper-backend",
-    env: config.env,
-  });
-});
-
-/* -------------------- Routes -------------------- */
-// Example:
-// app.use("/api/auth", authRoutes);
-// app.use("/api/users", userRoutes);
-
-/* -------------------- Startup -------------------- */
-const startServer = async () => {
+async function connectDatabase() {
   try {
-    const dbConnected = await connectDB();
+    await prisma.$connect();
+    console.log('✅ Database connected successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+    return false;
+  }
+}
 
-    if (!dbConnected && config.env === "production") {
-      console.error("❌ Database connection failed in production");
-      process.exit(1);
-    }
+// ===========================================
+// GRACEFUL SHUTDOWN
+// ===========================================
 
-    const PORT = process.env.PORT || config.port || 3000;
-
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log("🚀 CreditHopper backend started");
-      console.log(`🌍 Environment: ${config.env}`);
-      console.log(`📡 Listening on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error("❌ Server startup failed:", err);
+async function gracefulShutdown(signal) {
+  console.log(`\n${signal} received. Shutting down gracefully...`);
+  
+  try {
+    await prisma.$disconnect();
+    console.log('Database connection closed');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error during shutdown:', error);
     process.exit(1);
   }
-};
+}
 
-startServer();
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// ===========================================
+// START SERVER
+// ===========================================
+
+async function startServer() {
+  console.log('\n===========================================');
+  console.log('   CREDITHOPPER API SERVER');
+  console.log('===========================================\n');
+  
+  // Connect to database
+  const dbConnected = await connectDatabase();
+  
+  if (!dbConnected && config.env === 'production') {
+    console.error('Cannot start server without database connection');
+    process.exit(1);
+  }
+  
+  // Start Express server
+  app.listen(config.port, () => {
+    console.log(`\n🚀 Server running on port ${config.port}`);
+    console.log(`📍 Environment: ${config.env}`);
+    console.log(`🔗 Health check: http://localhost:${config.port}/health`);
+    console.log(`📚 API docs: http://localhost:${config.port}/api`);
+    console.log('\n===========================================\n');
+  });
+}
+
+// Run
+startServer().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});
