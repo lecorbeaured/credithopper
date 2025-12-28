@@ -89,6 +89,24 @@ router.get(
   dashboardController.getActivity
 );
 
+/**
+ * GET /api/dashboard/onboarding
+ * Get onboarding checklist status
+ */
+router.get(
+  '/onboarding',
+  dashboardController.getOnboarding
+);
+
+/**
+ * GET /api/dashboard/quick-actions
+ * Get personalized quick actions based on user state
+ */
+router.get(
+  '/quick-actions',
+  dashboardController.getQuickActions
+);
+
 // ===========================================
 // WINS ROUTES
 // ===========================================

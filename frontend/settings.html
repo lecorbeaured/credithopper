@@ -20,13 +20,13 @@
   <link rel="stylesheet" href="css/dashboard.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='28' ry='18' fill='%2310b981'/%3E%3Ccircle cx='75' cy='45' r='12' fill='%2310b981'/%3E%3Ccircle cx='78' cy='42' r='5' fill='white'/%3E%3Ccircle cx='79' cy='41' r='3' fill='%230d0d0f'/%3E%3Cpath d='M82 35Q88 25 92 18' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M80 33Q84 20 80 12' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M35 55Q18 72 12 88' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 88Q28 84 38 78' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='45' cy='44' rx='16' ry='9' fill='%2334d399' opacity='0.5'/%3E%3C/svg%3E">
 
   <!-- Auth Check - Redirect if not logged in -->
   <script>
     (function() {
-      const isLoggedIn = localStorage.getItem('credithopper_logged_in') === 'true';
-      if (!isLoggedIn) {
+      const token = localStorage.getItem('ch_token');
+      if (!token) {
         window.location.href = 'login.html';
       }
     })();
@@ -570,10 +570,20 @@
     <div class="sidebar-header">
       <a href="index.html" class="logo">
         <div class="logo-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
-            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
-            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
+            <circle cx="36" cy="22" r="6" fill="#10b981"/>
+            <circle cx="38" cy="20" r="2.5" fill="white"/>
+            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
+            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
+            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
+            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
           </svg>
         </div>
         <span class="logo-text">Credit<span>Hopper</span></span>
@@ -689,25 +699,52 @@
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">First Name</label>
-                  <input type="text" class="form-input" value="John">
+                  <input type="text" id="firstName" class="form-input" placeholder="Enter first name">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Last Name</label>
-                  <input type="text" class="form-input" value="Doe">
+                  <input type="text" id="lastName" class="form-input" placeholder="Enter last name">
                 </div>
               </div>
               
               <div class="form-group">
                 <label class="form-label">Email Address</label>
-                <input type="email" class="form-input" value="john@example.com">
+                <input type="email" id="email" class="form-input" disabled>
+                <small style="color: var(--dark-500); font-size: 0.75rem;">Email cannot be changed</small>
               </div>
               
               <div class="form-group">
                 <label class="form-label">Phone Number</label>
-                <input type="tel" class="form-input" value="(555) 123-4567">
+                <input type="tel" id="phone" class="form-input" placeholder="(555) 123-4567">
               </div>
               
-              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <h3 style="color: #fff; font-size: 1rem; margin: 1.5rem 0 1rem;">Mailing Address</h3>
+              <p class="settings-card-description" style="margin-bottom: 1rem;">Used for dispute letters and mailings</p>
+              
+              <div class="form-group">
+                <label class="form-label">Street Address</label>
+                <input type="text" id="street" class="form-input" placeholder="123 Main St">
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">City</label>
+                  <input type="text" id="city" class="form-input" placeholder="City">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">State</label>
+                  <input type="text" id="state" class="form-input" placeholder="State">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ZIP Code</label>
+                  <input type="text" id="zip" class="form-input" placeholder="12345">
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="save"></i>
+                Save Changes
+              </button>
             </form>
           </div>
         </section>
@@ -726,46 +763,34 @@
                 <i data-lucide="zap"></i>
               </div>
               <div class="subscription-info">
-                <div class="subscription-plan">Pro Plan</div>
-                <div class="subscription-price">$29/month</div>
+                <div class="subscription-plan" id="planName">Loading...</div>
+                <div class="subscription-price" id="planPrice">--</div>
               </div>
-              <span class="subscription-badge active">Active</span>
+              <span class="subscription-badge active" id="planBadge">Active</span>
             </div>
 
             <!-- Plan Details -->
             <div class="subscription-details">
               <div class="subscription-detail">
-                <div class="subscription-detail-label">Next Billing Date</div>
-                <div class="subscription-detail-value">January 15, 2025</div>
-              </div>
-              <div class="subscription-detail">
                 <div class="subscription-detail-label">Member Since</div>
-                <div class="subscription-detail-value">October 3, 2024</div>
-              </div>
-              <div class="subscription-detail">
-                <div class="subscription-detail-label">Payment Method</div>
-                <div class="subscription-detail-value">Visa •••• 4242</div>
-              </div>
-              <div class="subscription-detail">
-                <div class="subscription-detail-label">Letters Generated</div>
-                <div class="subscription-detail-value">47 this month</div>
+                <div class="subscription-detail-value" id="memberSince">--</div>
               </div>
             </div>
 
             <!-- Actions -->
             <div class="subscription-actions">
-              <a href="index.html#pricing" class="btn btn-outline">
+              <a href="checkout.html?plan=pro" class="btn btn-primary" id="upgradeBtn" style="display: none;">
                 <i data-lucide="arrow-up-circle"></i>
-                Change Plan
+                Upgrade to Pro
               </a>
-              <button class="btn btn-outline" onclick="openModal('paymentModal')">
+              <a href="checkout.html" class="btn btn-outline">
                 <i data-lucide="credit-card"></i>
-                Update Payment
-              </button>
+                Manage Billing
+              </a>
             </div>
 
             <!-- Cancel Section -->
-            <div class="cancel-section">
+            <div class="cancel-section" id="cancelSection">
               <h3 class="settings-card-title" style="margin-bottom: 0.5rem;">Cancel Subscription</h3>
               <p class="settings-card-description">We're sorry to see you go. You can cancel anytime - no questions asked.</p>
               
@@ -807,21 +832,21 @@
                 <tr>
                   <td>Dec 15, 2024</td>
                   <td>Pro Plan - Monthly</td>
-                  <td>$29.00</td>
+                  <td>$49.00</td>
                   <td><span class="billing-status paid">Paid</span></td>
                   <td><a href="#" class="btn btn-ghost btn-sm">Invoice</a></td>
                 </tr>
                 <tr>
                   <td>Nov 15, 2024</td>
                   <td>Pro Plan - Monthly</td>
-                  <td>$29.00</td>
+                  <td>$49.00</td>
                   <td><span class="billing-status paid">Paid</span></td>
                   <td><a href="#" class="btn btn-ghost btn-sm">Invoice</a></td>
                 </tr>
                 <tr>
                   <td>Oct 15, 2024</td>
                   <td>Pro Plan - Monthly</td>
-                  <td>$29.00</td>
+                  <td>$49.00</td>
                   <td><span class="billing-status paid">Paid</span></td>
                   <td><a href="#" class="btn btn-ghost btn-sm">Invoice</a></td>
                 </tr>
@@ -848,20 +873,23 @@
             <form id="passwordForm">
               <div class="form-group">
                 <label class="form-label">Current Password</label>
-                <input type="password" class="form-input" placeholder="Enter current password">
+                <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password" required>
               </div>
               
               <div class="form-group">
                 <label class="form-label">New Password</label>
-                <input type="password" class="form-input" placeholder="Enter new password">
+                <input type="password" id="newPassword" class="form-input" placeholder="Enter new password (min 8 characters)" required minlength="8">
               </div>
               
               <div class="form-group">
                 <label class="form-label">Confirm New Password</label>
-                <input type="password" class="form-input" placeholder="Confirm new password">
+                <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password" required>
               </div>
               
-              <button type="submit" class="btn btn-primary">Update Password</button>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="lock"></i>
+                Update Password
+              </button>
             </form>
           </div>
 
@@ -919,6 +947,11 @@
             <option value="other">Other</option>
           </select>
         </div>
+        
+        <label class="checkbox-label" style="display: flex; gap: 0.75rem; margin-top: 1rem; cursor: pointer;">
+          <input type="checkbox" id="cancelConfirm">
+          <span style="color: var(--dark-400); font-size: 0.875rem;">I understand I will lose access to Pro features</span>
+        </label>
       </div>
       <div class="modal-footer" id="cancelModalFooter">
         <button class="btn btn-outline" onclick="closeModal('cancelModal')">Keep My Subscription</button>
@@ -997,123 +1030,11 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <!-- Scripts -->
-  <script src="js/main.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/settings.js"></script>
   <script>
-    // Tab Navigation
-    document.querySelectorAll('.settings-nav-item').forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Update active tab
-        document.querySelectorAll('.settings-nav-item').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        // Show corresponding section
-        const tabId = tab.dataset.tab;
-        document.querySelectorAll('.settings-section').forEach(section => {
-          section.classList.remove('active');
-        });
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-
-    // Modal Functions
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    // Close modal on overlay click
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          overlay.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      });
-    });
-
-    // Confirm Cancel
-    function confirmCancel() {
-      const modalBody = document.getElementById('cancelModalBody');
-      const modalFooter = document.getElementById('cancelModalFooter');
-      
-      modalBody.innerHTML = `
-        <div class="cancel-success">
-          <div class="cancel-success-icon">
-            <i data-lucide="check"></i>
-          </div>
-          <h4 class="cancel-confirm-title">Subscription Cancelled</h4>
-          <p class="cancel-confirm-text">Your subscription has been cancelled. You'll have access to Pro features until January 15, 2025.</p>
-          <p style="color: var(--dark-400); font-size: 0.875rem; margin-top: 1rem;">
-            Changed your mind? You can resubscribe anytime from the <a href="index.html#pricing" style="color: var(--accent-400);">pricing page</a>.
-          </p>
-        </div>
-      `;
-      
-      modalFooter.innerHTML = `
-        <button class="btn btn-primary" onclick="closeModal('cancelModal'); location.reload();">Done</button>
-      `;
-      
-      lucide.createIcons();
-    }
-
-    // Update Payment
-    function updatePayment() {
-      // In a real app, this would process the payment update
-      alert('Payment method updated successfully!');
-      closeModal('paymentModal');
-    }
-
-    // Delete Account
-    function deleteAccount() {
-      const confirmInput = document.getElementById('deleteConfirmInput').value;
-      if (confirmInput === 'DELETE') {
-        alert('Account deleted. You will be redirected to the homepage.');
-        window.location.href = 'index.html';
-      } else {
-        alert('Please type DELETE to confirm.');
-      }
-    }
-
-    // Form Submissions
-    document.getElementById('profileForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Profile updated successfully!');
-    });
-
-    document.getElementById('passwordForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Password updated successfully!');
-    });
-
-    // Initialize Lucide Icons
+    // Initialize icons
     lucide.createIcons();
-
-    // Sidebar Toggle (for mobile)
-    document.getElementById('sidebarToggle')?.addEventListener('click', () => {
-      document.getElementById('sidebar').classList.toggle('active');
-      document.getElementById('sidebarOverlay').classList.toggle('active');
-    });
-
-    document.getElementById('sidebarOverlay')?.addEventListener('click', () => {
-      document.getElementById('sidebar').classList.remove('active');
-      document.getElementById('sidebarOverlay').classList.remove('active');
-    });
-
-    // User Menu Toggle
-    function toggleUserMenu() {
-      const dropdown = document.getElementById('userDropdown');
-      if (dropdown) {
-        dropdown.classList.toggle('active');
-        lucide.createIcons();
-      }
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      const dropdown = document.getElementById('userDropdown');
- 
+  </script>
+</body>
+</html>

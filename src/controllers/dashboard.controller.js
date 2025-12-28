@@ -147,6 +147,36 @@ async function getActivity(req, res, next) {
   }
 }
 
+/**
+ * GET /api/dashboard/onboarding
+ * Get onboarding checklist status
+ */
+async function getOnboarding(req, res, next) {
+  try {
+    const onboarding = await dashboardService.getOnboardingStatus(req.userId);
+
+    return success(res, { onboarding }, 'Onboarding status retrieved');
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * GET /api/dashboard/quick-actions
+ * Get personalized quick actions
+ */
+async function getQuickActions(req, res, next) {
+  try {
+    const actions = await dashboardService.getQuickActions(req.userId);
+
+    return success(res, { actions }, 'Quick actions retrieved');
+
+  } catch (err) {
+    next(err);
+  }
+}
+
 // ===========================================
 // WINS ENDPOINTS
 // ===========================================
@@ -320,6 +350,8 @@ module.exports = {
   getAttention,
   getProgress,
   getActivity,
+  getOnboarding,
+  getQuickActions,
   createWin,
   listWins,
   getWin,

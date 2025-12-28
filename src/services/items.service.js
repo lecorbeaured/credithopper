@@ -654,7 +654,16 @@ function generateStrategies(item, solInfo, disputeAnalysis) {
  * Calculate user stats
  */
 async function calculateUserStats(userId) {
-  const [totalItems, activeItems, disputingItems, deletedItems, totalBalance] = await Promise.all([
+  const [
+    totalItems, 
+    activeItems, 
+    disputingItems, 
+    deletedItems, 
+    totalBalance,
+    byBureau,
+    byType,
+    recentWins
+  ] = await Promise.all([
     prisma.negativeItem.count({ where: { userId } }),
     prisma.negativeItem.count({ where: { userId, status: 'ACTIVE' } }),
     prisma.negativeItem.count({ where: { userId, status: 'DISPUTING' } }),
@@ -663,7 +672,33 @@ async function calculateUserStats(userId) {
       where: { userId, status: { in: ['ACTIVE', 'DISPUTING'] } },
       _sum: { balance: true },
     }),
+    // Count by bureau
+    Promise.all([
+      prisma.negativeItem.count({ where: { userId, onEquifax: true, status: { not: 'DELETED' } } }),
+      prisma.negativeItem.count({ where: { userId, onExperian: true, status: { not: 'DELETED' } } }),
+      prisma.negativeItem.count({ where: { userId, onTransunion: true, status: { not: 'DELETED' } } }),
+    ]),
+    // Group by type
+    prisma.negativeItem.groupBy({
+      by: ['accountType'],
+      where: { userId, status: { not: 'DELETED' } },
+      _count: { id: true },
+      _sum: { balance: true },
+    }),
+    // Recent wins (last 30 days)
+    prisma.win.count({
+      where: {
+        userId,
+        achievedAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+      },
+    }),
   ]);
+
+  // Calculate debt eliminated
+  const debtEliminated = await prisma.win.aggregate({
+    where: { userId },
+    _sum: { debtEliminated: true },
+  });
 
   return {
     totalItems,
@@ -671,7 +706,19 @@ async function calculateUserStats(userId) {
     disputingItems,
     deletedItems,
     totalBalance: totalBalance._sum.balance || 0,
+    debtEliminated: debtEliminated._sum.debtEliminated || 0,
     deletionRate: totalItems > 0 ? Math.round((deletedItems / totalItems) * 100) : 0,
+    byBureau: {
+      equifax: byBureau[0],
+      experian: byBureau[1],
+      transunion: byBureau[2],
+    },
+    byType: byType.map(t => ({
+      type: t.accountType,
+      count: t._count.id,
+      balance: t._sum.balance || 0,
+    })),
+    recentWins,
   };
 }
 

@@ -48,6 +48,48 @@ router.post(
 );
 
 /**
+ * POST /api/items/bulk-delete
+ * Delete multiple items at once
+ * Requires active trial or subscription
+ * 
+ * Body:
+ * - itemIds: string[] (required, max 50)
+ */
+router.post(
+  '/bulk-delete',
+  requireFullAccess('Bulk Delete'),
+  itemsController.bulkDelete
+);
+
+/**
+ * GET /api/items/export
+ * Export items to CSV
+ * 
+ * Query params:
+ * - status: string (optional)
+ * - accountType: string (optional)
+ * - bureau: string (optional)
+ */
+router.get(
+  '/export',
+  itemsController.exportItems
+);
+
+/**
+ * POST /api/items/analyze-all
+ * Get AI analysis and recommendations for all active items
+ * Requires active trial or subscription
+ * 
+ * Body:
+ * - state: string (optional, 2-letter state code for SOL calculation)
+ */
+router.post(
+  '/analyze-all',
+  requireFullAccess('AI Analysis'),
+  itemsController.analyzeAllItems
+);
+
+/**
  * POST /api/items
  * Create a new negative item
  * Requires active trial or subscription

@@ -110,8 +110,45 @@ function initSplashScreen() {
   // Mark splash as seen for this session
   sessionStorage.setItem('credithopper_splash_seen', 'true');
   
-  // Minimum display time for splash (6 seconds as requested)
-  const minDisplayTime = 6000;
+  // Animation sequence
+  const splashLogo = document.getElementById('splashLogoIcon');
+  const splashLogoWrapper = document.getElementById('splashLogoWrapper');
+  const splashFinalLogo = document.getElementById('splashFinalLogo');
+  const splashTagline = document.getElementById('splashTagline');
+  const splashLoadingBar = document.getElementById('splashLoadingBar');
+  
+  // Phase 1: Loading bar completes at ~3.5s, trigger hop
+  setTimeout(() => {
+    if (splashLogo) {
+      splashLogo.classList.add('hop');
+    }
+  }, 3500);
+  
+  // Phase 2: After hop completes (~4.3s), start transition
+  setTimeout(() => {
+    // First: Hide tagline and loading bar immediately
+    if (splashTagline) {
+      splashTagline.classList.add('move-down');
+    }
+    if (splashLoadingBar) {
+      splashLoadingBar.classList.add('move-down');
+    }
+    
+    // Then: Hide the centered logo
+    if (splashLogoWrapper) {
+      splashLogoWrapper.classList.add('hidden');
+    }
+    
+    // Finally: Show the horizontal logo lockup (delayed slightly)
+    setTimeout(() => {
+      if (splashFinalLogo) {
+        splashFinalLogo.classList.add('visible');
+      }
+    }, 300);
+  }, 4300);
+  
+  // Minimum display time for splash (5.5 seconds total for full animation)
+  const minDisplayTime = 5500;
   const startTime = Date.now();
   
   // Wait for page to fully load
@@ -128,7 +165,7 @@ function initSplashScreen() {
         // Trigger page animations after splash
         document.body.classList.add('page-loaded');
         triggerPageAnimations();
-      }, 600);
+      }, 800);
     }, remainingTime);
   });
 }
@@ -1067,7 +1104,7 @@ window.CreditHopperAccess = {
           <span class="trial-banner-text">
             Your free trial has ended. Subscribe to continue using all features.
           </span>
-          <a href="/checkout.html" class="trial-banner-cta">Subscribe for $29.99/mo</a>
+          <a href="/checkout.html" class="trial-banner-cta">Subscribe for $49/mo</a>
         </div>
       `;
     }
@@ -1104,7 +1141,7 @@ window.CreditHopperAccess = {
           <div class="paywall-feature">✓ Progress dashboard</div>
         </div>
         <div class="paywall-price">
-          <span class="paywall-amount">$29.99</span>
+          <span class="paywall-amount">$49</span>
           <span class="paywall-period">/month</span>
         </div>
         <a href="/checkout.html" class="paywall-cta">Subscribe Now</a>

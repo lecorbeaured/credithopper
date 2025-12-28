@@ -20,13 +20,13 @@
   <link rel="stylesheet" href="css/dashboard.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='28' ry='18' fill='%2310b981'/%3E%3Ccircle cx='75' cy='45' r='12' fill='%2310b981'/%3E%3Ccircle cx='78' cy='42' r='5' fill='white'/%3E%3Ccircle cx='79' cy='41' r='3' fill='%230d0d0f'/%3E%3Cpath d='M82 35Q88 25 92 18' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M80 33Q84 20 80 12' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M35 55Q18 72 12 88' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 88Q28 84 38 78' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='45' cy='44' rx='16' ry='9' fill='%2334d399' opacity='0.5'/%3E%3C/svg%3E">
 
   <!-- Auth Check - Redirect if not logged in -->
   <script>
     (function() {
-      const isLoggedIn = localStorage.getItem('credithopper_logged_in') === 'true';
-      if (!isLoggedIn) {
+      const token = localStorage.getItem('ch_token');
+      if (!token) {
         window.location.href = 'login.html';
       }
     })();
@@ -335,10 +335,20 @@
     <div class="sidebar-header">
       <a href="index.html" class="logo">
         <div class="logo-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
-            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
-            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
+            <circle cx="36" cy="22" r="6" fill="#10b981"/>
+            <circle cx="38" cy="20" r="2.5" fill="white"/>
+            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
+            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
+            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
+            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
           </svg>
         </div>
         <span class="logo-text">Credit<span>Hopper</span></span>
@@ -432,486 +442,91 @@
 
     <!-- Letters Content -->
     <div class="my-letters-content">
-      <!-- Welcome Banner (shown on first visit) -->
-      <div class="welcome-banner" id="welcomeBanner">
-        <div class="welcome-banner-icon">
-          <i data-lucide="party-popper"></i>
+      <!-- Page Header -->
+      <div class="letters-header">
+        <div>
+          <h1>My Disputes</h1>
+          <p style="color: var(--dark-400); font-size: 0.875rem; margin-top: 0.25rem;">Track and manage your dispute letters</p>
         </div>
-        <div class="welcome-banner-content">
-          <h2>Welcome! Your letters are ready 🎉</h2>
-          <p>You now have lifetime access to all 55+ dispute letter templates. Browse by category below or search for a specific letter.</p>
-        </div>
-        <button class="btn btn-outline btn-sm" onclick="dismissWelcome()">
-          <i data-lucide="x"></i>
-          Dismiss
-        </button>
+        <a href="engine-v2.html" class="btn btn-primary">
+          <i data-lucide="plus"></i>
+          New Dispute
+        </a>
       </div>
 
-      <!-- Header -->
-      <div class="letters-header">
-        <h1>Your Letter Templates</h1>
+      <!-- Stats Bar -->
+      <div id="disputeStats"></div>
+
+      <!-- Filters -->
+      <div class="filters-bar" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <div class="filter-tabs" style="display: flex; gap: 0.5rem;">
+          <button class="filter-tab active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="drafts">Drafts</button>
+          <button class="filter-tab" data-filter="mailed">Pending</button>
+          <button class="filter-tab" data-filter="responded">Responded</button>
+          <button class="filter-tab" data-filter="completed">Completed</button>
+        </div>
+        <div style="flex: 1;"></div>
         <div class="letters-search">
           <i data-lucide="search"></i>
-          <input type="text" placeholder="Search letters..." id="letterSearch">
+          <input type="text" placeholder="Search disputes..." id="letterSearch">
         </div>
+        <select id="sortSelect" class="form-select" style="width: auto; padding: 0.5rem 1rem;">
+          <option value="recent">Most Recent</option>
+          <option value="creditor">By Creditor</option>
+          <option value="status">By Status</option>
+        </select>
       </div>
 
-      <!-- Categories Grid -->
-      <div class="categories-grid" id="categoriesGrid">
-        <!-- Credit Bureau Letters -->
-        <div class="category-card">
-          <div class="category-card-header">
-            <div class="category-icon">
-              <i data-lucide="building-2"></i>
-            </div>
-            <div class="category-info">
-              <h3>Credit Bureau Disputes</h3>
-              <span>12 letters</span>
-            </div>
-          </div>
-          <ul class="category-letters">
-            <li>
-              <span>General Dispute Letter</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('general-dispute')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('general-dispute')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Late Payment Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('late-payment')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('late-payment')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Inquiry Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('inquiry-dispute')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('inquiry-dispute')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Identity Theft Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('identity-theft')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('identity-theft')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Collection Letters -->
-        <div class="category-card">
-          <div class="category-card-header">
-            <div class="category-icon">
-              <i data-lucide="alert-circle"></i>
-            </div>
-            <div class="category-info">
-              <h3>Collection Disputes</h3>
-              <span>14 letters</span>
-            </div>
-          </div>
-          <ul class="category-letters">
-            <li>
-              <span>Debt Validation Letter</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('debt-validation')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('debt-validation')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Medical Collection Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('medical-collection')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('medical-collection')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>HIPAA Validation Letter</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('hipaa-validation')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('hipaa-validation')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Paid Medical Debt Removal</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('medical-paid')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('medical-paid')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Debt Collector Letters -->
-        <div class="category-card">
-          <div class="category-card-header">
-            <div class="category-icon">
-              <i data-lucide="phone-off"></i>
-            </div>
-            <div class="category-info">
-              <h3>Debt Collector Letters</h3>
-              <span>8 letters</span>
-            </div>
-          </div>
-          <ul class="category-letters">
-            <li>
-              <span>Cease & Desist</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('cease-desist')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('cease-desist')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Pay for Delete Request</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('pay-delete')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('pay-delete')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>FDCPA Violation Notice</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('fdcpa-violation')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('fdcpa-violation')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Settlement Offer</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('settlement-offer')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('settlement-offer')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Data Furnisher Letters -->
-        <div class="category-card">
-          <div class="category-card-header">
-            <div class="category-icon">
-              <i data-lucide="database"></i>
-            </div>
-            <div class="category-info">
-              <h3>Data Furnisher Letters</h3>
-              <span>7 letters</span>
-            </div>
-          </div>
-          <ul class="category-letters">
-            <li>
-              <span>Direct Furnisher Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('furnisher-dispute')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('furnisher-dispute')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Account Correction Request</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('account-correction')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('account-correction')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Billing Error Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('billing-error')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('billing-error')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Re-aging Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('reaging-dispute')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('reaging-dispute')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Goodwill & Special -->
-        <div class="category-card">
-          <div class="category-card-header">
-            <div class="category-icon">
-              <i data-lucide="heart"></i>
-            </div>
-            <div class="category-info">
-              <h3>Goodwill & Special</h3>
-              <span>8 letters</span>
-            </div>
-          </div>
-          <ul class="category-letters">
-            <li>
-              <span>Goodwill Adjustment Letter</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('goodwill')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('goodwill')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Statute of Limitations Defense</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('sol-defense')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('sol-defense')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Closed Account Correction</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('closed-account')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('closed-account')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Direct Dispute to Collector</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('collector-dispute')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('collector-dispute')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Bankruptcy Letters -->
-        <div class="category-card">
-          <div class="category-card-header">
-            <div class="category-icon">
-              <i data-lucide="scale"></i>
-            </div>
-            <div class="category-info">
-              <h3>Bankruptcy Letters</h3>
-              <span>6 letters</span>
-            </div>
-          </div>
-          <ul class="category-letters">
-            <li>
-              <span>Bankruptcy Discharge Dispute</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('bankruptcy-discharge')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('bankruptcy-discharge')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Bankruptcy Date Correction</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('bankruptcy-date')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('bankruptcy-date')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-            <li>
-              <span>Furnisher Violation Notice</span>
-              <div class="letter-actions">
-                <button onclick="previewLetter('fcra-623-violation')" title="Preview"><i data-lucide="eye"></i></button>
-                <button onclick="downloadLetter('fcra-623-violation')" title="Download"><i data-lucide="download"></i></button>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Upgrade Banner -->
-      <div class="upgrade-banner">
-        <div class="upgrade-banner-content">
-          <h3>Want to automate your credit repair?</h3>
-          <p>Upgrade to Pro and let our Credit Repair Engine analyze your credit report, identify issues, and generate personalized letters automatically.</p>
-          <div class="upgrade-features">
-            <div class="upgrade-feature">
-              <i data-lucide="check"></i>
-              <span>Auto-analyze reports</span>
-            </div>
-            <div class="upgrade-feature">
-              <i data-lucide="check"></i>
-              <span>Personalized letters</span>
-            </div>
-            <div class="upgrade-feature">
-              <i data-lucide="check"></i>
-              <span>Dispute tracking</span>
-            </div>
-            <div class="upgrade-feature">
-              <i data-lucide="check"></i>
-              <span>Priority support</span>
-            </div>
-          </div>
-        </div>
-        <div class="upgrade-banner-cta">
-          <a href="checkout.html?plan=pro" class="btn btn-glow">
-            Upgrade to Pro - $29/mo
-          </a>
-        </div>
+      <!-- Disputes Container -->
+      <div id="disputesContainer">
+        <!-- Populated by JS -->
       </div>
     </div>
   </main>
-
-  <!-- Letter Preview Modal -->
-  <div class="modal-overlay" id="letterModal">
-    <div class="modal modal-lg">
-      <div class="modal-header">
-        <div>
-          <h3 class="modal-title" id="modalLetterTitle">Letter Preview</h3>
-          <p class="modal-subtitle">Ready to customize and send</p>
-        </div>
-        <button class="modal-close" onclick="closeModal('letterModal')">
-          <i data-lucide="x"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="letter-modal-content" id="letterContent">
-          <!-- Letter content will be loaded here -->
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('letterModal')">Close</button>
-        <button class="btn btn-secondary" onclick="copyCurrentLetter()">
-          <i data-lucide="copy"></i>
-          Copy Text
-        </button>
-        <button class="btn btn-primary" onclick="downloadCurrentLetter()">
-          <i data-lucide="download"></i>
-          Download
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Mobile Sidebar Overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <!-- Scripts -->
-  <script src="js/main.js"></script>
-  <script src="js/bundles.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/my-letters.js"></script>
   <script>
-    // Check for welcome parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    if (!urlParams.get('welcome')) {
-      const banner = document.getElementById('welcomeBanner');
-      if (banner && localStorage.getItem('welcomeDismissed')) {
-        banner.style.display = 'none';
-      }
-    }
-
-    function dismissWelcome() {
-      const banner = document.getElementById('welcomeBanner');
-      if (banner) {
-        banner.style.display = 'none';
-        localStorage.setItem('welcomeDismissed', 'true');
-      }
-    }
-
-    let currentLetterId = null;
-
-    function previewLetter(letterId) {
-      currentLetterId = letterId;
-      const template = window.letterTemplates ? window.letterTemplates[letterId] : null;
-      
-      if (!template) {
-        alert('Letter not found');
-        return;
-      }
-
-      document.getElementById('modalLetterTitle').textContent = template.title;
-      document.getElementById('letterContent').textContent = template.content;
-      
-      openModal('letterModal');
-    }
-
-    function downloadLetter(letterId) {
-      const template = window.letterTemplates ? window.letterTemplates[letterId] : null;
-      
-      if (!template) {
-        alert('Letter not found');
-        return;
-      }
-
-      const blob = new Blob([template.content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${template.title.replace(/\s+/g, '_')}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      if (window.Toast) {
-        Toast.success('Letter downloaded!');
-      }
-    }
-
-    function copyCurrentLetter() {
-      if (!currentLetterId) return;
-      const template = window.letterTemplates ? window.letterTemplates[currentLetterId] : null;
-      
-      if (template) {
-        navigator.clipboard.writeText(template.content).then(() => {
-          if (window.Toast) {
-            Toast.success('Letter copied to clipboard!');
-          }
-        });
-      }
-    }
-
-    function downloadCurrentLetter() {
-      if (currentLetterId) {
-        downloadLetter(currentLetterId);
-      }
-    }
-
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.add('active');
-      document.body.style.overflow = 'hidden';
-      lucide.createIcons();
-    }
-
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    // Search functionality
-    document.getElementById('letterSearch')?.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      const cards = document.querySelectorAll('.category-card');
-      
-      cards.forEach(card => {
-        const letters = card.querySelectorAll('.category-letters li');
-        let hasMatch = false;
-        
-        letters.forEach(letter => {
-          const text = letter.textContent.toLowerCase();
-          if (text.includes(query)) {
-            letter.style.display = '';
-            hasMatch = true;
-          } else {
-            letter.style.display = 'none';
-          }
-        });
-        
-        card.style.display = hasMatch || !query ? '' : 'none';
+    // Initialize icons
+    lucide.createIcons();
+    
+    // Filter tab styles
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
       });
     });
-
-    // Sidebar toggle
-    document.getElementById('sidebarToggle')?.addEventListener('click', () => {
-      document.getElementById('sidebar').classList.toggle('active');
-      document.getElementById('sidebarOverlay').classList.toggle('active');
-    });
-
-    document.getElementById('sidebarOverlay')?.addEventListener('click', () => {
-      document.getElementById('sidebar').classList.remove('active');
-      document.getElementById('sidebarOverlay').classList.remove('active');
-    });
-
-    // User Menu Toggle
-    function toggleUserMenu() {
-      const dropdown = document.getElementById('userDropdown');
-      if (dropdown) {
-        dropdown.classList.toggle('active');
-        lucide.createIcons();
-      }
+  </script>
+  
+  <style>
+    .filter-tab {
+      padding: 0.5rem 1rem;
+      background: var(--dark-800);
+      border: 1px solid var(--dark-700);
+      border-radius: 8px;
+      color: var(--dark-400);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      const dropdown = document.getElementById('userDropdown');
-      const btn = document.g
+    
+    .filter-tab:hover {
+      border-color: var(--dark-600);
+      color: #fff;
+    }
+    
+    .filter-tab.active {
+      background: var(--accent-500);
+      border-color: var(--accent-500);
+      color: #000;
+      font-weight: 500;
+    }
+  </style>
+</body>
+</html>

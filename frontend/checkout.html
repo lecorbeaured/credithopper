@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="css/auth.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='28' ry='18' fill='%2310b981'/%3E%3Ccircle cx='75' cy='45' r='12' fill='%2310b981'/%3E%3Ccircle cx='78' cy='42' r='5' fill='white'/%3E%3Ccircle cx='79' cy='41' r='3' fill='%230d0d0f'/%3E%3Cpath d='M82 35Q88 25 92 18' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M80 33Q84 20 80 12' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M35 55Q18 72 12 88' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 88Q28 84 38 78' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='45' cy='44' rx='16' ry='9' fill='%2334d399' opacity='0.5'/%3E%3C/svg%3E">
 
   <style>
     .checkout-page {
@@ -401,10 +401,20 @@
     <header class="checkout-header">
       <a href="index.html" class="logo">
         <div class="logo-icon">
-          <svg viewBox="0 0 48 48" fill="none">
-            <defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
-            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
-            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
+            <circle cx="36" cy="22" r="6" fill="#10b981"/>
+            <circle cx="38" cy="20" r="2.5" fill="white"/>
+            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
+            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
+            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
+            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
           </svg>
         </div>
         <span class="logo-text">Credit<span>Hopper</span></span>
@@ -487,7 +497,7 @@
 
           <button type="submit" class="btn btn-glow checkout-submit" id="submitBtn">
             <i data-lucide="lock"></i>
-            <span id="submitBtnText">Pay $47</span>
+            <span id="submitBtnText">Subscribe - $49/mo</span>
           </button>
 
           <div class="security-badges">
@@ -511,46 +521,40 @@
       <div class="order-summary">
         <h3>Order Summary</h3>
 
-        <!-- Plan Selector -->
-        <div class="plan-selector">
-          <button type="button" class="plan-option active" data-plan="bundles">
-            <span class="plan-name">Letter Bundles</span>
-            <span class="plan-price">$47 once</span>
-          </button>
-          <button type="button" class="plan-option" data-plan="pro">
+        <!-- Plan Display (single plan) -->
+        <div class="plan-selector" style="display: none;">
+          <button type="button" class="plan-option active" data-plan="pro">
             <span class="plan-name">Pro</span>
-            <span class="plan-price">$29/mo</span>
-          </button>
-          <button type="button" class="plan-option" data-plan="premium">
-            <span class="plan-name">Premium</span>
-            <span class="plan-price">$59/mo</span>
+            <span class="plan-price">$49/mo</span>
           </button>
         </div>
 
         <div class="order-item">
           <div class="order-item-icon" id="orderIcon">
-            <i data-lucide="file-text"></i>
+            <i data-lucide="zap"></i>
           </div>
           <div class="order-item-details">
-            <div class="order-item-name" id="orderName">Letter Bundles</div>
-            <div class="order-item-desc" id="orderDesc">All 55+ dispute letters</div>
+            <div class="order-item-name" id="orderName">Pro Plan</div>
+            <div class="order-item-desc" id="orderDesc">Full Credit Repair Engine</div>
           </div>
           <div class="order-item-price" id="orderPrice">
-            $47
+            $49/mo
           </div>
         </div>
 
         <ul class="order-features" id="orderFeatures">
           <li><i data-lucide="check"></i> All 55+ letter templates</li>
-          <li><i data-lucide="check"></i> Lifetime access</li>
-          <li><i data-lucide="check"></i> Future template updates</li>
-          <li><i data-lucide="check"></i> Download anytime</li>
+          <li><i data-lucide="check"></i> Credit Repair Engine</li>
+          <li><i data-lucide="check"></i> AI-powered letter generation</li>
+          <li><i data-lucide="check"></i> All 5 dispute rounds</li>
+          <li><i data-lucide="check"></i> Dispute tracking dashboard</li>
+          <li><i data-lucide="check"></i> Unlimited uploads & letters</li>
           <li><i data-lucide="check"></i> Email support</li>
         </ul>
 
         <div class="order-total">
           <span class="order-total-label">Total</span>
-          <span class="order-total-amount" id="orderTotal">$47</span>
+          <span class="order-total-amount" id="orderTotal">$49/mo</span>
         </div>
 
         <div class="order-guarantee">
@@ -564,65 +568,32 @@
   <script>
     // Plan configurations
     const plans = {
-      bundles: {
-        name: 'Letter Bundles',
-        desc: 'All 55+ dispute letters',
-        price: '$47',
-        priceNum: 47,
-        period: '',
-        icon: 'file-text',
-        note: 'One-time payment. Lifetime access.',
-        buttonText: 'Pay $47',
-        features: [
-          'All 55+ letter templates',
-          'Lifetime access',
-          'Future template updates',
-          'Download anytime',
-          'Email support'
-        ]
-      },
       pro: {
         name: 'Pro Plan',
-        desc: 'Credit Engine + All Letters',
-        price: '$29',
-        priceNum: 29,
+        desc: 'Full Credit Repair Engine',
+        price: '$49',
+        priceNum: 49,
         period: '/month',
         icon: 'zap',
         note: 'Cancel anytime. No contracts.',
-        buttonText: 'Subscribe - $29/mo',
+        buttonText: 'Subscribe - $49/mo',
         features: [
           'All 55+ letter templates',
           'Credit Repair Engine',
           'Upload & analyze reports',
-          'Generate & send disputes',
+          'AI-powered letter generation',
+          'All 5 dispute rounds',
           'Dispute tracking dashboard',
-          'Priority support'
-        ]
-      },
-      premium: {
-        name: 'Premium Plan',
-        desc: 'Full-service credit repair',
-        price: '$59',
-        priceNum: 59,
-        period: '/month',
-        icon: 'crown',
-        note: 'Cancel anytime. No contracts.',
-        buttonText: 'Subscribe - $59/mo',
-        features: [
-          'Everything in Pro',
-          'Unlimited report uploads',
-          '3-bureau monitoring',
-          '1-on-1 strategy session',
-          'Advanced dispute sequences',
-          'Phone support'
+          'Unlimited uploads & letters',
+          'Email support'
         ]
       }
     };
 
-    // Get plan from URL
+    // Get plan from URL - default to pro since it's the only paid plan
     const urlParams = new URLSearchParams(window.location.search);
-    let currentPlan = urlParams.get('plan') || 'bundles';
-    if (!plans[currentPlan]) currentPlan = 'bundles';
+    let currentPlan = urlParams.get('plan') || 'pro';
+    if (!plans[currentPlan]) currentPlan = 'pro';
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {

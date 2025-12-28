@@ -299,6 +299,145 @@ async function bulkUpdate(req, res, next) {
 }
 
 /**
+ * POST /api/items/bulk-delete
+ * Delete multiple items at once
+ */
+async function bulkDelete(req, res, next) {
+  try {
+    const { itemIds } = req.body;
+
+    if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
+      return error(res, 'itemIds array is required', 400);
+    }
+
+    if (itemIds.length > 50) {
+      return error(res, 'Cannot delete more than 50 items at once', 400);
+    }
+
+    const prisma = require('../config/database');
+    
+    // Verify ownership
+    const items = await prisma.negativeItem.findMany({
+      where: {
+        id: { in: itemIds },
+        userId: req.userId,
+      },
+    });
+
+    if (items.length === 0) {
+      return error(res, 'No items found', 404);
+    }
+
+    // Delete related disputes first
+    await prisma.dispute.deleteMany({
+      where: { negativeItemId: { in: itemIds } },
+    });
+
+    // Delete items
+    const result = await prisma.negativeItem.deleteMany({
+      where: {
+        id: { in: itemIds },
+        userId: req.userId,
+      },
+    });
+
+    // Log activity
+    await prisma.activityLog.create({
+      data: {
+        userId: req.userId,
+        action: 'ITEMS_BULK_DELETED',
+        description: `Bulk deleted ${result.count} items`,
+        entityType: 'negative_item',
+      },
+    });
+
+    return success(res, { deleted: result.count }, `${result.count} items deleted`);
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * GET /api/items/export
+ * Export items to CSV
+ */
+async function exportItems(req, res, next) {
+  try {
+    const { status, accountType, bureau } = req.query;
+    const prisma = require('../config/database');
+
+    // Build where clause
+    const where = { userId: req.userId };
+    if (status) where.status = status;
+    if (accountType) where.accountType = accountType;
+    if (bureau === 'EQUIFAX') where.onEquifax = true;
+    if (bureau === 'EXPERIAN') where.onExperian = true;
+    if (bureau === 'TRANSUNION') where.onTransunion = true;
+
+    const items = await prisma.negativeItem.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Build CSV
+    const headers = [
+      'Creditor Name',
+      'Original Creditor',
+      'Account Number',
+      'Account Type',
+      'Balance',
+      'Status',
+      'Equifax',
+      'Experian',
+      'TransUnion',
+      'Date of First Delinquency',
+      'Falls Off Date',
+      'Recommendation',
+      'Created At',
+    ];
+
+    const rows = items.map(item => [
+      item.creditorName || '',
+      item.originalCreditor || '',
+      item.accountNumberMasked || '',
+      item.accountType || '',
+      item.balance ? item.balance.toFixed(2) : '',
+      item.status || '',
+      item.onEquifax ? 'Yes' : 'No',
+      item.onExperian ? 'Yes' : 'No',
+      item.onTransunion ? 'Yes' : 'No',
+      item.dateOfFirstDelinquency ? new Date(item.dateOfFirstDelinquency).toLocaleDateString() : '',
+      item.fallsOffDate ? new Date(item.fallsOffDate).toLocaleDateString() : '',
+      item.recommendation || '',
+      item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '',
+    ]);
+
+    // Escape CSV values
+    const escapeCSV = (val) => {
+      if (typeof val !== 'string') val = String(val);
+      if (val.includes(',') || val.includes('"') || val.includes('\n')) {
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+      return val;
+    };
+
+    const csv = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map(row => row.map(escapeCSV).join(',')),
+    ].join('\n');
+
+    // Set headers for download
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="credithopper-items-${new Date().toISOString().split('T')[0]}.csv"`);
+    res.send(csv);
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
  * GET /api/items/stats
  * Get user's item statistics
  */
@@ -345,6 +484,141 @@ async function getAccountTypes(req, res, next) {
   }
 }
 
+/**
+ * POST /api/items/analyze-all
+ * Get AI analysis and prioritized recommendations for all active items
+ */
+async function analyzeAllItems(req, res, next) {
+  try {
+    const { state } = req.body;
+    const prisma = require('../config/database');
+
+    // Get user's state from profile if not provided
+    let userState = state;
+    if (!userState) {
+      const user = await prisma.user.findUnique({
+        where: { id: req.userId },
+        select: { state: true },
+      });
+      userState = user?.state;
+    }
+
+    // Get all active items
+    const items = await prisma.negativeItem.findMany({
+      where: {
+        userId: req.userId,
+        status: { in: ['ACTIVE', 'DISPUTING'] },
+      },
+      include: {
+        disputes: {
+          select: {
+            id: true,
+            round: true,
+            status: true,
+            responseType: true,
+            mailedAt: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+      orderBy: { balance: 'desc' },
+    });
+
+    if (items.length === 0) {
+      return success(res, {
+        summary: {
+          totalItems: 0,
+          totalDebt: 0,
+          highPriority: 0,
+          mediumPriority: 0,
+          lowPriority: 0,
+        },
+        items: [],
+        actionPlan: [],
+      }, 'No active items to analyze');
+    }
+
+    // Analyze each item
+    const analyzedItems = [];
+    let highPriority = 0;
+    let mediumPriority = 0;
+    let lowPriority = 0;
+
+    for (const item of items) {
+      const analysis = await itemsService.analyzeItem(item.id, req.userId, userState);
+      
+      // Determine priority
+      let priority = 'LOW';
+      if (analysis.metrics.recommendation === 'DISPUTE_NOW') {
+        priority = 'HIGH';
+        highPriority++;
+      } else if (analysis.metrics.recommendation === 'OPTIONAL') {
+        priority = 'MEDIUM';
+        mediumPriority++;
+      } else {
+        lowPriority++;
+      }
+
+      analyzedItems.push({
+        id: item.id,
+        creditorName: item.creditorName,
+        accountType: item.accountType,
+        balance: item.balance,
+        priority,
+        recommendation: analysis.metrics.recommendation,
+        reason: analysis.metrics.recommendationReason,
+        fallsOffDate: analysis.metrics.fallsOffDate,
+        monthsUntilFallsOff: analysis.metrics.monthsUntilFallsOff,
+        currentRound: analysis.disputeHistory.currentRound,
+        nextAction: analysis.disputeHistory.nextAction,
+        suggestedStrategy: analysis.strategies[0] || null,
+        bureausReporting: analysis.bureaus.reporting,
+        statuteOfLimitations: analysis.statuteOfLimitations,
+      });
+    }
+
+    // Sort by priority (HIGH first, then by balance)
+    analyzedItems.sort((a, b) => {
+      const priorityOrder = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+      if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      }
+      return (b.balance || 0) - (a.balance || 0);
+    });
+
+    // Generate action plan (top 5 items to tackle)
+    const actionPlan = analyzedItems
+      .filter(i => i.priority === 'HIGH' || i.priority === 'MEDIUM')
+      .slice(0, 5)
+      .map((item, index) => ({
+        step: index + 1,
+        itemId: item.id,
+        creditor: item.creditorName,
+        action: item.nextAction,
+        strategy: item.suggestedStrategy?.type || 'INITIAL_DISPUTE',
+        reason: item.reason,
+      }));
+
+    const totalDebt = items.reduce((sum, i) => sum + (i.balance || 0), 0);
+
+    return success(res, {
+      summary: {
+        totalItems: items.length,
+        totalDebt,
+        highPriority,
+        mediumPriority,
+        lowPriority,
+        userState: userState || null,
+      },
+      items: analyzedItems,
+      actionPlan,
+    }, 'Analysis complete');
+
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createItem,
   listItems,
@@ -354,6 +628,9 @@ module.exports = {
   analyzeItem,
   markDeleted,
   bulkUpdate,
+  bulkDelete,
+  exportItems,
   getStats,
   getAccountTypes,
+  analyzeAllItems,
 };

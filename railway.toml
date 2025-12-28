@@ -5,3 +5,8 @@ builder = "nixpacks"
 startCommand = "npm run start:prod"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
+
+# Persistent volume for file uploads
+[[mounts]]
+source = "uploads"
+destination = "/app/uploads"

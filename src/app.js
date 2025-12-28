@@ -11,6 +11,9 @@ const config = require('./config');
 // Create Express app
 const app = express();
 
+// Trust proxy - required for Railway/Heroku/etc behind load balancers
+app.set('trust proxy', 1);
+
 // ===========================================
 // SECURITY MIDDLEWARE
 // ===========================================

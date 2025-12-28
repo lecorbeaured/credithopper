@@ -42,6 +42,8 @@ const config = {
     directory: process.env.UPLOAD_DIR || './uploads',
     allowedMimeTypes: [
       'application/pdf',
+      'text/html',
+      'application/xhtml+xml',
       'image/png',
       'image/jpeg',
     ],

@@ -5,12 +5,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Mock bundles data
+// Mock bundles data (all free now)
 const bundles = [
-  { id: 1, slug: 'initial-dispute-starter-kit', name: 'Initial Dispute Starter Kit', letterCount: 5, price: 0, value: 47 },
-  { id: 2, slug: 'collection-crusher-bundle', name: 'Collection Crusher Bundle', letterCount: 4, price: 0, value: 67 },
-  { id: 3, slug: 'medical-debt-destroyer', name: 'Medical Debt Destroyer', letterCount: 3, price: 0, value: 67 },
-  { id: 4, slug: 'mega-bundle', name: 'MEGA Bundle - All 55 Letters', letterCount: 55, price: 0, value: 297 }
+  { id: 1, slug: 'initial-dispute-starter-kit', name: 'Initial Dispute Starter Kit', letterCount: 6, price: 0, value: 'Free' },
+  { id: 2, slug: 'collection-crusher-bundle', name: 'Collection Crusher Bundle', letterCount: 8, price: 0, value: 'Free' },
+  { id: 3, slug: 'medical-debt-destroyer', name: 'Medical Debt Destroyer', letterCount: 8, price: 0, value: 'Free' },
+  { id: 4, slug: 'mega-bundle-all-letters', name: 'MEGA Bundle - All 55 Letters', letterCount: 55, price: 0, value: 'Free' }
 ];
 
 // Mock users

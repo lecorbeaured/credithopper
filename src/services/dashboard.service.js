@@ -19,6 +19,8 @@ async function getDashboardData(userId) {
     recentActivity,
     attentionItems,
     progressMetrics,
+    onboardingStatus,
+    quickActions,
   ] = await Promise.all([
     getItemsStats(userId),
     getDisputeStats(userId),
@@ -26,6 +28,8 @@ async function getDashboardData(userId) {
     getRecentActivity(userId, 10),
     getAttentionItems(userId),
     getProgressMetrics(userId),
+    getOnboardingStatus(userId),
+    getQuickActions(userId),
   ]);
 
   return {
@@ -35,8 +39,242 @@ async function getDashboardData(userId) {
     recentActivity,
     attention: attentionItems,
     progress: progressMetrics,
+    onboarding: onboardingStatus,
+    quickActions,
     lastUpdated: new Date().toISOString(),
   };
+}
+
+// ===========================================
+// ONBOARDING STATUS
+// ===========================================
+
+/**
+ * Get onboarding checklist status
+ */
+async function getOnboardingStatus(userId) {
+  const [
+    user,
+    hasReports,
+    hasItems,
+    hasDisputes,
+    hasMailedDispute,
+    hasWin,
+  ] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        street: true,
+        city: true,
+        state: true,
+        zipCode: true,
+        ssnLast4: true,
+      },
+    }),
+    prisma.creditReport.count({ where: { userId } }).then(c => c > 0),
+    prisma.negativeItem.count({ where: { userId } }).then(c => c > 0),
+    prisma.dispute.count({ where: { userId } }).then(c => c > 0),
+    prisma.dispute.count({ where: { userId, status: 'MAILED' } }).then(c => c > 0),
+    prisma.win.count({ where: { userId } }).then(c => c > 0),
+  ]);
+
+  // Check if profile is complete
+  const hasCompleteProfile = !!(
+    user?.street && 
+    user?.city && 
+    user?.state && 
+    user?.zipCode && 
+    user?.ssnLast4
+  );
+
+  const steps = [
+    {
+      id: 'profile',
+      label: 'Complete your profile',
+      description: 'Add your address for dispute letters',
+      completed: hasCompleteProfile,
+      link: '/settings',
+    },
+    {
+      id: 'report',
+      label: 'Upload your credit report',
+      description: 'Get your free report from annualcreditreport.com',
+      completed: hasReports,
+      link: '/engine',
+    },
+    {
+      id: 'items',
+      label: 'Review negative items',
+      description: 'Identify items to dispute',
+      completed: hasItems,
+      link: '/engine',
+    },
+    {
+      id: 'dispute',
+      label: 'Create your first dispute',
+      description: 'Generate a letter and start disputing',
+      completed: hasDisputes,
+      link: '/engine',
+    },
+    {
+      id: 'mail',
+      label: 'Mail your first letter',
+      description: 'Send via certified mail for tracking',
+      completed: hasMailedDispute,
+      link: '/my-letters',
+    },
+    {
+      id: 'win',
+      label: 'Record your first win',
+      description: 'Track deletions and corrections',
+      completed: hasWin,
+      link: '/dashboard',
+    },
+  ];
+
+  const completedCount = steps.filter(s => s.completed).length;
+  const totalSteps = steps.length;
+  const percentComplete = Math.round((completedCount / totalSteps) * 100);
+
+  return {
+    steps,
+    completedCount,
+    totalSteps,
+    percentComplete,
+    isComplete: completedCount === totalSteps,
+    nextStep: steps.find(s => !s.completed) || null,
+  };
+}
+
+// ===========================================
+// QUICK ACTIONS
+// ===========================================
+
+/**
+ * Get personalized quick actions based on user state
+ */
+async function getQuickActions(userId) {
+  const [
+    hasReports,
+    itemsToDispute,
+    draftDisputes,
+    overdueDisputes,
+    readyForNextRound,
+  ] = await Promise.all([
+    prisma.creditReport.count({ where: { userId } }).then(c => c > 0),
+    prisma.negativeItem.count({
+      where: {
+        userId,
+        status: 'ACTIVE',
+        disputes: { none: {} },
+      },
+    }),
+    prisma.dispute.count({
+      where: { userId, status: 'DRAFT' },
+    }),
+    prisma.dispute.count({
+      where: {
+        userId,
+        status: 'MAILED',
+        responseDueDate: { lt: new Date() },
+      },
+    }),
+    prisma.dispute.count({
+      where: {
+        userId,
+        status: 'RESPONSE_RECEIVED',
+        responseType: 'VERIFIED',
+        round: { lt: 4 },
+      },
+    }),
+  ]);
+
+  const actions = [];
+
+  // Priority 1: Upload first report
+  if (!hasReports) {
+    actions.push({
+      id: 'upload-report',
+      label: 'Upload Credit Report',
+      description: 'Start by uploading your credit report',
+      icon: '📄',
+      priority: 1,
+      link: '/engine',
+      variant: 'primary',
+    });
+  }
+
+  // Priority 2: Handle overdue disputes
+  if (overdueDisputes > 0) {
+    actions.push({
+      id: 'overdue-disputes',
+      label: `${overdueDisputes} Overdue Response${overdueDisputes > 1 ? 's' : ''}`,
+      description: 'Log bureau responses to continue',
+      icon: '⚠️',
+      priority: 2,
+      link: '/my-letters',
+      variant: 'warning',
+      count: overdueDisputes,
+    });
+  }
+
+  // Priority 3: Send draft letters
+  if (draftDisputes > 0) {
+    actions.push({
+      id: 'send-drafts',
+      label: `${draftDisputes} Letter${draftDisputes > 1 ? 's' : ''} Ready to Send`,
+      description: 'Print and mail your dispute letters',
+      icon: '📬',
+      priority: 3,
+      link: '/my-letters',
+      variant: 'info',
+      count: draftDisputes,
+    });
+  }
+
+  // Priority 4: Escalate verified disputes
+  if (readyForNextRound > 0) {
+    actions.push({
+      id: 'escalate',
+      label: `Escalate ${readyForNextRound} Dispute${readyForNextRound > 1 ? 's' : ''}`,
+      description: 'Bureau verified - send follow-up letter',
+      icon: '📈',
+      priority: 4,
+      link: '/engine',
+      variant: 'secondary',
+      count: readyForNextRound,
+    });
+  }
+
+  // Priority 5: Start new disputes
+  if (itemsToDispute > 0) {
+    actions.push({
+      id: 'new-disputes',
+      label: `Dispute ${itemsToDispute} Item${itemsToDispute > 1 ? 's' : ''}`,
+      description: 'Generate letters for undisputed items',
+      icon: '✍️',
+      priority: 5,
+      link: '/engine',
+      variant: 'default',
+      count: itemsToDispute,
+    });
+  }
+
+  // Always show these utility actions
+  actions.push({
+    id: 'upload-new-report',
+    label: 'Upload New Report',
+    description: 'Check for updates after disputes',
+    icon: '🔄',
+    priority: 10,
+    link: '/engine',
+    variant: 'outline',
+  });
+
+  // Sort by priority
+  actions.sort((a, b) => a.priority - b.priority);
+
+  return actions.slice(0, 5); // Return top 5 actions
 }
 
 // ===========================================
@@ -753,6 +991,8 @@ module.exports = {
   getAttentionItems,
   getProgressMetrics,
   getRecentActivity,
+  getOnboardingStatus,
+  getQuickActions,
   createWin,
   getUserWins,
   getWinById,

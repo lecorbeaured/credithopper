@@ -63,19 +63,26 @@ function createStorage(subdir) {
 // ===========================================
 
 /**
- * Filter for credit report uploads (PDF only)
+ * Filter for credit report uploads (PDF and HTML)
  */
 function creditReportFilter(req, file, cb) {
-  const allowedMimes = ['application/pdf'];
-  const allowedExts = ['.pdf'];
+  const allowedMimes = [
+    'application/pdf',
+    'text/html',
+    'application/xhtml+xml',
+  ];
+  const allowedExts = ['.pdf', '.html', '.htm'];
   
   const ext = path.extname(file.originalname).toLowerCase();
   const mime = file.mimetype;
   
-  if (allowedMimes.includes(mime) && allowedExts.includes(ext)) {
+  // Check extension first, then MIME (some browsers send wrong MIME for HTML)
+  if (allowedExts.includes(ext)) {
+    cb(null, true);
+  } else if (allowedMimes.includes(mime)) {
     cb(null, true);
   } else {
-    cb(new Error('Only PDF files are allowed for credit reports'), false);
+    cb(new Error('Only PDF and HTML files are allowed for credit reports'), false);
   }
 }
 

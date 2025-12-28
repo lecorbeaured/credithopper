@@ -386,12 +386,22 @@ const API = {
     async generate(params) {
       return API.post('/letters/generate', {
         negativeItemId: params.negativeItemId,
-        disputeId: params.disputeId,
         letterType: params.letterType,
         target: params.target,
         bureau: params.bureau,
-        round: params.round,
-        customInstructions: params.customInstructions,
+        customNotes: params.customNotes,
+        includeUserInfo: params.includeUserInfo,
+        includeRecipient: params.includeRecipient,
+      });
+    },
+    
+    async regenerate(params) {
+      return API.post('/letters/regenerate', {
+        negativeItemId: params.negativeItemId,
+        letterType: params.letterType,
+        target: params.target,
+        bureau: params.bureau,
+        customNotes: params.customNotes,
       });
     },
     
@@ -410,19 +420,24 @@ const API = {
       return API.get(`/letters/templates/${id}`);
     },
     
-    async fillTemplate(templateId, variables) {
+    async fillTemplate(templateId, negativeItemId, customData = {}) {
       return API.post('/letters/fill-template', {
         templateId,
-        variables,
+        negativeItemId,
+        ...customData,
       });
     },
     
-    async recommend(negativeItemId, round = 1, target = 'BUREAU') {
-      return API.get(`/letters/recommend?negativeItemId=${negativeItemId}&round=${round}&target=${target}`);
+    async recommend(negativeItemId, target = 'BUREAU') {
+      return API.get(`/letters/recommend?negativeItemId=${negativeItemId}&target=${target}`);
     },
     
     async getTypes() {
       return API.get('/letters/types');
+    },
+    
+    async getBureaus() {
+      return API.get('/letters/bureaus');
     },
   },
   
@@ -491,6 +506,14 @@ const API = {
     
     async getActivity(limit = 20) {
       return API.get(`/dashboard/activity?limit=${limit}`);
+    },
+    
+    async getOnboarding() {
+      return API.get('/dashboard/onboarding');
+    },
+    
+    async getQuickActions() {
+      return API.get('/dashboard/quick-actions');
     },
     
     async getWinTypes() {

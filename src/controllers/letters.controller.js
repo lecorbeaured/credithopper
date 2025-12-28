@@ -13,12 +13,12 @@ async function generateLetter(req, res, next) {
   try {
     const {
       negativeItemId,
-      disputeId,
       letterType,
       target,
       bureau,
-      round,
-      customInstructions,
+      customNotes,
+      includeUserInfo,
+      includeRecipient,
     } = req.body;
 
     // Validate required fields
@@ -46,12 +46,11 @@ async function generateLetter(req, res, next) {
     // Validate letter type
     const validLetterTypes = [
       'INITIAL_DISPUTE',
-      'METHOD_OF_VERIFICATION',
-      'PROCEDURAL_VIOLATION',
-      'LEGAL_ESCALATION',
       'DEBT_VALIDATION',
+      'METHOD_OF_VERIFICATION',
+      'FOLLOW_UP',
       'GOODWILL',
-      'IDENTITY_THEFT',
+      'EARLY_EXCLUSION',
     ];
 
     if (!validLetterTypes.includes(letterType)) {
@@ -62,17 +61,24 @@ async function generateLetter(req, res, next) {
     const result = await lettersService.generateLetter({
       userId: req.userId,
       negativeItemId,
-      disputeId,
       letterType,
       target,
       bureau,
-      round: round || 1,
-      customInstructions,
+      customNotes,
+      includeUserInfo: includeUserInfo || false,
+      includeRecipient: includeRecipient || false,
     });
 
     return created(res, {
       letter: result.letter,
+      completeLetter: result.completeLetter,
+      letterType: result.letterType,
+      target: result.target,
+      bureau: result.bureau,
       metadata: result.metadata,
+      userData: result.userData,
+      recipientData: result.recipientData,
+      itemData: result.itemData,
     }, 'Letter generated successfully');
 
   } catch (err) {
@@ -87,8 +93,112 @@ async function generateLetter(req, res, next) {
 }
 
 /**
+ * POST /api/letters/regenerate
+ * Generate a new variation of the same letter
+ */
+async function regenerateLetter(req, res, next) {
+  try {
+    const {
+      negativeItemId,
+      letterType,
+      target,
+      bureau,
+      customNotes,
+    } = req.body;
+
+    if (!negativeItemId || !letterType || !target) {
+      return error(res, 'negativeItemId, letterType, and target are required', 400);
+    }
+
+    const result = await lettersService.regenerateLetter({
+      userId: req.userId,
+      negativeItemId,
+      letterType,
+      target,
+      bureau,
+      customNotes,
+    });
+
+    return success(res, {
+      letter: result.letter,
+      metadata: result.metadata,
+    }, 'New variation generated');
+
+  } catch (err) {
+    if (err.message.includes('not found')) {
+      return notFound(res, err.message);
+    }
+    next(err);
+  }
+}
+
+/**
+ * GET /api/letters/types
+ * Get list of available letter types with descriptions
+ */
+async function getLetterTypes(req, res, next) {
+  try {
+    const letterTypes = lettersService.getLetterTypes();
+    return success(res, { letterTypes }, 'Letter types retrieved');
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * GET /api/letters/recommend
+ * Get recommended letter type for an item
+ */
+async function getRecommendation(req, res, next) {
+  try {
+    const { negativeItemId, target } = req.query;
+
+    if (!negativeItemId) {
+      return error(res, 'negativeItemId is required', 400);
+    }
+
+    // Get the negative item with dispute count
+    const prisma = require('../config/database');
+    const negativeItem = await prisma.negativeItem.findFirst({
+      where: {
+        id: negativeItemId,
+        userId: req.userId,
+      },
+      include: {
+        _count: {
+          select: { disputes: true },
+        },
+      },
+    });
+
+    if (!negativeItem) {
+      return notFound(res, 'Negative item not found');
+    }
+
+    const recommendation = lettersService.getRecommendedLetterType(
+      negativeItem,
+      negativeItem._count.disputes,
+      target || 'BUREAU'
+    );
+
+    return success(res, {
+      recommendation,
+      item: {
+        id: negativeItem.id,
+        creditorName: negativeItem.creditorName,
+        accountType: negativeItem.accountType,
+        disputeCount: negativeItem._count.disputes,
+      },
+    }, 'Recommendation retrieved');
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
  * GET /api/letters/templates
- * Get available letter templates
+ * Get available letter templates (for bundle downloads)
  */
 async function getTemplates(req, res, next) {
   try {
@@ -132,7 +242,6 @@ async function getTemplate(req, res, next) {
 
     const template = await lettersService.getTemplate(id);
 
-    // Check if premium template and user has access
     if (template.isPremium && req.user.subscriptionTier === 'FREE') {
       return forbidden(res, 'Upgrade to access premium templates');
     }
@@ -181,109 +290,16 @@ async function fillTemplate(req, res, next) {
 }
 
 /**
- * GET /api/letters/recommend
- * Get recommended letter type for an item
+ * GET /api/letters/bureaus
+ * Get bureau addresses
  */
-async function getRecommendation(req, res, next) {
+async function getBureauAddresses(req, res, next) {
   try {
-    const { negativeItemId, round, target } = req.query;
-
-    if (!negativeItemId) {
-      return error(res, 'negativeItemId is required', 400);
-    }
-
-    // Get the negative item
-    const prisma = require('../config/database');
-    const negativeItem = await prisma.negativeItem.findFirst({
-      where: {
-        id: negativeItemId,
-        userId: req.userId,
-      },
-    });
-
-    if (!negativeItem) {
-      return notFound(res, 'Negative item not found');
-    }
-
-    const recommendation = lettersService.getRecommendedLetterType(
-      negativeItem,
-      parseInt(round) || 1,
-      target || 'BUREAU'
-    );
-
+    const claudeService = require('../services/claude.service');
+    
     return success(res, {
-      recommendation,
-      item: {
-        id: negativeItem.id,
-        creditorName: negativeItem.creditorName,
-        accountType: negativeItem.accountType,
-      },
-    }, 'Recommendation retrieved');
-
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
- * GET /api/letters/types
- * Get list of available letter types with descriptions
- */
-async function getLetterTypes(req, res, next) {
-  try {
-    const letterTypes = [
-      {
-        type: 'INITIAL_DISPUTE',
-        name: 'Initial Dispute',
-        description: 'First dispute letter requesting investigation and verification',
-        round: 1,
-        target: 'BUREAU',
-      },
-      {
-        type: 'METHOD_OF_VERIFICATION',
-        name: 'Method of Verification',
-        description: 'Demand proof of how the bureau verified the account',
-        round: 2,
-        target: 'BUREAU',
-      },
-      {
-        type: 'PROCEDURAL_VIOLATION',
-        name: 'Procedural Violation',
-        description: 'Cite specific FCRA violations and demand correction',
-        round: 3,
-        target: 'BUREAU',
-      },
-      {
-        type: 'LEGAL_ESCALATION',
-        name: 'Legal Escalation',
-        description: 'Final demand with legal action warning',
-        round: 4,
-        target: 'BUREAU',
-      },
-      {
-        type: 'DEBT_VALIDATION',
-        name: 'Debt Validation',
-        description: 'Request complete validation of debt from collector',
-        round: 1,
-        target: 'FURNISHER',
-      },
-      {
-        type: 'GOODWILL',
-        name: 'Goodwill Request',
-        description: 'Ask creditor to remove negative mark as a courtesy',
-        round: 1,
-        target: 'FURNISHER',
-      },
-      {
-        type: 'IDENTITY_THEFT',
-        name: 'Identity Theft Dispute',
-        description: 'Dispute fraudulent accounts due to identity theft',
-        round: 1,
-        target: 'BUREAU',
-      },
-    ];
-
-    return success(res, { letterTypes }, 'Letter types retrieved');
+      bureaus: claudeService.BUREAU_ADDRESSES,
+    }, 'Bureau addresses retrieved');
 
   } catch (err) {
     next(err);
@@ -292,9 +308,11 @@ async function getLetterTypes(req, res, next) {
 
 module.exports = {
   generateLetter,
+  regenerateLetter,
+  getLetterTypes,
+  getRecommendation,
   getTemplates,
   getTemplate,
   fillTemplate,
-  getRecommendation,
-  getLetterTypes,
+  getBureauAddresses,
 };

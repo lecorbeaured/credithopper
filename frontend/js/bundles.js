@@ -120,12 +120,12 @@ function renderBundleCard(bundle, featured = false) {
 function renderStaticBundles() {
   // Fallback static bundles if API fails
   const staticBundles = [
-    { id: 'mega-bundle', name: 'MEGA BUNDLE - All 55 Letters', description: 'Every single letter template we offer. The complete credit repair arsenal.', value: '$297', letterCount: 55, slug: 'mega-bundle-all-letters' },
-    { id: 'initial-dispute-starter', name: 'Initial Dispute Starter Kit', description: 'Everything you need to start disputing errors.', value: '$47', letterCount: 6, slug: 'initial-dispute-starter-kit' },
-    { id: 'collection-crusher', name: 'Collection Crusher Bundle', description: 'Fight collection accounts and get them removed.', value: '$67', letterCount: 8, slug: 'collection-crusher-bundle' },
-    { id: 'medical-debt-destroyer', name: 'Medical Debt Destroyer', description: 'Specialized letters for medical collections.', value: '$67', letterCount: 8, slug: 'medical-debt-destroyer' },
-    { id: 'identity-theft-recovery', name: 'Identity Theft Recovery Kit', description: 'Recover from identity theft and clean your credit.', value: '$57', letterCount: 5, slug: 'identity-theft-recovery-kit' },
-    { id: 'bankruptcy-fresh-start', name: 'Bankruptcy Fresh Start', description: 'Clean up your credit after bankruptcy.', value: '$57', letterCount: 6, slug: 'bankruptcy-fresh-start' }
+    { id: 'mega-bundle', name: 'MEGA BUNDLE - All 55 Letters', description: 'Every single letter template we offer. The complete credit repair arsenal.', value: 'Free', letterCount: 55, slug: 'mega-bundle-all-letters' },
+    { id: 'initial-dispute-starter', name: 'Initial Dispute Starter Kit', description: 'Everything you need to start disputing errors.', value: 'Free', letterCount: 6, slug: 'initial-dispute-starter-kit' },
+    { id: 'collection-crusher', name: 'Collection Crusher Bundle', description: 'Fight collection accounts and get them removed.', value: 'Free', letterCount: 8, slug: 'collection-crusher-bundle' },
+    { id: 'medical-debt-destroyer', name: 'Medical Debt Destroyer', description: 'Specialized letters for medical collections.', value: 'Free', letterCount: 8, slug: 'medical-debt-destroyer' },
+    { id: 'identity-theft-recovery', name: 'Identity Theft Recovery Kit', description: 'Recover from identity theft and clean your credit.', value: 'Free', letterCount: 5, slug: 'identity-theft-recovery-kit' },
+    { id: 'bankruptcy-fresh-start', name: 'Bankruptcy Fresh Start', description: 'Clean up your credit after bankruptcy.', value: 'Free', letterCount: 6, slug: 'bankruptcy-fresh-start' }
   ];
   
   renderBundles(staticBundles);
@@ -2214,7 +2214,7 @@ window.openLetterModal = function(letterId) {
             <h4>Unlock This Letter</h4>
             <p>Get instant access to all 55+ dispute letters</p>
             <a href="register.html?plan=bundles" class="btn btn-primary">
-              Get All Letters - $47
+              Get All Letters Free
             </a>
             <p class="blur-note">One-time payment • Lifetime access</p>
           </div>

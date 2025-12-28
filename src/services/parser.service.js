@@ -2,11 +2,14 @@
 // CREDITHOPPER - CREDIT REPORT PARSER
 // ===========================================
 // Parses credit report text to extract negative items
+// Uses regex patterns first, then Claude AI for enhancement
 
 const prisma = require('../config/database');
 const pdfService = require('./pdf.service');
 const itemsService = require('./items.service');
 const reportsService = require('./reports.service');
+const fs = require('fs');
+const path = require('path');
 
 // ===========================================
 // MAIN PARSER
@@ -29,15 +32,26 @@ async function parseReport(reportId, userId) {
     // Update status to processing
     await reportsService.updateParseStatus(reportId, 'PROCESSING');
 
-    // Extract text from PDF
-    const pdfResult = await pdfService.extractTextFromPDF(report.filePath);
+    // Extract text based on file type
+    let extractedText = '';
+    const ext = path.extname(report.filePath).toLowerCase();
     
-    if (!pdfResult.success) {
-      throw new Error('Failed to extract text from PDF');
+    if (ext === '.pdf') {
+      const pdfResult = await pdfService.extractTextFromPDF(report.filePath);
+      if (!pdfResult.success) {
+        throw new Error('Failed to extract text from PDF');
+      }
+      extractedText = pdfResult.text;
+    } else if (ext === '.html' || ext === '.htm') {
+      // Read HTML file and strip tags
+      const htmlContent = fs.readFileSync(report.filePath, 'utf8');
+      extractedText = stripHtmlTags(htmlContent);
+    } else {
+      throw new Error('Unsupported file format');
     }
 
     // Clean the text
-    const cleanedText = pdfService.cleanText(pdfResult.text);
+    const cleanedText = pdfService.cleanText(extractedText);
 
     // Store raw text
     await reportsService.storeRawText(reportId, cleanedText);
@@ -48,7 +62,7 @@ async function parseReport(reportId, userId) {
       await reportsService.updateBureau(reportId, bureau);
     }
 
-    // Parse based on bureau
+    // Try regex parsing first
     let parsedData;
     switch (bureau) {
       case 'EQUIFAX':
@@ -62,6 +76,20 @@ async function parseReport(reportId, userId) {
         break;
       default:
         parsedData = parseGenericReport(cleanedText);
+    }
+
+    // If regex didn't find enough items, use Claude AI
+    if (parsedData.negativeItems.length < 2) {
+      console.log('Regex parsing found few items, trying Claude AI...');
+      try {
+        const aiParsedData = await parseWithClaudeAI(cleanedText, bureau);
+        if (aiParsedData.negativeItems.length > parsedData.negativeItems.length) {
+          parsedData = aiParsedData;
+          console.log(`Claude AI found ${aiParsedData.negativeItems.length} items`);
+        }
+      } catch (aiError) {
+        console.error('Claude AI parsing failed, using regex results:', aiError.message);
+      }
     }
 
     // Extract personal info
@@ -129,6 +157,175 @@ async function parseReport(reportId, userId) {
     
     throw error;
   }
+}
+
+// ===========================================
+// CLAUDE AI PARSING
+// ===========================================
+
+/**
+ * Use Claude AI to parse credit report text
+ */
+async function parseWithClaudeAI(text, bureau) {
+  const claudeService = require('./claude.service');
+  const client = claudeService.getClient();
+  
+  // Truncate text if too long (Claude has context limits)
+  const maxLength = 100000;
+  const truncatedText = text.length > maxLength 
+    ? text.substring(0, maxLength) + '\n...[truncated]...' 
+    : text;
+
+  const systemPrompt = `You are a credit report parser. Extract ALL negative items from the credit report text.
+
+A negative item includes:
+- Collections accounts
+- Charge-offs
+- Late payments (30/60/90/120+ days)
+- Repossessions
+- Foreclosures
+- Bankruptcies
+- Judgments
+- Tax liens
+- Any account with derogatory marks
+
+For each negative item, extract:
+- creditorName: The creditor or collection agency name
+- originalCreditor: Original creditor if this is a collection
+- accountNumber: Account number (may be partial/masked)
+- accountType: COLLECTION, CHARGE_OFF, LATE_PAYMENT, REPOSSESSION, FORECLOSURE, BANKRUPTCY, JUDGMENT, TAX_LIEN, MEDICAL, CREDIT_CARD, AUTO_LOAN, PERSONAL_LOAN, STUDENT_LOAN, MORTGAGE, OTHER
+- balance: Current balance (number only, no $ or commas)
+- originalBalance: Original/high credit amount if available
+- accountStatus: The status text from the report
+- dateOpened: Date account opened (YYYY-MM-DD format)
+- dateOfFirstDelinquency: Date of first delinquency if shown (YYYY-MM-DD format)
+- lastReportedDate: Last reported date (YYYY-MM-DD format)
+
+Respond with ONLY a valid JSON array. No explanations or markdown.`;
+
+  const userPrompt = `Parse this ${bureau || 'credit'} report and extract ALL negative items as JSON:
+
+${truncatedText}
+
+Return a JSON array of negative items. Example format:
+[
+  {
+    "creditorName": "ABC COLLECTIONS",
+    "originalCreditor": "CHASE BANK",
+    "accountNumber": "XXXX1234",
+    "accountType": "COLLECTION",
+    "balance": 1500.00,
+    "originalBalance": 2000.00,
+    "accountStatus": "Collection account",
+    "dateOpened": "2022-01-15",
+    "dateOfFirstDelinquency": "2021-06-01",
+    "lastReportedDate": "2024-12-01"
+  }
+]`;
+
+  try {
+    const response = await client.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4096,
+      system: systemPrompt,
+      messages: [
+        { role: 'user', content: userPrompt }
+      ],
+    });
+
+    const content = response.content[0]?.text || '[]';
+    
+    // Extract JSON from response
+    let jsonStr = content;
+    
+    // Try to find JSON array in the response
+    const jsonMatch = content.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      jsonStr = jsonMatch[0];
+    }
+    
+    // Parse JSON
+    const items = JSON.parse(jsonStr);
+    
+    // Validate and clean items
+    const validItems = items
+      .filter(item => item.creditorName && item.creditorName.length > 1)
+      .map(item => ({
+        creditorName: String(item.creditorName).substring(0, 100),
+        originalCreditor: item.originalCreditor ? String(item.originalCreditor).substring(0, 100) : null,
+        accountNumber: item.accountNumber || null,
+        accountNumberMasked: item.accountNumber ? maskAccountNumber(item.accountNumber) : null,
+        accountType: validateAccountType(item.accountType),
+        balance: item.balance ? parseFloat(item.balance) : null,
+        originalBalance: item.originalBalance ? parseFloat(item.originalBalance) : null,
+        accountStatus: item.accountStatus ? String(item.accountStatus).substring(0, 100) : null,
+        dateOpened: parseAIDate(item.dateOpened),
+        dateOfFirstDelinquency: parseAIDate(item.dateOfFirstDelinquency),
+        lastReportedDate: parseAIDate(item.lastReportedDate),
+      }));
+
+    return {
+      negativeItems: validItems,
+      reportDate: null,
+      parsedBy: 'claude-ai',
+    };
+  } catch (error) {
+    console.error('Claude AI parsing error:', error);
+    throw new Error('AI parsing failed: ' + error.message);
+  }
+}
+
+/**
+ * Validate account type from AI response
+ */
+function validateAccountType(type) {
+  const validTypes = [
+    'COLLECTION', 'CHARGE_OFF', 'LATE_PAYMENT', 'REPOSSESSION', 
+    'FORECLOSURE', 'BANKRUPTCY', 'JUDGMENT', 'TAX_LIEN', 'MEDICAL',
+    'CREDIT_CARD', 'AUTO_LOAN', 'PERSONAL_LOAN', 'STUDENT_LOAN', 
+    'MORTGAGE', 'INQUIRY', 'OTHER'
+  ];
+  
+  const upperType = String(type).toUpperCase().replace(/[^A-Z_]/g, '');
+  return validTypes.includes(upperType) ? upperType : 'OTHER';
+}
+
+/**
+ * Parse date from AI response
+ */
+function parseAIDate(dateStr) {
+  if (!dateStr) return null;
+  
+  try {
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) {
+      return date;
+    }
+  } catch (e) {}
+  
+  return null;
+}
+
+/**
+ * Strip HTML tags from content
+ */
+function stripHtmlTags(html) {
+  return html
+    // Remove script and style tags with content
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    // Remove HTML tags
+    .replace(/<[^>]+>/g, ' ')
+    // Decode common HTML entities
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    // Clean up whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // ===========================================

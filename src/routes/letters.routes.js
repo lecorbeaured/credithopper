@@ -15,18 +15,49 @@ router.use(authenticate);
 // ===========================================
 
 /**
+ * GET /api/letters/types
+ * Get list of available letter types with descriptions (free access)
+ */
+router.get(
+  '/types',
+  lettersController.getLetterTypes
+);
+
+/**
+ * GET /api/letters/bureaus
+ * Get bureau mailing addresses (free access)
+ */
+router.get(
+  '/bureaus',
+  lettersController.getBureauAddresses
+);
+
+/**
+ * GET /api/letters/recommend
+ * Get recommended letter type for an item (free access)
+ * 
+ * Query params:
+ * - negativeItemId: string (required)
+ * - target: string (optional, default: BUREAU)
+ */
+router.get(
+  '/recommend',
+  lettersController.getRecommendation
+);
+
+/**
  * POST /api/letters/generate
  * Generate a dispute letter using AI
  * Requires active trial or paid subscription
  * 
  * Body:
  * - negativeItemId: string (required)
- * - disputeId: string (optional)
- * - letterType: string (required) - INITIAL_DISPUTE, METHOD_OF_VERIFICATION, etc.
+ * - letterType: string (required) - INITIAL_DISPUTE, DEBT_VALIDATION, etc.
  * - target: string (required) - BUREAU or FURNISHER
  * - bureau: string (required if target is BUREAU) - EQUIFAX, EXPERIAN, TRANSUNION
- * - round: number (optional, default: 1)
- * - customInstructions: string (optional)
+ * - customNotes: string (optional) - context for goodwill letters
+ * - includeUserInfo: boolean (optional) - include user address header
+ * - includeRecipient: boolean (optional) - include recipient address
  */
 router.post(
   '/generate',
@@ -35,13 +66,26 @@ router.post(
 );
 
 /**
+ * POST /api/letters/regenerate
+ * Generate a new variation of the same letter
+ * Requires active trial or paid subscription
+ * 
+ * Body: same as /generate
+ */
+router.post(
+  '/regenerate',
+  requireFullAccess('AI Letter Generation'),
+  lettersController.regenerateLetter
+);
+
+/**
  * GET /api/letters/templates
- * Get available letter templates (free access)
+ * Get available letter templates for bundles (free access)
  * 
  * Query params:
  * - category: string (optional)
  * - targetType: string (optional) - BUREAU or FURNISHER
- * - accountType: string (optional) - COLLECTION, LATE_PAYMENT, etc.
+ * - accountType: string (optional)
  * - round: number (optional)
  * - premium: boolean (optional)
  */
@@ -52,7 +96,7 @@ router.get(
 
 /**
  * GET /api/letters/templates/:id
- * Get a specific template with content (free access)
+ * Get a specific template with content
  */
 router.get(
   '/templates/:id',
@@ -61,7 +105,7 @@ router.get(
 
 /**
  * POST /api/letters/fill-template
- * Fill a template with user and item data
+ * Fill a static template with user and item data
  * Requires active trial or paid subscription
  * 
  * Body:
@@ -74,29 +118,6 @@ router.post(
   '/fill-template',
   requireFullAccess('Letter Templates'),
   lettersController.fillTemplate
-);
-
-/**
- * GET /api/letters/recommend
- * Get recommended letter type for an item (free access)
- * 
- * Query params:
- * - negativeItemId: string (required)
- * - round: number (optional, default: 1)
- * - target: string (optional, default: BUREAU)
- */
-router.get(
-  '/recommend',
-  lettersController.getRecommendation
-);
-
-/**
- * GET /api/letters/types
- * Get list of available letter types with descriptions (free access)
- */
-router.get(
-  '/types',
-  lettersController.getLetterTypes
 );
 
 module.exports = router;

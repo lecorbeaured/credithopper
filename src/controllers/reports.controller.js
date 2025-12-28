@@ -9,13 +9,13 @@ const fs = require('fs');
 
 /**
  * POST /api/reports/upload
- * Upload a credit report PDF
+ * Upload a credit report PDF or HTML
  */
 async function uploadReport(req, res, next) {
   try {
     // Check if file was uploaded
     if (!req.file) {
-      return error(res, 'No file uploaded. Please select a PDF file.', 400);
+      return error(res, 'No file uploaded. Please select a PDF or HTML file.', 400);
     }
     
     // Check upload limits
@@ -34,17 +34,32 @@ async function uploadReport(req, res, next) {
     }
     
     // Get bureau from request body if provided
-    const bureau = req.body.bureau || null;
+    let bureau = req.body.bureau || null;
+    
+    // Try to auto-detect bureau from file content
+    if (!bureau) {
+      try {
+        const fileContent = fs.readFileSync(req.file.path, 'utf8');
+        bureau = reportsService.detectBureau(fileContent);
+      } catch (e) {
+        // PDF files can't be read as text directly, will detect during parsing
+        console.log('Could not auto-detect bureau from file (likely PDF)');
+      }
+    }
     
     // Create report record
     const report = await reportsService.createReport(req.userId, req.file, bureau);
     
     return created(res, {
-      report,
+      report: {
+        ...report,
+        bureauDetected: !!bureau,
+      },
       limits: {
         remaining: limits.remaining - 1,
         max: limits.max,
       },
+      nextStep: 'Call POST /api/reports/' + report.id + '/parse to extract negative items',
     }, 'Credit report uploaded successfully');
     
   } catch (err) {

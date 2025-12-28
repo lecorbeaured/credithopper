@@ -75,10 +75,8 @@ model User {
 }
 
 enum SubscriptionTier {
-  FREE
-  STARTER     // $27 one-time or $9/mo
-  PRO         // $47 one-time or $15/mo
-  UNLIMITED   // $97 one-time or $29/mo
+  FREE        // Template letters only
+  PRO         // $49/mo - Full engine access, unlimited
 }
 
 // ===========================================

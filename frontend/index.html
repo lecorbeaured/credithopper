@@ -21,35 +21,82 @@
   <link rel="stylesheet" href="css/landing.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='28' ry='18' fill='%2310b981'/%3E%3Ccircle cx='75' cy='45' r='12' fill='%2310b981'/%3E%3Ccircle cx='78' cy='42' r='5' fill='white'/%3E%3Ccircle cx='79' cy='41' r='3' fill='%230d0d0f'/%3E%3Cpath d='M82 35Q88 25 92 18' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M80 33Q84 20 80 12' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M35 55Q18 72 12 88' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 88Q28 84 38 78' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='45' cy='44' rx='16' ry='9' fill='%2334d399' opacity='0.5'/%3E%3C/svg%3E">
 </head>
 <body>
   <!-- Splash Screen -->
   <div class="splash-screen" id="splashScreen">
+    <!-- Floating particles -->
+    <div class="splash-particles">
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+      <div class="splash-particle"></div>
+    </div>
+
     <div class="splash-content">
-      <div class="splash-logo">
-        <div class="splash-logo-icon">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="splashGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#34d399"/>
-                <stop offset="100%" stop-color="#06b6d4"/>
-              </linearGradient>
-            </defs>
-            <circle cx="24" cy="24" r="22" fill="url(#splashGradient)"/>
-            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Phase 1: Centered logo with glow -->
+      <div class="splash-logo-wrapper" id="splashLogoWrapper">
+        <div class="splash-glow-ring"></div>
+        <div class="splash-logo-icon" id="splashLogoIcon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="50" rx="28" ry="18" fill="#10b981"/>
+            <circle cx="75" cy="45" r="12" fill="#10b981"/>
+            <circle fill="#ffffff" cx="78" cy="42" r="5"/>
+            <circle fill="#0d0d0f" cx="79" cy="41" r="3"/>
+            <circle fill="#ffffff" cx="80" cy="40" r="1"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M82 35 Q88 25 92 18"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M80 33 Q84 20 80 12"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M35 55 Q18 72 12 88"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M12 88 Q28 84 38 78"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M45 60 L38 78"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M62 55 L56 72"/>
+            <ellipse cx="45" cy="44" rx="16" ry="9" fill="#34d399" opacity="0.5"/>
+            <rect fill="rgba(255,255,255,0.25)" x="28" y="45" width="28" height="4" rx="2"/>
+            <rect fill="rgba(255,255,255,0.15)" x="28" y="52" width="20" height="3" rx="1.5"/>
+            <path stroke="#059669" stroke-width="2" fill="none" d="M70 50 Q75 54 80 50"/>
           </svg>
         </div>
-        <span class="splash-logo-text">Credit<span>Hopper</span></span>
       </div>
-      <div class="splash-loader">
-        <div class="splash-loader-dot"></div>
-        <div class="splash-loader-dot"></div>
-        <div class="splash-loader-dot"></div>
+
+      <!-- Phase 2: Final logo lockup (hidden initially) -->
+      <div class="splash-final-logo" id="splashFinalLogo">
+        <div class="splash-final-icon" id="splashFinalIcon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="50" rx="28" ry="18" fill="#10b981"/>
+            <circle cx="75" cy="45" r="12" fill="#10b981"/>
+            <circle fill="#ffffff" cx="78" cy="42" r="5"/>
+            <circle fill="#0d0d0f" cx="79" cy="41" r="3"/>
+            <circle fill="#ffffff" cx="80" cy="40" r="1"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M82 35 Q88 25 92 18"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M80 33 Q84 20 80 12"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M35 55 Q18 72 12 88"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M12 88 Q28 84 38 78"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M45 60 L38 78"/>
+            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M62 55 L56 72"/>
+            <ellipse cx="45" cy="44" rx="16" ry="9" fill="#34d399" opacity="0.5"/>
+            <rect fill="rgba(255,255,255,0.25)" x="28" y="45" width="28" height="4" rx="2"/>
+            <rect fill="rgba(255,255,255,0.15)" x="28" y="52" width="20" height="3" rx="1.5"/>
+            <path stroke="#059669" stroke-width="2" fill="none" d="M70 50 Q75 54 80 50"/>
+          </svg>
+        </div>
+        <h1 class="splash-final-text">
+          <span class="splash-credit">Credit</span><span class="splash-hopper">Hopper</span>
+        </h1>
       </div>
-      <p class="splash-tagline">Your credit repair journey starts here</p>
-      <div class="splash-progress">
-        <div class="splash-progress-bar"></div>
+
+      <p class="splash-tagline" id="splashTagline">Hop Your Way to Better Credit®</p>
+
+      <div class="splash-loading-bar" id="splashLoadingBar">
+        <div class="splash-loading-progress"></div>
       </div>
     </div>
   </div>
@@ -60,14 +107,19 @@
       <a href="index.html" class="logo">
         <div class="logo-icon">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#34d399"/>
-                <stop offset="100%" stop-color="#06b6d4"/>
-              </linearGradient>
-            </defs>
-            <circle cx="24" cy="24" r="22" fill="url(#logoGradient)"/>
-            <path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
+            <circle cx="36" cy="22" r="6" fill="#10b981"/>
+            <circle cx="38" cy="20" r="2.5" fill="white"/>
+            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
+            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
+            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
+            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
           </svg>
         </div>
         <span class="logo-text">Credit<span>Hopper</span></span>
@@ -521,35 +573,37 @@
         <span class="badge badge-accent mb-4">Pricing</span>
         <h2>Simple, Transparent<br><span class="text-gradient">Pricing</span></h2>
         <p style="max-width: 600px; margin: 1rem auto 0;">
-          Get the letters you need, or unlock the full power of automated credit repair.
+          Start free with our letter templates, or unlock the full Credit Repair Engine.
         </p>
       </div>
 
-      <div class="pricing-grid">
-        <!-- Letter Bundles -->
+      <div class="pricing-grid" style="max-width: 900px; margin: 0 auto;">
+        <!-- Free Plan -->
         <div class="pricing-card card card-glass animate-on-scroll">
           <div class="pricing-header">
-            <h3>Letter Bundles</h3>
-            <p class="pricing-description">All 55+ dispute letter templates</p>
+            <h3>Free</h3>
+            <p class="pricing-description">DIY with letter templates</p>
             <div class="pricing-price">
-              <span class="price-amount">$47</span>
-              <span class="price-period">one-time</span>
+              <span class="price-amount">$0</span>
+              <span class="price-period">forever</span>
             </div>
           </div>
           <div class="pricing-features">
             <ul class="feature-list">
               <li><i data-lucide="check" class="icon"></i> <strong>All 55+ letter templates</strong></li>
-              <li><i data-lucide="check" class="icon"></i> Lifetime access</li>
-              <li><i data-lucide="check" class="icon"></i> All categories included</li>
               <li><i data-lucide="check" class="icon"></i> Download as TXT or PDF</li>
+              <li><i data-lucide="check" class="icon"></i> All dispute categories</li>
+              <li><i data-lucide="check" class="icon"></i> Step-by-step guides</li>
               <li><i data-lucide="check" class="icon"></i> Future template updates</li>
-              <li><i data-lucide="check" class="icon"></i> Email support</li>
+              <li style="color: var(--dark-500);"><i data-lucide="x" class="icon" style="color: var(--dark-500);"></i> Credit Repair Engine</li>
+              <li style="color: var(--dark-500);"><i data-lucide="x" class="icon" style="color: var(--dark-500);"></i> AI letter generation</li>
+              <li style="color: var(--dark-500);"><i data-lucide="x" class="icon" style="color: var(--dark-500);"></i> Email support</li>
             </ul>
           </div>
-          <a href="checkout.html?plan=bundles" class="btn btn-outline btn-lg" style="width: 100%;">
-            Get Letter Bundles
+          <a href="register.html" class="btn btn-outline btn-lg" style="width: 100%;">
+            Create Free Account
           </a>
-          <p class="pricing-note">Pay once, own forever</p>
+          <p class="pricing-note">No credit card required</p>
         </div>
 
         <!-- Pro Plan -->
@@ -557,52 +611,29 @@
           <div class="pricing-badge">Most Popular</div>
           <div class="pricing-header">
             <h3>Pro</h3>
-            <p class="pricing-description">Credit Repair Engine + Letters</p>
+            <p class="pricing-description">Full Credit Repair Engine</p>
             <div class="pricing-price">
-              <span class="price-amount">$29</span>
+              <span class="price-amount">$49</span>
               <span class="price-period">/month</span>
             </div>
           </div>
           <div class="pricing-features">
             <ul class="feature-list">
-              <li><i data-lucide="check" class="icon"></i> <strong>All Letter Bundles included</strong></li>
+              <li><i data-lucide="check" class="icon"></i> <strong>Everything in Free</strong></li>
               <li><i data-lucide="check" class="icon"></i> <strong>Credit Repair Engine</strong></li>
               <li><i data-lucide="check" class="icon"></i> Upload & auto-analyze reports</li>
-              <li><i data-lucide="check" class="icon"></i> Personalized letter generation</li>
+              <li><i data-lucide="check" class="icon"></i> AI-powered letter generation</li>
+              <li><i data-lucide="check" class="icon"></i> Personalized dispute letters</li>
+              <li><i data-lucide="check" class="icon"></i> All 5 dispute rounds</li>
               <li><i data-lucide="check" class="icon"></i> Dispute tracking dashboard</li>
-              <li><i data-lucide="check" class="icon"></i> Priority support</li>
+              <li><i data-lucide="check" class="icon"></i> Unlimited uploads & letters</li>
+              <li><i data-lucide="check" class="icon"></i> Email support</li>
             </ul>
           </div>
           <a href="register.html" class="btn btn-glow btn-lg" style="width: 100%;">
             Start 7-Day Free Trial
           </a>
-          <p class="pricing-note">No credit card required</p>
-        </div>
-
-        <!-- Premium Plan -->
-        <div class="pricing-card card card-glass animate-on-scroll">
-          <div class="pricing-header">
-            <h3>Premium</h3>
-            <p class="pricing-description">Full-service credit repair</p>
-            <div class="pricing-price">
-              <span class="price-amount">$59</span>
-              <span class="price-period">/month</span>
-            </div>
-          </div>
-          <div class="pricing-features">
-            <ul class="feature-list">
-              <li><i data-lucide="check" class="icon"></i> <strong>Everything in Pro</strong></li>
-              <li><i data-lucide="check" class="icon"></i> Unlimited report uploads</li>
-              <li><i data-lucide="check" class="icon"></i> 3-bureau monitoring</li>
-              <li><i data-lucide="check" class="icon"></i> 1-on-1 strategy session</li>
-              <li><i data-lucide="check" class="icon"></i> Advanced dispute sequences</li>
-              <li><i data-lucide="check" class="icon"></i> Phone support</li>
-            </ul>
-          </div>
-          <a href="register.html" class="btn btn-outline btn-lg" style="width: 100%;">
-            Start Free Trial
-          </a>
-          <p class="pricing-note">Then $59/mo after trial</p>
+          <p class="pricing-note">No credit card required • Then $49/mo</p>
         </div>
       </div>
 
@@ -624,12 +655,12 @@
       <div class="faq-list">
         <div class="accordion-item">
           <button type="button" class="accordion-trigger">
-            <span>What's the difference between Letter Bundles and Pro?</span>
+            <span>What's the difference between Free and Pro?</span>
             <i data-lucide="chevron-down" class="accordion-icon"></i>
           </button>
           <div class="accordion-content">
-            <p><strong>Letter Bundles ($47 one-time)</strong> gives you all 55+ dispute letter templates to download and customize yourself. Great if you want to handle everything manually.</p>
-            <p style="margin-top: 0.5rem;"><strong>Pro ($29/month)</strong> includes all the letters PLUS the Credit Repair Engine - which automatically analyzes your credit report, identifies disputable items, generates personalized letters with your details filled in, and tracks your disputes. It's the difference between doing it yourself vs. having a system do the heavy lifting.</p>
+            <p><strong>Free</strong> gives you access to all 55+ dispute letter templates to download and customize yourself. Great if you want to handle everything manually and already know what you're doing.</p>
+            <p style="margin-top: 0.5rem;"><strong>Pro ($49/month)</strong> includes all the templates PLUS the Credit Repair Engine - which automatically analyzes your credit report, identifies disputable items, generates personalized letters with your details filled in, and tracks your disputes. It's the difference between doing it yourself vs. having AI do the heavy lifting.</p>
           </div>
         </div>
 
@@ -639,18 +670,18 @@
             <i data-lucide="chevron-down" class="accordion-icon"></i>
           </button>
           <div class="accordion-content">
-            <p>The 7-day free trial gives you full access to the Credit Repair Engine - upload your credit report and see exactly what's hurting your score. You'll see all your negative items, collections, late payments, and get a clear action plan. No credit card required.</p>
-            <p style="margin-top: 0.5rem;">To actually generate dispute letters and start the repair process, you'll need to upgrade to Pro ($29/mo) or purchase the Letter Bundles ($47 one-time).</p>
+            <p>The 7-day free trial gives you full access to the Credit Repair Engine - upload your credit report and see exactly what's hurting your score. You'll see all your negative items, collections, late payments, and get a clear action plan.</p>
+            <p style="margin-top: 0.5rem;">To generate personalized dispute letters, you'll need to upgrade to Pro ($49/mo). No credit card is required to start the trial.</p>
           </div>
         </div>
 
         <div class="accordion-item">
           <button type="button" class="accordion-trigger">
-            <span>Is the $47 really a one-time payment?</span>
+            <span>Are the letter templates really free?</span>
             <i data-lucide="chevron-down" class="accordion-icon"></i>
           </button>
           <div class="accordion-content">
-            <p>Yes! Pay once and you own the Letter Bundles forever. You'll also get any new templates we add in the future at no extra cost. No subscriptions, no recurring charges, no surprises.</p>
+            <p>Yes! All 55+ dispute letter templates are completely free. Create an account and you'll have lifetime access to download and use any template. The Pro plan adds the Credit Repair Engine which automatically analyzes your credit report and generates personalized letters for you.</p>
           </div>
         </div>
 
@@ -725,12 +756,12 @@
         Join thousands who have already improved their credit scores with CreditHopper.
       </p>
       <div class="flex gap-4 justify-center flex-wrap">
-        <a href="#pricing" class="btn btn-glow btn-xl">
-          Get Started Free
+        <a href="register.html" class="btn btn-glow btn-xl">
+          Start Your Free Trial
           <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
         </a>
         <a href="bundles.html" class="btn btn-outline btn-xl">
-          Browse Templates
+          Browse Free Templates
         </a>
       </div>
     </div>
@@ -743,7 +774,21 @@
         <div class="footer-brand">
           <a href="index.html" class="logo">
             <div class="logo-icon">
-              <svg viewBox="0 0 48 48" fill="none"><defs><linearGradient id="footerLogo" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><circle cx="24" cy="24" r="22" fill="url(#footerLogo)"/><path d="M14 24L21 31L34 17" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
+            <circle cx="36" cy="22" r="6" fill="#10b981"/>
+            <circle cx="38" cy="20" r="2.5" fill="white"/>
+            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
+            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
+            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
+            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
+          </svg>
             </div>
             <span class="logo-text">Credit<span>Hopper</span></span>
           </a>
