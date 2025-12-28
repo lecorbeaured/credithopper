@@ -76,7 +76,9 @@ model User {
 
 enum SubscriptionTier {
   FREE        // Template letters only
+  STARTER     // Legacy tier
   PRO         // $49/mo - Full engine access, unlimited
+  UNLIMITED   // Legacy tier
 }
 
 // ===========================================
