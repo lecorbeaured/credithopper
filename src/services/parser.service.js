@@ -53,6 +53,11 @@ async function parseReport(reportId, userId) {
     // Clean the text
     const cleanedText = pdfService.cleanText(extractedText);
 
+    // Validate this looks like a credit report
+    if (!isValidCreditReportText(cleanedText)) {
+      throw new Error('The uploaded file does not appear to be a valid credit report. Please upload a credit report from Equifax, Experian, or TransUnion.');
+    }
+
     // Store raw text
     await reportsService.storeRawText(reportId, cleanedText);
 
@@ -164,11 +169,66 @@ async function parseReport(reportId, userId) {
 // ===========================================
 
 /**
+ * Validate that text appears to be from a credit report
+ */
+function isValidCreditReportText(text) {
+  const lowerText = text.toLowerCase();
+  
+  // Must contain at least some credit report indicators
+  const creditReportIndicators = [
+    'credit report',
+    'credit score',
+    'credit history',
+    'account history',
+    'payment history',
+    'equifax',
+    'experian',
+    'transunion',
+    'credit bureau',
+    'tradeline',
+    'credit account',
+    'balance',
+    'credit limit',
+    'payment status',
+    'account status',
+    'date opened',
+    'creditor',
+    'collection',
+    'charge off',
+    'delinquent',
+    'past due',
+    'inquiries',
+    'public records',
+  ];
+  
+  let matchCount = 0;
+  for (const indicator of creditReportIndicators) {
+    if (lowerText.includes(indicator)) {
+      matchCount++;
+    }
+  }
+  
+  // Require at least 3 indicators to consider it a credit report
+  return matchCount >= 3;
+}
+
+/**
  * Use Claude AI to parse credit report text
  */
 async function parseWithClaudeAI(text, bureau) {
   const claudeService = require('./claude.service');
   const client = claudeService.getClient();
+  
+  // First validate this looks like a credit report
+  if (!isValidCreditReportText(text)) {
+    console.log('Text does not appear to be a valid credit report');
+    return {
+      negativeItems: [],
+      reportDate: null,
+      parsedBy: 'validation-failed',
+      error: 'Document does not appear to be a credit report',
+    };
+  }
   
   // Truncate text if too long (Claude has context limits)
   const maxLength = 100000;
@@ -176,7 +236,15 @@ async function parseWithClaudeAI(text, bureau) {
     ? text.substring(0, maxLength) + '\n...[truncated]...' 
     : text;
 
-  const systemPrompt = `You are a credit report parser. Extract ALL negative items from the credit report text.
+  const systemPrompt = `You are a credit report parser. Your job is to extract ONLY REAL negative items that are ACTUALLY PRESENT in the credit report text provided.
+
+CRITICAL RULES:
+1. ONLY extract items that are EXPLICITLY mentioned in the text
+2. If you cannot find clear negative items in the text, return an empty array []
+3. DO NOT make up, invent, or hallucinate any data
+4. DO NOT use example data or placeholder data
+5. If the document does not appear to be a credit report, return an empty array []
+6. Every field must come directly from the text - if a field is not in the text, use null
 
 A negative item includes:
 - Collections accounts
@@ -189,39 +257,27 @@ A negative item includes:
 - Tax liens
 - Any account with derogatory marks
 
-For each negative item, extract:
-- creditorName: The creditor or collection agency name
-- originalCreditor: Original creditor if this is a collection
-- accountNumber: Account number (may be partial/masked)
+For each REAL negative item found, extract:
+- creditorName: The EXACT creditor or collection agency name from the document
+- originalCreditor: Original creditor if this is a collection (or null)
+- accountNumber: Account number exactly as shown (may be partial/masked) (or null)
 - accountType: COLLECTION, CHARGE_OFF, LATE_PAYMENT, REPOSSESSION, FORECLOSURE, BANKRUPTCY, JUDGMENT, TAX_LIEN, MEDICAL, CREDIT_CARD, AUTO_LOAN, PERSONAL_LOAN, STUDENT_LOAN, MORTGAGE, OTHER
-- balance: Current balance (number only, no $ or commas)
-- originalBalance: Original/high credit amount if available
-- accountStatus: The status text from the report
-- dateOpened: Date account opened (YYYY-MM-DD format)
-- dateOfFirstDelinquency: Date of first delinquency if shown (YYYY-MM-DD format)
-- lastReportedDate: Last reported date (YYYY-MM-DD format)
+- balance: Current balance as a number (or null if not shown)
+- originalBalance: Original/high credit amount if available (or null)
+- accountStatus: The EXACT status text from the report (or null)
+- dateOpened: Date account opened in YYYY-MM-DD format (or null)
+- dateOfFirstDelinquency: Date of first delinquency in YYYY-MM-DD format (or null)
+- lastReportedDate: Last reported date in YYYY-MM-DD format (or null)
 
-Respond with ONLY a valid JSON array. No explanations or markdown.`;
+Respond with ONLY a valid JSON array. No explanations, no markdown, no code blocks.
+If no negative items are found or this is not a credit report, respond with exactly: []`;
 
-  const userPrompt = `Parse this ${bureau || 'credit'} report and extract ALL negative items as JSON:
+  const userPrompt = `Analyze this document and extract ONLY the negative items that are ACTUALLY present in the text. If this is not a credit report or contains no negative items, return an empty array [].
 
+DOCUMENT TEXT:
 ${truncatedText}
 
-Return a JSON array of negative items. Example format:
-[
-  {
-    "creditorName": "ABC COLLECTIONS",
-    "originalCreditor": "CHASE BANK",
-    "accountNumber": "XXXX1234",
-    "accountType": "COLLECTION",
-    "balance": 1500.00,
-    "originalBalance": 2000.00,
-    "accountStatus": "Collection account",
-    "dateOpened": "2022-01-15",
-    "dateOfFirstDelinquency": "2021-06-01",
-    "lastReportedDate": "2024-12-01"
-  }
-]`;
+Remember: Only extract REAL data from the document. Do not invent or hallucinate any information. Return [] if no valid negative items are found.`;
 
   try {
     const response = await client.messages.create({

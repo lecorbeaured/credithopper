@@ -3,874 +3,422 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Transform your credit with professionally crafted dispute letters. Access 55+ free templates or use our Credit Repair Engine to analyze your report and generate personalized letters.">
-  <meta name="keywords" content="credit repair, dispute letters, credit score improvement, credit report, FCRA, credit repair engine">
+  <meta name="description" content="CreditHopper - Smart credit repair tools to help you dispute errors and boost your credit score. Coming soon.">
+  <title>CreditHopper - Coming Soon</title>
   
-  <title>CreditHopper - Fix Your Credit with Personalized Dispute Letters</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='28' ry='18' fill='%2310b981'/%3E%3Ccircle cx='75' cy='45' r='12' fill='%2310b981'/%3E%3Ccircle cx='78' cy='42' r='5' fill='white'/%3E%3Ccircle cx='79' cy='41' r='3' fill='%230d0d0f'/%3E%3C/svg%3E">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/landing.css">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='28' ry='18' fill='%2310b981'/%3E%3Ccircle cx='75' cy='45' r='12' fill='%2310b981'/%3E%3Ccircle cx='78' cy='42' r='5' fill='white'/%3E%3Ccircle cx='79' cy='41' r='3' fill='%230d0d0f'/%3E%3Cpath d='M82 35Q88 25 92 18' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M80 33Q84 20 80 12' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M35 55Q18 72 12 88' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M12 88Q28 84 38 78' stroke='%23059669' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='45' cy='44' rx='16' ry='9' fill='%2334d399' opacity='0.5'/%3E%3C/svg%3E">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --dark-950: #0d0d0f;
+      --dark-900: #202123;
+      --dark-800: #343541;
+      --dark-100: #ececf1;
+      --accent-500: #10b981;
+      --accent-600: #059669;
+      --accent-400: #34d399;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--dark-950);
+      color: var(--dark-100);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Animated background */
+    .bg-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    
+    .bg-glow-1 {
+      background: var(--accent-500);
+      top: -200px;
+      right: -200px;
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .bg-glow-2 {
+      background: var(--accent-600);
+      bottom: -200px;
+      left: -200px;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, 30px); }
+    }
+    
+    /* Content */
+    .container {
+      max-width: 600px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Logo */
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.8s ease-out;
+    }
+    
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.5));
+      animation: hop 2s ease-in-out infinite;
+    }
+    
+    @keyframes hop {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    .logo-text {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+    
+    .logo-text span {
+      color: var(--accent-500);
+    }
+    
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--accent-400);
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.8s ease-out 0.1s both;
+    }
+    
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-500);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    /* Tagline */
+    .tagline {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: rgba(236, 236, 241, 0.9);
+      margin-bottom: 0.75rem;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    
+    .tagline-sub {
+      font-size: 1rem;
+      color: rgba(236, 236, 241, 0.5);
+      margin-bottom: 3rem;
+      line-height: 1.6;
+      animation: fadeInUp 0.8s ease-out 0.25s both;
+    }
+    
+    /* Features */
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.8s ease-out 0.3s both;
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: rgba(236, 236, 241, 0.6);
+    }
+    
+    .feature svg {
+      width: 18px;
+      height: 18px;
+      color: var(--accent-500);
+    }
+    
+    /* Email form */
+    .email-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 450px;
+      margin: 0 auto 1.5rem;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+    
+    .email-input {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      background: var(--dark-900);
+      border: 1px solid var(--dark-800);
+      border-radius: 12px;
+      color: var(--dark-100);
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .email-input::placeholder {
+      color: rgba(236, 236, 241, 0.4);
+    }
+    
+    .email-input:focus {
+      border-color: var(--accent-500);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .submit-btn {
+      padding: 1rem 1.75rem;
+      background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    
+    .form-note {
+      font-size: 0.8rem;
+      color: rgba(236, 236, 241, 0.4);
+      animation: fadeInUp 0.8s ease-out 0.5s both;
+    }
+    
+    /* Success message */
+    .success-message {
+      display: none;
+      padding: 1rem 1.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      color: var(--accent-400);
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.4s ease-out;
+    }
+    
+    .success-message.show {
+      display: block;
+    }
+    
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 2rem;
+      font-size: 0.8rem;
+      color: rgba(236, 236, 241, 0.3);
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      .logo-text {
+        font-size: 2rem;
+      }
+      
+      .logo-icon {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .email-form {
+        flex-direction: column;
+      }
+      
+      .submit-btn {
+        width: 100%;
+      }
+      
+      .features {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Splash Screen -->
-  <div class="splash-screen" id="splashScreen">
-    <!-- Floating particles -->
-    <div class="splash-particles">
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
-      <div class="splash-particle"></div>
+  <!-- Background glows -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  
+  <div class="container">
+    <!-- Logo -->
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="50" rx="28" ry="18" fill="#10b981"/>
+        <circle cx="75" cy="45" r="12" fill="#10b981"/>
+        <circle fill="#ffffff" cx="78" cy="42" r="5"/>
+        <circle fill="#0d0d0f" cx="79" cy="41" r="3"/>
+        <circle fill="#ffffff" cx="80" cy="40" r="1"/>
+        <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M82 35 Q88 25 92 18"/>
+        <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M80 33 Q84 20 80 12"/>
+        <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M35 55 Q18 72 12 88"/>
+        <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M12 88 Q28 84 38 78"/>
+        <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M45 60 L38 78"/>
+        <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M62 55 L56 72"/>
+        <ellipse cx="45" cy="44" rx="16" ry="9" fill="#34d399" opacity="0.5"/>
+        <rect fill="rgba(255,255,255,0.25)" x="28" y="45" width="28" height="4" rx="2"/>
+        <rect fill="rgba(255,255,255,0.15)" x="28" y="52" width="20" height="3" rx="1.5"/>
+        <path stroke="#059669" stroke-width="2" fill="none" d="M70 50 Q75 54 80 50"/>
+      </svg>
+      <div class="logo-text">Credit<span>Hopper</span></div>
     </div>
-
-    <div class="splash-content">
-      <!-- Phase 1: Centered logo with glow -->
-      <div class="splash-logo-wrapper" id="splashLogoWrapper">
-        <div class="splash-glow-ring"></div>
-        <div class="splash-logo-icon" id="splashLogoIcon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="50" cy="50" rx="28" ry="18" fill="#10b981"/>
-            <circle cx="75" cy="45" r="12" fill="#10b981"/>
-            <circle fill="#ffffff" cx="78" cy="42" r="5"/>
-            <circle fill="#0d0d0f" cx="79" cy="41" r="3"/>
-            <circle fill="#ffffff" cx="80" cy="40" r="1"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M82 35 Q88 25 92 18"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M80 33 Q84 20 80 12"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M35 55 Q18 72 12 88"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M12 88 Q28 84 38 78"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M45 60 L38 78"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M62 55 L56 72"/>
-            <ellipse cx="45" cy="44" rx="16" ry="9" fill="#34d399" opacity="0.5"/>
-            <rect fill="rgba(255,255,255,0.25)" x="28" y="45" width="28" height="4" rx="2"/>
-            <rect fill="rgba(255,255,255,0.15)" x="28" y="52" width="20" height="3" rx="1.5"/>
-            <path stroke="#059669" stroke-width="2" fill="none" d="M70 50 Q75 54 80 50"/>
-          </svg>
-        </div>
+    
+    <!-- Coming Soon Badge -->
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Coming Soon
+    </div>
+    
+    <!-- Tagline -->
+    <p class="tagline">Hop your way to better credit.®</p>
+    <p class="tagline-sub">Smart tools to dispute errors, remove negatives, and take control of your credit score.</p>
+    
+    <!-- Features -->
+    <div class="features">
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Dispute Letters in Minutes
       </div>
-
-      <!-- Phase 2: Final logo lockup (hidden initially) -->
-      <div class="splash-final-logo" id="splashFinalLogo">
-        <div class="splash-final-icon" id="splashFinalIcon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="50" cy="50" rx="28" ry="18" fill="#10b981"/>
-            <circle cx="75" cy="45" r="12" fill="#10b981"/>
-            <circle fill="#ffffff" cx="78" cy="42" r="5"/>
-            <circle fill="#0d0d0f" cx="79" cy="41" r="3"/>
-            <circle fill="#ffffff" cx="80" cy="40" r="1"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M82 35 Q88 25 92 18"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M80 33 Q84 20 80 12"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M35 55 Q18 72 12 88"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M12 88 Q28 84 38 78"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M45 60 L38 78"/>
-            <path stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" d="M62 55 L56 72"/>
-            <ellipse cx="45" cy="44" rx="16" ry="9" fill="#34d399" opacity="0.5"/>
-            <rect fill="rgba(255,255,255,0.25)" x="28" y="45" width="28" height="4" rx="2"/>
-            <rect fill="rgba(255,255,255,0.15)" x="28" y="52" width="20" height="3" rx="1.5"/>
-            <path stroke="#059669" stroke-width="2" fill="none" d="M70 50 Q75 54 80 50"/>
-          </svg>
-        </div>
-        <h1 class="splash-final-text">
-          <span class="splash-credit">Credit</span><span class="splash-hopper">Hopper</span>
-        </h1>
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Track Your Progress
       </div>
-
-      <p class="splash-tagline" id="splashTagline">Hop Your Way to Better Credit®</p>
-
-      <div class="splash-loading-bar" id="splashLoadingBar">
-        <div class="splash-loading-progress"></div>
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        No Monthly Fees
       </div>
     </div>
+    
+    <!-- Email signup -->
+    <div class="success-message" id="successMessage">
+      🎉 You're on the list! We'll notify you when we launch.
+    </div>
+    
+    <form class="email-form" id="waitlistForm">
+      <input 
+        type="email" 
+        class="email-input" 
+        placeholder="Enter your email" 
+        required
+        id="emailInput"
+      >
+      <button type="submit" class="submit-btn">Notify Me</button>
+    </form>
+    
+    <p class="form-note">Be the first to know when we launch. No spam, ever.</p>
   </div>
-
-  <!-- Navigation -->
-  <nav class="nav" id="navbar">
-    <div class="container nav-inner">
-      <a href="index.html" class="logo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
-            <circle cx="36" cy="22" r="6" fill="#10b981"/>
-            <circle cx="38" cy="20" r="2.5" fill="white"/>
-            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
-            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
-            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
-            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
-          </svg>
-        </div>
-        <span class="logo-text">Credit<span>Hopper</span></span>
-      </a>
-      
-      <div class="nav-links">
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="#bundles" class="nav-link">Letter Bundles</a>
-        <a href="#pricing" class="nav-link">Pricing</a>
-        <a href="#faq" class="nav-link">FAQ</a>
-      </div>
-      
-      <div class="nav-actions">
-        <a href="login.html" class="btn btn-ghost">Login</a>
-        <a href="#pricing" class="btn btn-primary">Get Started</a>
-      </div>
-
-      <!-- Mobile Menu Toggle -->
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i data-lucide="menu" class="menu-icon"></i>
-        <i data-lucide="x" class="close-icon hidden"></i>
-      </button>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="#features" class="mobile-link">Features</a>
-      <a href="#how-it-works" class="mobile-link">How It Works</a>
-      <a href="#bundles" class="mobile-link">Letter Bundles</a>
-      <a href="#pricing" class="mobile-link">Pricing</a>
-      <a href="#faq" class="mobile-link">FAQ</a>
-      <div class="mobile-menu-actions">
-        <a href="login.html" class="btn btn-outline" style="width: 100%;">Login</a>
-        <a href="#pricing" class="btn btn-primary" style="width: 100%;">Get Started</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <section class="hero-landing">
-    <div class="hero-bg-effects">
-      <div class="hero-glow hero-glow-1"></div>
-      <div class="hero-glow hero-glow-2"></div>
-      <div class="hero-grid"></div>
-    </div>
-    
-    <div class="container hero-content">
-      <a href="engine-v2.html" class="hero-badge animate-on-load">
-        <span class="badge badge-accent badge-dot pulse">New</span>
-        <span>Credit Repair Engine 2.0 Now Available</span>
-        <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-      </a>
-      
-      <h1 class="hero-title animate-on-load">
-        Meet the Credit Repair Tool People Use<br>
-        <span class="text-gradient">When They Want Real Results</span>
-      </h1>
-      
-      <p class="hero-description animate-on-load">
-        Clear steps. Real consumer laws. No calls. No scripts. Just progress.
-      </p>
-      
-      <div class="hero-cta animate-on-load">
-        <a href="#pricing" class="btn btn-glow btn-xl">
-          Start Fixing Your Credit
-          <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
-        </a>
-        <a href="#how-it-works" class="btn btn-outline btn-xl">
-          See How It Works
-        </a>
-      </div>
-      
-      <div class="hero-stats animate-on-load">
-        <div class="hero-stat">
-          <span class="hero-stat-value">87%</span>
-          <span class="hero-stat-label">Success Rate</span>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-value">24K+</span>
-          <span class="hero-stat-label">Users Helped</span>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-value">+73</span>
-          <span class="hero-stat-label">Avg Score Increase</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hero Image/Preview -->
-    <div class="hero-preview container animate-on-load">
-      <div class="preview-window">
-        <div class="preview-header">
-          <div class="preview-dots">
-            <span></span><span></span><span></span>
-          </div>
-          <span class="preview-title">Credit Repair Engine</span>
-        </div>
-        <div class="preview-content">
-          <div class="preview-sidebar">
-            <div class="preview-nav-item active">
-              <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
-              Dashboard
-            </div>
-            <div class="preview-nav-item">
-              <i data-lucide="file-text" style="width: 18px; height: 18px;"></i>
-              My Letters
-            </div>
-            <div class="preview-nav-item">
-              <i data-lucide="upload" style="width: 18px; height: 18px;"></i>
-              Upload Report
-            </div>
-            <div class="preview-nav-item">
-              <i data-lucide="trending-up" style="width: 18px; height: 18px;"></i>
-              Progress
-            </div>
-          </div>
-          <div class="preview-main">
-            <div class="preview-card">
-              <div class="preview-card-header">
-                <span>Credit Score</span>
-                <span class="badge badge-success badge-sm">+45 pts</span>
-              </div>
-              <div class="preview-score">
-                <span class="score-value">712</span>
-                <span class="score-label">Good</span>
-              </div>
-              <div class="preview-progress">
-                <div class="preview-progress-bar" style="width: 71%;"></div>
-              </div>
-            </div>
-            <div class="preview-disputes">
-              <div class="preview-dispute-item">
-                <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--accent-400);"></i>
-                <span>Late Payment - Removed</span>
-              </div>
-              <div class="preview-dispute-item">
-                <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--accent-400);"></i>
-                <span>Collection Account - Deleted</span>
-              </div>
-              <div class="preview-dispute-item pending">
-                <i data-lucide="clock" style="width: 16px; height: 16px; color: var(--warm-400);"></i>
-                <span>Hard Inquiry - Pending</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Trusted By / Social Proof -->
-  <section class="trusted-section">
-    <div class="container">
-      <p class="trusted-label">Trusted by thousands rebuilding their credit</p>
-      <div class="trusted-logos">
-        <div class="trusted-logo">★★★★★ <span>4.9 Rating</span></div>
-        <div class="trusted-logo">FCRA <span>Compliant</span></div>
-        <div class="trusted-logo">SSL <span>Secured</span></div>
-        <div class="trusted-logo">24/7 <span>Support</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="section-lg" id="features">
-    <div class="container">
-      <div class="section-header text-center">
-        <span class="badge badge-accent mb-4">Features</span>
-        <h2>Everything You Need to<br><span class="text-gradient">Repair Your Credit</span></h2>
-        <p style="max-width: 600px; margin: 1rem auto 0;">
-          Whether you prefer DIY templates or want personalized letters, we've got you covered.
-        </p>
-      </div>
-
-      <div class="features-grid">
-        <!-- Feature 1 -->
-        <div class="feature-card-lg card card-glass card-hover animate-on-scroll">
-          <div class="feature-icon">
-            <i data-lucide="sparkles"></i>
-          </div>
-          <h3>Credit Repair Engine</h3>
-          <p>Upload your credit report and our system identifies every disputable item. Generate powerful letters that demand verification - because they have to prove it, not you.</p>
-          <ul class="feature-list-mini">
-            <li><i data-lucide="check"></i> Auto-detects disputable items</li>
-            <li><i data-lucide="check"></i> Puts burden on bureaus</li>
-            <li><i data-lucide="check"></i> Demands proof, not promises</li>
-          </ul>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="feature-card-lg card card-glass card-hover animate-on-scroll">
-          <div class="feature-icon">
-            <i data-lucide="file-text"></i>
-          </div>
-          <h3>55+ Power Letters</h3>
-          <p>Access our complete library of dispute letters written to put the pressure on bureaus and collectors. These aren't "please help" letters - they're demand letters.</p>
-          <ul class="feature-list-mini">
-            <li><i data-lucide="check"></i> Written to shift the burden</li>
-            <li><i data-lucide="check"></i> Ready to customize & send</li>
-            <li><i data-lucide="check"></i> 100% free access</li>
-          </ul>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="feature-card-lg card card-glass card-hover animate-on-scroll">
-          <div class="feature-icon">
-            <i data-lucide="shield-check"></i>
-          </div>
-          <h3>The Law on Your Side</h3>
-          <p>FCRA and FDCPA require bureaus and collectors to verify disputed info - or delete it. Our letters use these laws to protect you and hold them accountable.</p>
-          <ul class="feature-list-mini">
-            <li><i data-lucide="check"></i> Uses law as your weapon</li>
-            <li><i data-lucide="check"></i> No proof = must delete</li>
-            <li><i data-lucide="check"></i> 30-day response required</li>
-          </ul>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="feature-card-lg card card-glass card-hover animate-on-scroll">
-          <div class="feature-icon">
-            <i data-lucide="trophy"></i>
-          </div>
-          <h3>Track Your Wins</h3>
-          <p>Monitor every dispute from submission to deletion. See exactly which items get removed and how much debt disappears from your report.</p>
-          <ul class="feature-list-mini">
-            <li><i data-lucide="check"></i> Dispute status tracking</li>
-            <li><i data-lucide="check"></i> Removed items counter</li>
-            <li><i data-lucide="check"></i> Debt eliminated tracker</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How It Works Section -->
-  <section class="section-lg section-dark" id="how-it-works">
-    <div class="container">
-      <div class="section-header text-center">
-        <span class="badge badge-electric mb-4">How It Works</span>
-        <h2>Three Steps to<br><span class="text-gradient">Hold Them Accountable</span></h2>
-        <p style="max-width: 600px; margin: 1rem auto 0;">
-          You don't have to prove you're right. Make them prove they are.
-        </p>
-      </div>
-
-      <div class="steps-container">
-        <div class="step animate-on-scroll">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Upload Your Report</h3>
-            <p>Get your free credit report from AnnualCreditReport.com. Our secure platform accepts reports from all three bureaus.</p>
-          </div>
-          <div class="step-icon">
-            <i data-lucide="upload-cloud"></i>
-          </div>
-        </div>
-
-        <div class="step-connector"></div>
-
-        <div class="step animate-on-scroll">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Find & Challenge</h3>
-            <p>Our engine identifies every item that can be disputed. Generate powerful letters demanding they verify with proof - or delete it.</p>
-          </div>
-          <div class="step-icon">
-            <i data-lucide="scan-search"></i>
-          </div>
-        </div>
-
-        <div class="step-connector"></div>
-
-        <div class="step animate-on-scroll">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Send & Win</h3>
-            <p>Mail your letters and start the 30-day clock. If they can't prove it, they must remove it. Most users see deletions within 30-45 days.</p>
-          </div>
-          <div class="step-icon">
-            <i data-lucide="trophy"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center mt-8">
-        <a href="#pricing" class="btn btn-primary btn-lg">
-          Start Fighting Back
-          <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Letter Bundles Preview -->
-  <section class="section-lg" id="bundles">
-    <div class="container">
-      <div class="section-header text-center">
-        <span class="badge badge-accent mb-4">Letter Library</span>
-        <h2>55+ Professional<br><span class="text-gradient">Dispute Templates</span></h2>
-        <p style="max-width: 600px; margin: 1rem auto 0;">
-          Free access to our complete collection of dispute letters, organized by category.
-        </p>
-      </div>
-
-      <div class="bundles-grid">
-        <!-- Bundle Card 1 -->
-        <div class="bundle-card card card-glass card-hover animate-on-scroll">
-          <div class="bundle-header">
-            <span class="badge badge-beginner">Beginner</span>
-            <span class="bundle-count">12 Letters</span>
-          </div>
-          <h3>Credit Basics</h3>
-          <p>Essential letters for common credit issues. Perfect for first-time credit repair.</p>
-          <ul class="bundle-list">
-            <li>General dispute letter</li>
-            <li>Debt validation request</li>
-            <li>Goodwill adjustment</li>
-            <li>Pay for delete template</li>
-          </ul>
-          <a href="bundles.html" class="btn btn-outline" style="width: 100%;">
-            View Bundle
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
-          </a>
-        </div>
-
-        <!-- Bundle Card 2 -->
-        <div class="bundle-card card card-glass card-hover animate-on-scroll">
-          <div class="bundle-header">
-            <span class="badge badge-intermediate">Intermediate</span>
-            <span class="bundle-count">18 Letters</span>
-          </div>
-          <h3>Collections & Charge-offs</h3>
-          <p>Targeted letters for dealing with collection agencies and charged-off accounts.</p>
-          <ul class="bundle-list">
-            <li>Collection dispute letter</li>
-            <li>Cease and desist</li>
-            <li>Statute of limitations</li>
-            <li>Re-aging dispute</li>
-          </ul>
-          <a href="bundles.html" class="btn btn-outline" style="width: 100%;">
-            View Bundle
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
-          </a>
-        </div>
-
-        <!-- Bundle Card 3 -->
-        <div class="bundle-card card card-glass card-hover animate-on-scroll">
-          <div class="bundle-header">
-            <span class="badge badge-advanced">Advanced</span>
-            <span class="bundle-count">15 Letters</span>
-          </div>
-          <h3>Legal & Compliance</h3>
-          <p>Advanced dispute strategies using FCRA, FDCPA, and other legal frameworks.</p>
-          <ul class="bundle-list">
-            <li>Method of verification</li>
-            <li>Procedural request</li>
-            <li>Intent to sue letter</li>
-            <li>FTC complaint template</li>
-          </ul>
-          <a href="bundles.html" class="btn btn-outline" style="width: 100%;">
-            View Bundle
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
-          </a>
-        </div>
-
-        <!-- Bundle Card 4 -->
-        <div class="bundle-card card card-glass card-hover animate-on-scroll">
-          <div class="bundle-header">
-            <span class="badge badge-error">Specialized</span>
-            <span class="bundle-count">22 Letters</span>
-          </div>
-          <h3>Identity Theft</h3>
-          <p>Complete toolkit for identity theft victims. Dispute fraudulent accounts effectively.</p>
-          <ul class="bundle-list">
-            <li>Fraud affidavit</li>
-            <li>Police report template</li>
-            <li>Fraud alert request</li>
-            <li>Identity theft dispute</li>
-          </ul>
-          <a href="bundles.html" class="btn btn-outline" style="width: 100%;">
-            View Bundle
-            <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="text-center mt-8">
-        <a href="bundles.html" class="btn btn-secondary btn-lg">
-          Browse All 55+ Templates
-          <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials Section -->
-  <section class="section-lg section-dark">
-    <div class="container">
-      <div class="section-header text-center">
-        <span class="badge badge-accent mb-4">Testimonials</span>
-        <h2>Real Results from<br><span class="text-gradient">Real People</span></h2>
-      </div>
-
-      <div class="testimonials-grid">
-        <div class="testimonial-card card card-glass animate-on-scroll">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"I was skeptical at first, but after using the Credit Repair Engine, I removed 4 negative items and my score jumped 89 points in 60 days!"</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">MJ</div>
-            <div>
-              <div class="testimonial-name">Marcus J.</div>
-              <div class="testimonial-meta">Score: 548 → 637</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="testimonial-card card card-glass animate-on-scroll">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"The free templates alone are worth it. I've been able to dispute collections that were years old and get them removed. Amazing resource."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">ST</div>
-            <div>
-              <div class="testimonial-name">Sarah T.</div>
-              <div class="testimonial-meta">3 collections removed</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="testimonial-card card card-glass animate-on-scroll">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"As someone who was a victim of identity theft, the specialized bundle saved me. Every letter I needed was there, properly formatted."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">RW</div>
-            <div>
-              <div class="testimonial-name">Robert W.</div>
-              <div class="testimonial-meta">Identity theft resolved</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing Section -->
-  <section class="section-lg" id="pricing">
-    <div class="container">
-      <div class="section-header text-center">
-        <span class="badge badge-accent mb-4">Pricing</span>
-        <h2>Simple, Transparent<br><span class="text-gradient">Pricing</span></h2>
-        <p style="max-width: 600px; margin: 1rem auto 0;">
-          Start free with our letter templates, or unlock the full Credit Repair Engine.
-        </p>
-      </div>
-
-      <div class="pricing-grid" style="max-width: 900px; margin: 0 auto;">
-        <!-- Free Plan -->
-        <div class="pricing-card card card-glass animate-on-scroll">
-          <div class="pricing-header">
-            <h3>Free</h3>
-            <p class="pricing-description">DIY with letter templates</p>
-            <div class="pricing-price">
-              <span class="price-amount">$0</span>
-              <span class="price-period">forever</span>
-            </div>
-          </div>
-          <div class="pricing-features">
-            <ul class="feature-list">
-              <li><i data-lucide="check" class="icon"></i> <strong>All 55+ letter templates</strong></li>
-              <li><i data-lucide="check" class="icon"></i> Download as TXT or PDF</li>
-              <li><i data-lucide="check" class="icon"></i> All dispute categories</li>
-              <li><i data-lucide="check" class="icon"></i> Step-by-step guides</li>
-              <li><i data-lucide="check" class="icon"></i> Future template updates</li>
-              <li style="color: var(--dark-500);"><i data-lucide="x" class="icon" style="color: var(--dark-500);"></i> Credit Repair Engine</li>
-              <li style="color: var(--dark-500);"><i data-lucide="x" class="icon" style="color: var(--dark-500);"></i> AI letter generation</li>
-              <li style="color: var(--dark-500);"><i data-lucide="x" class="icon" style="color: var(--dark-500);"></i> Email support</li>
-            </ul>
-          </div>
-          <a href="register.html" class="btn btn-outline btn-lg" style="width: 100%;">
-            Create Free Account
-          </a>
-          <p class="pricing-note">No credit card required</p>
-        </div>
-
-        <!-- Pro Plan -->
-        <div class="pricing-card pricing-card-featured card card-glass animate-on-scroll">
-          <div class="pricing-badge">Most Popular</div>
-          <div class="pricing-header">
-            <h3>Pro</h3>
-            <p class="pricing-description">Full Credit Repair Engine</p>
-            <div class="pricing-price">
-              <span class="price-amount">$49</span>
-              <span class="price-period">/month</span>
-            </div>
-          </div>
-          <div class="pricing-features">
-            <ul class="feature-list">
-              <li><i data-lucide="check" class="icon"></i> <strong>Everything in Free</strong></li>
-              <li><i data-lucide="check" class="icon"></i> <strong>Credit Repair Engine</strong></li>
-              <li><i data-lucide="check" class="icon"></i> Upload & auto-analyze reports</li>
-              <li><i data-lucide="check" class="icon"></i> AI-powered letter generation</li>
-              <li><i data-lucide="check" class="icon"></i> Personalized dispute letters</li>
-              <li><i data-lucide="check" class="icon"></i> All 5 dispute rounds</li>
-              <li><i data-lucide="check" class="icon"></i> Dispute tracking dashboard</li>
-              <li><i data-lucide="check" class="icon"></i> Unlimited uploads & letters</li>
-              <li><i data-lucide="check" class="icon"></i> Email support</li>
-            </ul>
-          </div>
-          <a href="register.html" class="btn btn-glow btn-lg" style="width: 100%;">
-            Start 7-Day Free Trial
-          </a>
-          <p class="pricing-note">No credit card required • Then $49/mo</p>
-        </div>
-      </div>
-
-      <div class="pricing-guarantee text-center">
-        <i data-lucide="shield-check" style="width: 24px; height: 24px; color: var(--accent-400);"></i>
-        <span>7-Day Free Trial • No Credit Card Required • Cancel Anytime</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ Section -->
-  <section class="section-lg section-dark" id="faq">
-    <div class="container container-tight">
-      <div class="section-header text-center">
-        <span class="badge badge-accent mb-4">FAQ</span>
-        <h2>Frequently Asked<br><span class="text-gradient">Questions</span></h2>
-      </div>
-
-      <div class="faq-list">
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>What's the difference between Free and Pro?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p><strong>Free</strong> gives you access to all 55+ dispute letter templates to download and customize yourself. Great if you want to handle everything manually and already know what you're doing.</p>
-            <p style="margin-top: 0.5rem;"><strong>Pro ($49/month)</strong> includes all the templates PLUS the Credit Repair Engine - which automatically analyzes your credit report, identifies disputable items, generates personalized letters with your details filled in, and tracks your disputes. It's the difference between doing it yourself vs. having AI do the heavy lifting.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>What's included in the free trial?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>The 7-day free trial gives you full access to the Credit Repair Engine - upload your credit report and see exactly what's hurting your score. You'll see all your negative items, collections, late payments, and get a clear action plan.</p>
-            <p style="margin-top: 0.5rem;">To generate personalized dispute letters, you'll need to upgrade to Pro ($49/mo). No credit card is required to start the trial.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>Are the letter templates really free?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>Yes! All 55+ dispute letter templates are completely free. Create an account and you'll have lifetime access to download and use any template. The Pro plan adds the Credit Repair Engine which automatically analyzes your credit report and generates personalized letters for you.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>How does this actually work?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>Here's the key: when you dispute something, the law requires the credit bureau to verify it with documented proof - not just call the creditor and accept their word. If they can't prove it's accurate, they must delete it. Our letters are designed to demand that proof, putting the burden where it belongs: on them.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>How long does it take?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>Credit bureaus have 30 days to investigate - that's the law. If they miss the deadline or can't verify the information, they must delete it. Most users see their first deletions within 30-45 days. Complete credit repair typically takes 3-6 months depending on how many items you're disputing.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>Is this legal?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>100% legal. The Fair Credit Reporting Act gives you the RIGHT to dispute any information on your credit report and requires bureaus to verify it or remove it. You're not asking for favors - you're exercising federal rights that protect you from inaccurate reporting.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>What's the success rate?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>87% of disputed items get removed or corrected. Why so high? Because the law requires verification with documented proof - and most creditors don't keep perfect records for every account. When they can't prove it, they must delete it.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>What if the bureau says they "verified" it?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>Demand to know HOW they verified it. Ask for the name of who they contacted, what documents they reviewed, and copies of any proof they received. Many bureaus do "soft verifications" - just checking with the creditor without getting real documentation. That's not good enough, and you can call them on it.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-trigger">
-            <span>Can I cancel anytime?</span>
-            <i data-lucide="chevron-down" class="accordion-icon"></i>
-          </button>
-          <div class="accordion-content">
-            <p>Yes, cancel any time from your account settings. No contracts, no cancellation fees.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Final CTA Section -->
-  <section class="section-lg cta-section">
-    <div class="container text-center">
-      <h2>Ready to Fix Your Credit?</h2>
-      <p style="max-width: 500px; margin: 1rem auto 2rem;">
-        Join thousands who have already improved their credit scores with CreditHopper.
-      </p>
-      <div class="flex gap-4 justify-center flex-wrap">
-        <a href="register.html" class="btn btn-glow btn-xl">
-          Start Your Free Trial
-          <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
-        </a>
-        <a href="bundles.html" class="btn btn-outline btn-xl">
-          Browse Free Templates
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer-main">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="index.html" class="logo">
-            <div class="logo-icon">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="24" cy="24" rx="13" ry="9" fill="#10b981"/>
-            <circle cx="36" cy="22" r="6" fill="#10b981"/>
-            <circle cx="38" cy="20" r="2.5" fill="white"/>
-            <circle cx="38.5" cy="19.5" r="1.5" fill="#0d0d0f"/>
-            <path d="M40 17Q43 12 45 9" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M39 16Q41 10 39 6" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M17 27Q9 35 6 42" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M6 42Q13 40 18 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M22 29L19 37" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M30 27L27 35" stroke="#059669" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <ellipse cx="22" cy="21" rx="8" ry="4" fill="#34d399" opacity="0.5"/>
-            <rect x="14" y="22" width="13" height="2" rx="1" fill="white" opacity="0.25"/>
-            <rect x="14" y="25" width="9" height="1.5" rx="0.75" fill="white" opacity="0.15"/>
-          </svg>
-            </div>
-            <span class="logo-text">Credit<span>Hopper</span></span>
-          </a>
-          <p>Empowering you to take control of your credit with professional dispute letters and automated tools.</p>
-        </div>
-
-        <div class="footer-links">
-          <h4>Product</h4>
-          <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="bundles.html">Letter Bundles</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#faq">FAQ</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="guide.html">Credit Guide</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="success-stories.html">Success Stories</a></li>
-            <li><a href="help.html">Help Center</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="terms.html">Terms of Service</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; <span class="current-year">2024</span> CreditHopper. All rights reserved.</p>
-        <p>Not a credit repair organization. For educational purposes.</p>
-      </div>
-    </div>
+  
+  <footer class="footer">
+    © 2025 CreditHopper. All rights reserved.
   </footer>
-
-  <!-- Scripts -->
-  <script src="js/main.js"></script>
-  <script src="js/landing.js"></script>
+  
   <script>
-    lucide.createIcons();
-    
-    // Set current year
-    document.querySelectorAll('.current-year').forEach(el => {
-      el.textContent = new Date().getFullYear();
-    });
-    
-    // Ensure accordion works (backup initialization)
-    document.querySelectorAll('.accordion-trigger').forEach(trigger => {
-      trigger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const item = this.closest('.accordion-item');
-        const content = item.querySelector('.accordion-content');
-        const isOpen = item.classList.contains('open');
-        
-        // Close all other items
-        document.querySelectorAll('.accordion-item.open').forEach(openItem => {
-          if (openItem !== item) {
-            openItem.classList.remove('open');
-            openItem.querySelector('.accordion-content').style.maxHeight = '0';
-          }
-        });
-        
-        // Toggle current
-        if (isOpen) {
-          item.classList.remove('open');
-          content.style.maxHeight = '0';
-        } else {
-          item.classList.add('open');
-          content.style.maxHeight = content.scrollHeight + 'px';
-        }
-      });
+    // Simple form handling
+    document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('emailInput').value;
+      const form = this;
+      const successMessage = document.getElementById('successMessage');
+      
+      // Store email in localStorage (you can replace this with a real backend/service)
+      const waitlist = JSON.parse(localStorage.getItem('credithopper_waitlist') || '[]');
+      if (!waitlist.includes(email)) {
+        waitlist.push(email);
+        localStorage.setItem('credithopper_waitlist', JSON.stringify(waitlist));
+      }
+      
+      // Show success
+      form.style.display = 'none';
+      successMessage.classList.add('show');
+      
+      // Optional: Send to your backend or email service
+      // fetch('/api/waitlist', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email })
+      // });
     });
   </script>
 </body>
