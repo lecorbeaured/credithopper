@@ -183,6 +183,65 @@
   border-radius: 6px;
 }
 
+/* Google Drive Import */
+.upload-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--dark-500);
+  font-size: 0.8125rem;
+}
+
+.upload-divider::before,
+.upload-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--dark-700);
+}
+
+.btn-google-drive {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--dark-800);
+  border: 1px solid var(--dark-600);
+  border-radius: 10px;
+  color: var(--dark-100);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  pointer-events: auto;
+}
+
+.btn-google-drive:hover {
+  background: var(--dark-700);
+  border-color: var(--dark-500);
+  transform: translateY(-1px);
+}
+
+.btn-google-drive:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-google-drive svg {
+  flex-shrink: 0;
+}
+
+.btn-google-drive .btn-loading {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
 /* Upload Progress */
 .upload-progress {
   text-align: left;

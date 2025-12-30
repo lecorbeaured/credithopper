@@ -4,6 +4,9 @@
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Redirect if already logged in (unless handling OAuth callback)
+  redirectIfLoggedIn();
+  
   handleGoogleCallback(); // Check for OAuth callback first
   initLoginForm();
   initRegisterForm();
@@ -11,6 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initPasswordStrength();
   initGoogleAuth();
 });
+
+/* ============================================
+   REDIRECT IF ALREADY LOGGED IN
+   ============================================ */
+function redirectIfLoggedIn() {
+  // Don't redirect if handling OAuth callback
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('token') || urlParams.get('google') || urlParams.get('error')) {
+    return;
+  }
+  
+  // Check if user is already logged in
+  const hasToken = !!localStorage.getItem('ch_token');
+  const hasFlag = localStorage.getItem('credithopper_logged_in') === 'true';
+  
+  if (hasToken && hasFlag) {
+    // User is logged in, redirect to dashboard
+    console.log('[Auth] User already logged in, redirecting to dashboard');
+    window.location.href = 'dashboard.html';
+  }
+}
 
 /* ============================================
    GOOGLE OAUTH CALLBACK HANDLER
@@ -28,6 +52,10 @@ function handleGoogleCallback() {
       errorMessage = 'You denied access to your Google account.';
     } else if (error === 'no_code') {
       errorMessage = 'No authorization code received from Google.';
+    } else if (error === 'token_error') {
+      errorMessage = 'Failed to get authentication token from Google.';
+    } else if (error === 'user_error') {
+      errorMessage = 'Failed to get user information from Google.';
     }
     showToast(errorMessage, 'error');
     // Clean up URL
@@ -37,6 +65,14 @@ function handleGoogleCallback() {
   
   // Handle successful Google OAuth
   if (token && googleSuccess === 'success') {
+    // ========== VALIDATE TOKEN ==========
+    // Basic validation: token should be a non-empty string
+    if (typeof token !== 'string' || token.length < 10) {
+      showToast('Invalid authentication token received.', 'error');
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+    
     // Store the token
     localStorage.setItem('credithopper_logged_in', 'true');
     localStorage.setItem('ch_token', token);
@@ -93,53 +129,21 @@ async function handleGoogleSignIn(e) {
   btn.disabled = true;
   
   try {
-    // Check if we have API integration
-    if (typeof API !== 'undefined' && API.baseUrl) {
-      // Real implementation - redirect to backend OAuth endpoint
-      // The backend will handle the OAuth flow and redirect back
-      window.location.href = `${API.baseUrl}/auth/google`;
-      return;
+    // ========== REQUIRE REAL API ==========
+    if (typeof API === 'undefined' || !API.baseUrl) {
+      throw new Error('API not configured. Please contact support.');
     }
     
-    // Demo mode - simulate Google sign-in
-    await simulateApiCall(2000);
-    
-    // Simulate successful Google auth
-    const mockUser = {
-      email: 'demo.user@gmail.com',
-      firstName: 'Demo',
-      lastName: 'User',
-      provider: 'google'
-    };
-    
-    // Store auth state
-    localStorage.setItem('credithopper_logged_in', 'true');
-    localStorage.setItem('credithopper_user_email', mockUser.email);
-    localStorage.setItem('credithopper_user', JSON.stringify(mockUser));
-    
-    // Show success
-    showToast('Successfully signed in with Google!', 'success');
-    
-    // Redirect
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectParam = urlParams.get('redirect');
-    const storedRedirect = sessionStorage.getItem('credithopper_redirect');
-    
-    let redirectUrl = 'dashboard.html';
-    if (redirectParam === 'engine') {
-      redirectUrl = 'engine.html';
-    } else if (storedRedirect) {
-      redirectUrl = storedRedirect;
-      sessionStorage.removeItem('credithopper_redirect');
-    }
-    
-    setTimeout(() => {
-      window.location.href = redirectUrl;
-    }, 1000);
+    // Real implementation - redirect to backend OAuth endpoint
+    // The backend will handle the OAuth flow and redirect back with token
+    window.location.href = `${API.baseUrl}/auth/google`;
+    // Note: We return here because the page will navigate away
+    // The success/failure will be handled by handleGoogleCallback() on return
+    return;
     
   } catch (error) {
     console.error('Google sign-in error:', error);
-    showToast('Google sign-in failed. Please try again.', 'error');
+    showToast(error.message || 'Google sign-in failed. Please try again.', 'error');
     
     // Reset button
     btn.innerHTML = originalContent;
@@ -157,9 +161,9 @@ function initLoginForm() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const email = form.querySelector('#email').value;
+    const email = form.querySelector('#email').value.trim();
     const password = form.querySelector('#password').value;
-    const remember = form.querySelector('#remember').checked;
+    const remember = form.querySelector('#remember')?.checked || false;
     
     // Clear previous errors
     clearErrors(form);
@@ -185,36 +189,63 @@ function initLoginForm() {
     submitBtn.innerHTML = '<span class="btn-loading"></span> Signing in...';
     submitBtn.disabled = true;
     
-    // Simulate API call
-    await simulateApiCall(1500);
-    
-    // Reset button
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-    
-    // Set logged in flag
-    localStorage.setItem('credithopper_logged_in', 'true');
-    localStorage.setItem('credithopper_user_email', email);
-    
-    // Demo: Show success and redirect
-    showToast('Login successful! Redirecting...', 'success');
-    
-    // Check for redirect destination
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectParam = urlParams.get('redirect');
-    const storedRedirect = sessionStorage.getItem('credithopper_redirect');
-    
-    let redirectUrl = 'dashboard.html';
-    if (redirectParam === 'engine') {
-      redirectUrl = 'engine.html';
-    } else if (storedRedirect) {
-      redirectUrl = storedRedirect;
-      sessionStorage.removeItem('credithopper_redirect');
+    try {
+      // ========== REAL API CALL ==========
+      // Check if API is available
+      if (typeof API === 'undefined' || !API.baseUrl) {
+        throw new Error('API not available. Please refresh the page.');
+      }
+      
+      const response = await API.auth.login(email, password, remember);
+      
+      // Reset button first
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+      
+      // ========== VERIFY SUCCESS ==========
+      if (!response.ok) {
+        // Server returned an error
+        const errorMsg = response.data?.error || response.data?.message || 'Login failed. Please check your credentials.';
+        showToast(errorMsg, 'error');
+        return; // STOP HERE - do not set logged in
+      }
+      
+      // Verify we actually got a token
+      if (!API.token) {
+        showToast('Login failed. No authentication token received.', 'error');
+        return; // STOP HERE - do not set logged in
+      }
+      
+      // ========== ONLY NOW SET LOGGED IN ==========
+      localStorage.setItem('credithopper_logged_in', 'true');
+      localStorage.setItem('credithopper_user_email', email);
+      
+      // Show success
+      showToast('Login successful! Redirecting...', 'success');
+      
+      // Determine redirect destination
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectParam = urlParams.get('redirect');
+      const storedRedirect = sessionStorage.getItem('credithopper_redirect');
+      
+      let redirectUrl = 'dashboard.html';
+      if (redirectParam === 'engine') {
+        redirectUrl = 'engine.html';
+      } else if (storedRedirect) {
+        redirectUrl = storedRedirect;
+        sessionStorage.removeItem('credithopper_redirect');
+      }
+      
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+      showToast(error.message || 'Login failed. Please try again.', 'error');
     }
-    
-    setTimeout(() => {
-      window.location.href = redirectUrl;
-    }, 1000);
   });
 }
 
@@ -279,25 +310,59 @@ function initRegisterForm() {
     submitBtn.innerHTML = '<span class="btn-loading"></span> Creating account...';
     submitBtn.disabled = true;
     
-    // Simulate API call
-    await simulateApiCall(2000);
-    
-    // Reset button
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-    
-    // Set logged in flag (trial user)
-    localStorage.setItem('credithopper_logged_in', 'true');
-    localStorage.setItem('credithopper_user_email', email);
-    localStorage.setItem('credithopper_is_trial', 'true');
-    localStorage.setItem('credithopper_user_name', firstName + ' ' + lastName);
-    
-    // Demo: Show success and redirect to engine (start trial flow)
-    showToast('Account created! Starting your free trial...', 'success');
-    
-    setTimeout(() => {
-      window.location.href = 'engine.html';
-    }, 1000);
+    try {
+      // ========== REAL API CALL ==========
+      if (typeof API === 'undefined' || !API.baseUrl) {
+        throw new Error('API not available. Please refresh the page.');
+      }
+      
+      const response = await API.auth.register({
+        firstName,
+        lastName,
+        email,
+        password,
+        personalUseOnly: personalUse,
+        acceptedTerms: terms,
+      });
+      
+      // Reset button first
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+      
+      // ========== VERIFY SUCCESS ==========
+      if (!response.ok) {
+        // Server returned an error
+        const errorMsg = response.data?.error || response.data?.message || 'Registration failed. Please try again.';
+        showToast(errorMsg, 'error');
+        return; // STOP HERE - do not set logged in
+      }
+      
+      // Verify we actually got a token
+      if (!API.token) {
+        showToast('Registration failed. No authentication token received.', 'error');
+        return; // STOP HERE - do not set logged in
+      }
+      
+      // ========== ONLY NOW SET LOGGED IN ==========
+      localStorage.setItem('credithopper_logged_in', 'true');
+      localStorage.setItem('credithopper_user_email', email);
+      localStorage.setItem('credithopper_is_trial', 'true');
+      localStorage.setItem('credithopper_user_name', firstName + ' ' + lastName);
+      
+      // Show success
+      showToast('Account created! Starting your free trial...', 'success');
+      
+      // Redirect to engine (start trial flow)
+      setTimeout(() => {
+        window.location.href = 'engine.html';
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Registration error:', error);
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+      showToast(error.message || 'Registration failed. Please try again.', 'error');
+    }
   });
 }
 

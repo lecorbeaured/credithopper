@@ -118,7 +118,7 @@ async function getReport(req, res, next) {
 
 /**
  * POST /api/reports/:id/parse
- * Trigger parsing of a credit report
+ * Trigger parsing of a credit report using the new two-phase processor
  */
 async function parseReport(req, res, next) {
   try {
@@ -136,26 +136,39 @@ async function parseReport(req, res, next) {
       return error(res, 'Report is already being processed', 400);
     }
     
-    // Import parser service
-    const parserService = require('../services/parser.service');
+    // Use the new two-phase processor
+    const { CreditReportProcessor } = require('../services/processor.service');
+    const processor = new CreditReportProcessor();
     
-    // Parse the report (this may take a moment)
-    const result = await parserService.parseReport(id, req.userId);
+    // Process the report
+    const result = await processor.processReport(id, req.userId);
     
-    return success(res, {
-      reportId: id,
-      status: 'COMPLETED',
-      bureau: result.bureau,
-      itemsFound: result.itemsFound,
-      itemsCreated: result.itemsCreated,
-      items: result.items.map(item => ({
-        id: item.id,
-        creditorName: item.creditorName,
-        accountType: item.accountType,
-        balance: item.balance,
-        recommendation: item.recommendation,
-      })),
-    }, 'Report parsed successfully');
+    // Return the safe response from the processor
+    if (result.success) {
+      return success(res, {
+        reportId: id,
+        status: result.status,
+        bureau: result.classification?.sourceBureau,
+        confidence: result.classification?.confidence,
+        extraction: result.extraction ? {
+          tradelines: result.extraction.counts?.tradelines || 0,
+          collections: result.extraction.counts?.collections || 0,
+          inquiries: result.extraction.counts?.inquiries || 0,
+          totalNegativeItems: result.extraction.counts?.totalNegativeItems || 0,
+        } : null,
+        items: result.extraction?.tradelines?.concat(result.extraction?.collections || []) || [],
+        warnings: result.warnings,
+      }, result.userMessage);
+    } else {
+      // Return error response with details
+      return error(res, result.userMessage, 400, {
+        code: result.error?.code,
+        status: result.status,
+        documentType: result.classification?.documentType,
+        confidence: result.classification?.confidence,
+        suggestedAction: result.suggestedAction,
+      });
+    }
     
   } catch (err) {
     if (err.message.includes('PDF') || err.message.includes('parse')) {

@@ -125,11 +125,15 @@ const Engine = {
   initUploadZone() {
     const uploadZone = document.getElementById('uploadZone');
     const fileInput = document.getElementById('fileInput');
+    const googleDriveBtn = document.getElementById('googleDriveBtn');
     
     if (!uploadZone || !fileInput) return;
     
-    // Click to upload
-    uploadZone.addEventListener('click', () => fileInput.click());
+    // Click to upload (but not on Google Drive button)
+    uploadZone.addEventListener('click', (e) => {
+      if (e.target.closest('.btn-google-drive')) return;
+      fileInput.click();
+    });
     
     // Drag and drop
     uploadZone.addEventListener('dragover', (e) => {
@@ -163,6 +167,91 @@ const Engine = {
         e.stopPropagation();
         this.resetUpload();
       });
+    }
+    
+    // Google Drive button
+    if (googleDriveBtn) {
+      googleDriveBtn.addEventListener('click', (e) => this.handleGoogleDriveImport(e));
+    }
+  },
+  
+  async handleGoogleDriveImport(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const googleDriveBtn = document.getElementById('googleDriveBtn');
+    
+    // Check if GooglePickerService is available
+    if (typeof GooglePickerService === 'undefined') {
+      this.showToast('Google Drive integration is not available', 'error');
+      return;
+    }
+    
+    // Check if configured
+    if (GooglePickerService.CLIENT_ID.includes('YOUR_')) {
+      this.showToast('Google Drive is not configured', 'error');
+      return;
+    }
+    
+    // Show loading state
+    const originalContent = googleDriveBtn.innerHTML;
+    googleDriveBtn.innerHTML = '<span class="btn-loading"></span> Connecting...';
+    googleDriveBtn.disabled = true;
+    
+    try {
+      await GooglePickerService.init();
+      
+      GooglePickerService.open({
+        viewMode: 'pdfs',
+        multiSelect: false,
+        
+        onSelect: async (result) => {
+          googleDriveBtn.innerHTML = originalContent;
+          googleDriveBtn.disabled = false;
+          
+          if (!result.success) {
+            this.showToast(result.error || 'Failed to select file', 'error');
+            return;
+          }
+          
+          if (!result.files || result.files.length === 0) return;
+          
+          const selectedFile = result.files[0];
+          
+          // Validate file type
+          if (!selectedFile.mimeType.includes('pdf')) {
+            this.showToast('Please select a PDF file', 'error');
+            return;
+          }
+          
+          this.showToast('Downloading from Google Drive...', 'default');
+          
+          try {
+            const file = await GooglePickerService.downloadAsFile(selectedFile);
+            
+            if (file.size > 10 * 1024 * 1024) {
+              this.showToast('File must be under 10MB', 'error');
+              return;
+            }
+            
+            this.handleFileUpload(file);
+            this.showToast(`Imported "${selectedFile.name}"`, 'success');
+            
+          } catch (err) {
+            this.showToast('Failed to download file', 'error');
+          }
+        },
+        
+        onCancel: () => {
+          googleDriveBtn.innerHTML = originalContent;
+          googleDriveBtn.disabled = false;
+        }
+      });
+      
+    } catch (error) {
+      googleDriveBtn.innerHTML = originalContent;
+      googleDriveBtn.disabled = false;
+      this.showToast('Failed to open Google Drive', 'error');
     }
   },
   
@@ -244,33 +333,79 @@ const Engine = {
     try {
       const response = await API.reports.parse(reportId);
       
-      if (response.ok && response.data.data) {
-        const { items, report } = response.data.data;
+      if (response.ok && response.data.success !== false) {
+        const data = response.data.data || response.data;
+        const { items, extraction, status, bureau, confidence, warnings } = data;
         
         // Update report in state
         const idx = this.state.reports.findIndex(r => r.id === reportId);
         if (idx !== -1) {
-          this.state.reports[idx] = report;
+          this.state.reports[idx] = {
+            ...this.state.reports[idx],
+            parseStatus: status === 'COMPLETED' || status === 'COMPLETED_PARTIAL' ? 'COMPLETED' : 'FAILED',
+            bureau: bureau,
+          };
         }
         
+        // Handle items from new format
+        const extractedItems = items || [];
+        
         // Add items to state (avoid duplicates)
-        if (items && items.length > 0) {
-          items.forEach(item => {
+        if (extractedItems.length > 0) {
+          extractedItems.forEach(item => {
             if (!this.state.items.find(i => i.id === item.id)) {
               this.state.items.push(item);
             }
           });
           
-          this.showToast(`Found ${items.length} negative items!`, 'success');
+          // Show appropriate message based on status
+          if (status === 'COMPLETED_PARTIAL') {
+            this.showToast(`Found ${extractedItems.length} items (some items could not be verified)`, 'warning');
+          } else {
+            this.showToast(`Found ${extractedItems.length} negative items!`, 'success');
+          }
         } else {
           this.showToast('No negative items found in this report', 'info');
+        }
+        
+        // Show any warnings
+        if (warnings && warnings.length > 0) {
+          warnings.forEach(w => {
+            console.warn('Processing warning:', w.message);
+          });
+        }
+        
+        this.updateReportsListUI();
+      } else {
+        // Handle error response from new processor
+        const errorData = response.data?.data || response.data || {};
+        const errorMessage = errorData.userMessage || response.data?.error || 'Failed to analyze report';
+        const suggestedAction = errorData.suggestedAction;
+        const documentType = errorData.documentType;
+        
+        // Update report status to failed
+        const idx = this.state.reports.findIndex(r => r.id === reportId);
+        if (idx !== -1) {
+          this.state.reports[idx].parseStatus = 'FAILED';
+        }
+        
+        // Show detailed error message
+        if (documentType && documentType !== 'CREDIT_REPORT' && documentType !== 'UNKNOWN') {
+          this.showToast(`This doesn't appear to be a credit report (detected as ${documentType.toLowerCase().replace('_', ' ')})`, 'error');
+        } else {
+          this.showToast(errorMessage, 'error');
+        }
+        
+        // Log suggested action for debugging
+        if (suggestedAction) {
+          console.info('Suggested action:', suggestedAction);
         }
         
         this.updateReportsListUI();
       }
     } catch (error) {
       console.error('Parse error:', error);
-      this.showToast('Failed to analyze report', 'error');
+      this.showToast('Failed to analyze report. Please try again.', 'error');
     }
   },
   

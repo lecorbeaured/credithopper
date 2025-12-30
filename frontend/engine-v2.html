@@ -141,6 +141,22 @@
               <h3>Drag & drop or click to browse</h3>
               <p class="upload-formats">PDF files from any bureau (Max 10MB)</p>
               <input type="file" id="fileInput" accept=".pdf" hidden>
+              
+              <!-- Google Drive Import Button -->
+              <div class="upload-divider">
+                <span>or</span>
+              </div>
+              <button type="button" class="btn btn-google-drive" id="googleDriveBtn">
+                <svg viewBox="0 0 87.3 78" width="20" height="18">
+                  <path d="M6.6 66.85l15.39-26.64 15.39 26.64H6.6z" fill="#0066da"/>
+                  <path d="M29.58 0l15.39 26.64H14.19L29.58 0z" fill="#00ac47"/>
+                  <path d="M57.78 0l29.19 50.55-15.39 26.64-29.19-50.55L57.78 0z" fill="#ea4335"/>
+                  <path d="M43.36 26.64l14.2 24.55-28.98.31 14.78-24.86z" fill="#00832d"/>
+                  <path d="M43.36 26.64L28.58 51.5H0l14.78-24.86h28.58z" fill="#2684fc"/>
+                  <path d="M71.58 51.19L57.78 26.64l14.78-24.86 14.78 24.86-15.76 24.55z" fill="#ffba00"/>
+                </svg>
+                Import from Google Drive
+              </button>
             </div>
           </div>
 
@@ -1270,6 +1286,9 @@
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <script src="js/api.js"></script>
+  <script src="js/google-picker.js"></script>
+  <script src="js/auth-ui.js"></script>
   <script src="js/main.js"></script>
   <script src="js/engine-v2.js"></script>
 </body>

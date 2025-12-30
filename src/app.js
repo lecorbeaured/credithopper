@@ -52,6 +52,13 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ===========================================
+// RESPONSE SANITIZATION (Production Safety)
+// ===========================================
+
+const { sanitizeResponse } = require('./middleware/sanitizer');
+app.use(sanitizeResponse);
+
+// ===========================================
 // REQUEST LOGGING (Development)
 // ===========================================
 

@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initUploadZone();
+  initGoogleDriveImport();
   initBureauSelection();
   initIssueSelection();
   initMobileMenu();
@@ -224,6 +225,110 @@ function formatFileSize(bytes) {
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+/* ============================================
+   GOOGLE DRIVE IMPORT
+   ============================================ */
+function initGoogleDriveImport() {
+  const googleDriveBtn = document.getElementById('googleDriveBtn');
+  if (!googleDriveBtn) return;
+  
+  googleDriveBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent triggering upload zone click
+    
+    // Check if GooglePickerService is available
+    if (typeof GooglePickerService === 'undefined') {
+      showToast('Google Drive integration is not available. Please use file upload instead.', 'error');
+      return;
+    }
+    
+    // Check if properly configured
+    if (GooglePickerService.CLIENT_ID.includes('YOUR_')) {
+      showToast('Google Drive is not configured. Please contact support.', 'error');
+      console.error('[Engine] Google Picker credentials not configured');
+      return;
+    }
+    
+    // Show loading state on button
+    const originalContent = googleDriveBtn.innerHTML;
+    googleDriveBtn.innerHTML = '<span class="btn-loading"></span> Connecting...';
+    googleDriveBtn.disabled = true;
+    
+    try {
+      // Initialize picker if not already done
+      await GooglePickerService.init();
+      
+      // Open the picker
+      GooglePickerService.open({
+        viewMode: 'all', // Show PDFs and images
+        multiSelect: false,
+        
+        onSelect: async (result) => {
+          // Reset button
+          googleDriveBtn.innerHTML = originalContent;
+          googleDriveBtn.disabled = false;
+          
+          if (!result.success) {
+            showToast(result.error || 'Failed to select file', 'error');
+            return;
+          }
+          
+          if (!result.files || result.files.length === 0) {
+            showToast('No file selected', 'error');
+            return;
+          }
+          
+          const selectedFile = result.files[0];
+          console.log('[Engine] File selected from Drive:', selectedFile.name);
+          
+          // Validate file type
+          const validTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+          if (!validTypes.includes(selectedFile.mimeType)) {
+            showToast('Please select a PDF or image file', 'error');
+            return;
+          }
+          
+          // Show downloading state
+          showToast('Downloading file from Google Drive...', 'default');
+          
+          try {
+            // Download the file from Google Drive
+            const file = await GooglePickerService.downloadAsFile(selectedFile);
+            
+            // Validate file size (10MB max)
+            const maxSize = 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+              showToast('File size must be under 10MB', 'error');
+              return;
+            }
+            
+            // Process the file using existing handler
+            handleFileSelect(file);
+            showToast(`Imported "${selectedFile.name}" from Google Drive`, 'success');
+            
+          } catch (downloadError) {
+            console.error('[Engine] Failed to download from Drive:', downloadError);
+            showToast('Failed to download file from Google Drive. Please try again.', 'error');
+          }
+        },
+        
+        onCancel: () => {
+          // Reset button
+          googleDriveBtn.innerHTML = originalContent;
+          googleDriveBtn.disabled = false;
+          console.log('[Engine] Google Drive picker cancelled');
+        }
+      });
+      
+    } catch (error) {
+      console.error('[Engine] Google Drive import error:', error);
+      googleDriveBtn.innerHTML = originalContent;
+      googleDriveBtn.disabled = false;
+      showToast('Failed to open Google Drive. Please try again.', 'error');
+    }
+  });
 }
 
 /* ============================================
