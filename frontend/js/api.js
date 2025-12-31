@@ -174,7 +174,7 @@ const API = {
     async logout() {
       API.setToken(null);
       API.setUser(null);
-      window.location.href = '/login.html';
+      window.location.href = 'login.html';
     },
     
     async me() {
