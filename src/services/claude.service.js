@@ -173,10 +173,22 @@ function buildLetterPrompt(params) {
     user,
     previousDisputes,
     customNotes,
+    round = 1,
   } = params;
 
-  // Random tone selector for variation
-  const tones = ['confused', 'frustrated', 'polite', 'brief', 'matter-of-fact'];
+  // Determine effective round based on previous disputes
+  const effectiveRound = previousDisputes?.length > 0 
+    ? Math.min(previousDisputes.length + 1, 4) 
+    : round;
+
+  // Random tone selector for variation (adjust by round)
+  const tonesByRound = {
+    1: ['confused', 'polite', 'matter-of-fact'],
+    2: ['questioning', 'frustrated', 'polite but firm'],
+    3: ['firm', 'disappointed', 'assertive'],
+    4: ['formal', 'serious', 'demanding'],
+  };
+  const tones = tonesByRound[effectiveRound] || tonesByRound[1];
   const selectedTone = tones[Math.floor(Math.random() * tones.length)];
 
   // Random opening style
@@ -191,6 +203,7 @@ function buildLetterPrompt(params) {
 
   let prompt = `Write a ${letterType.replace(/_/g, ' ').toLowerCase()} letter with these details:
 
+DISPUTE ROUND: ${effectiveRound} of 4
 TONE FOR THIS LETTER: ${selectedTone}
 OPENING STYLE: ${selectedOpening}
 
@@ -205,8 +218,17 @@ ${negativeItem.originalCreditor ? `- Original Creditor: ${negativeItem.originalC
 
 `;
 
+  // Add previous dispute history for rounds 2+
+  if (previousDisputes && previousDisputes.length > 0) {
+    prompt += `\nPREVIOUS DISPUTE HISTORY:\n`;
+    previousDisputes.forEach((d, i) => {
+      prompt += `- Round ${i + 1}: Sent ${d.mailedAt ? new Date(d.mailedAt).toLocaleDateString() : 'unknown'}, Response: ${d.responseType || 'none'}\n`;
+    });
+    prompt += '\n';
+  }
+
   // Add letter-type specific guidance
-  prompt += getLetterTypeGuidance(letterType, previousDisputes);
+  prompt += getLetterTypeGuidance(letterType, previousDisputes, effectiveRound);
 
   // Add custom notes if provided
   if (customNotes) {
@@ -215,9 +237,8 @@ ${negativeItem.originalCreditor ? `- Original Creditor: ${negativeItem.originalC
 
   prompt += `
 REMEMBER:
-- Sound like a regular person, not a lawyer
-- NO legal jargon or citations
-- Keep it short (3-6 sentences)
+- Sound like a regular person, not a lawyer${effectiveRound < 4 ? ' (NO legal citations yet)' : ''}
+- Keep it ${effectiveRound === 1 ? 'short (3-6 sentences)' : effectiveRound === 4 ? 'thorough (1-2 pages)' : 'medium length'}
 - Don't explain or justify - just dispute
 - No signature or closing
 - Make it unique - don't sound like a template
@@ -228,61 +249,109 @@ Write only the letter body now:`;
 }
 
 /**
- * Get guidance based on letter type
+ * Get guidance based on letter type and round
+ * Enhanced with progressive escalation strategy
  */
-function getLetterTypeGuidance(letterType, previousDisputes) {
-  const guidance = {
-    INITIAL_DISPUTE: `
-WHAT TO SAY:
+function getLetterTypeGuidance(letterType, previousDisputes, round = 1) {
+  // Round-based guidance for bureau disputes
+  const roundGuidance = {
+    1: `
+ROUND 1 - THE CONFUSED CONSUMER:
+- Sound genuinely confused
 - You don't recognize this account
 - OR this information isn't accurate
 - Ask them to look into it / verify it
-- That's it - don't explain why`,
+- That's it - don't explain why
+- NO legal language at all
+- Keep it SHORT (half page max)`,
+
+    2: `
+ROUND 2 - METHOD OF VERIFICATION:
+- Reference your previous dispute date
+- They said "verified" but didn't explain HOW
+- Ask specific questions:
+  * "How exactly did you verify this?"
+  * "Who did you contact?"
+  * "What documentation did they provide?"
+  * "Was this reviewed by a person or automated?"
+- Express frustration but stay polite
+- Still NO legal citations
+- Medium length (3/4 page)`,
+
+    3: `
+ROUND 3 - PROCEDURAL ISSUES:
+- Reference BOTH previous disputes with dates
+- Document their failures:
+  * Late responses
+  * Vague verification without details
+  * No proof provided
+- NOW you can mention "I understand the Fair Credit Reporting Act requires..."
+- Soft warning that you may need to escalate
+- Still NO specific section numbers yet
+- Firmer tone, 1 page`,
+
+    4: `
+ROUND 4 - FINAL DEMAND:
+- Complete timeline of ALL disputes with dates
+- NOW use full legal language:
+  * "Under FCRA §611(a)..."
+  * "Your violation of §623..."
+  * Reference statutory damages ($100-$1,000 per violation)
+- Clear DEMAND: Delete within 15 days
+- State consequences: CFPB complaint, State AG, potential lawsuit
+- CC to regulatory agencies
+- Very formal, 1-2 pages`,
+  };
+
+  // Standard guidance by letter type
+  const guidance = {
+    INITIAL_DISPUTE: roundGuidance[1],
 
     DEBT_VALIDATION: `
-WHAT TO SAY:
+DEBT VALIDATION (to Furnisher):
 - You're disputing this debt
 - You want them to prove they own it and can collect
-- Ask for documentation showing it's yours
-- Don't acknowledge the debt is valid`,
+- Ask for:
+  * Original signed contract
+  * Complete payment history
+  * Proof they own the debt
+  * License to collect in your state
+- DON'T acknowledge the debt is valid
+- State they must cease collection until validated`,
 
-    METHOD_OF_VERIFICATION: `
-CONTEXT: User already disputed, bureau said "verified"
+    METHOD_OF_VERIFICATION: roundGuidance[2],
 
-WHAT TO SAY:
-- You disputed before and they said it was verified
-- But they didn't show you HOW they verified it
-- Ask what they actually did to verify
-- Who did they contact? What did they look at?`,
+    PROCEDURAL_VIOLATION: roundGuidance[3],
 
-    FOLLOW_UP: `
-CONTEXT: Previous dispute, no satisfactory response
+    LEGAL_ESCALATION: roundGuidance[4],
 
-WHAT TO SAY:
-- Reference that you disputed before
-- Still showing on report / still not resolved
-- Ask them to actually look into it this time
-- Express frustration naturally`,
+    FOLLOW_UP: roundGuidance[round] || roundGuidance[2],
 
     GOODWILL: `
-CONTEXT: User acknowledges the item but wants removal as courtesy
-
-WHAT TO SAY:
+GOODWILL REQUEST:
 - Be polite and appreciative
-- Briefly mention a hardship (job loss, medical, etc) if user noted one
-- Ask if they'd consider removing it as a one-time courtesy
-- Mention you've been a good customer otherwise
-- This is the ONE type where you can explain a little`,
+- Acknowledge the item (this is the exception)
+- Briefly mention hardship if relevant
+- Ask if they'd consider removing as a one-time courtesy
+- Highlight positive history with them
+- Promise continued on-time payments
+- Humble, sincere tone`,
 
     EARLY_EXCLUSION: `
-CONTEXT: Medical debt that should be excluded under newer rules
-
-WHAT TO SAY:
+MEDICAL DEBT EXCLUSION:
 - You noticed a medical account on your report
-- You believe it should have been removed under the new rules
-- Ask them to check if it qualifies for removal
-- Keep it simple`,
+- You believe it should be removed under FCRA medical debt rules
+- Ask them to verify if it qualifies for exclusion
+- Keep it simple and polite`,
   };
+
+  // If we have previous disputes, escalate based on count
+  if (previousDisputes && previousDisputes.length > 0) {
+    const disputeRound = previousDisputes.length + 1;
+    if (disputeRound >= 2 && disputeRound <= 4) {
+      return roundGuidance[disputeRound];
+    }
+  }
 
   return guidance[letterType] || guidance.INITIAL_DISPUTE;
 }

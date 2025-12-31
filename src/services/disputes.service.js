@@ -329,6 +329,7 @@ async function markAsMailed(disputeId, userId, mailedData = {}) {
 
 /**
  * Log a response from bureau/furnisher
+ * Enhanced with next steps recommendations
  */
 async function logResponse(disputeId, userId, responseData) {
   const {
@@ -359,20 +360,28 @@ async function logResponse(disputeId, userId, responseData) {
     'NO_RESPONSE',    // No response within timeframe
     'FRIVOLOUS',      // Marked as frivolous (rare)
     'PENDING',        // Still being investigated
+    'PARTIAL_DELETE', // Some info removed
+    'INVESTIGATING',  // Still investigating
   ];
 
   if (!validResponseTypes.includes(responseType)) {
     throw new Error(`Invalid response type. Must be one of: ${validResponseTypes.join(', ')}`);
   }
 
+  // Check if response was late (potential FCRA violation)
+  const responseDue = dispute.responseDueDate ? new Date(dispute.responseDueDate) : null;
+  const actualResponseDate = responseDate ? new Date(responseDate) : new Date();
+  const wasLate = responseDue && actualResponseDate > responseDue;
+
   // Update dispute
   const updated = await prisma.dispute.update({
     where: { id: disputeId },
     data: {
-      status: responseType === 'PENDING' ? 'MAILED' : 'RESPONSE_RECEIVED',
+      status: responseType === 'PENDING' || responseType === 'INVESTIGATING' ? 'MAILED' : 'RESPONSE_RECEIVED',
       responseType,
-      responseDate: responseDate ? new Date(responseDate) : new Date(),
-      responseNotes,
+      responseDate: actualResponseDate,
+      responseReceived: true,
+      responseNotes: (responseNotes || '') + (wasLate ? '\n[LATE RESPONSE - Potential FCRA violation]' : ''),
       responseDocumentPath,
     },
   });
@@ -380,9 +389,19 @@ async function logResponse(disputeId, userId, responseData) {
   // Update negative item based on response
   if (responseType === 'DELETED') {
     await handleDeletion(dispute, userId);
+  } else if (responseType === 'PARTIAL_DELETE') {
+    await handlePartialDeletion(dispute, userId);
+  } else if (responseType === 'UPDATED') {
+    await prisma.negativeItem.update({
+      where: { id: dispute.negativeItemId },
+      data: { status: 'UPDATED' },
+    });
   } else if (responseType === 'VERIFIED') {
     // Item stays as DISPUTING, ready for next round
   }
+
+  // Calculate next steps
+  const nextSteps = calculateNextSteps(dispute, responseType, wasLate);
 
   // Log activity
   await prisma.activityLog.create({
@@ -392,10 +411,149 @@ async function logResponse(disputeId, userId, responseData) {
       description: `Logged ${responseType} response for ${dispute.negativeItem.creditorName}`,
       entityType: 'dispute',
       entityId: disputeId,
+      metadata: { responseType, wasLate },
     },
   });
 
-  return updated;
+  return {
+    dispute: updated,
+    nextSteps,
+  };
+}
+
+/**
+ * Calculate next steps based on response
+ */
+function calculateNextSteps(dispute, responseType, wasLate) {
+  const round = dispute.round;
+  let nextAction = null;
+  let nextRound = round + 1;
+  let nextActionDate = null;
+  let explanation = '';
+  let urgency = 'normal';
+
+  const addDays = (date, days) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  };
+
+  switch (responseType) {
+    case 'DELETED':
+      nextAction = 'CELEBRATE';
+      explanation = '🎉 Success! The item has been deleted. Check other bureaus to ensure it\'s removed everywhere.';
+      urgency = 'none';
+      break;
+
+    case 'PARTIAL_DELETE':
+      nextAction = 'REVIEW_AND_CONTINUE';
+      explanation = 'Some information was removed. Review changes and decide if you want to continue disputing.';
+      nextActionDate = addDays(new Date(), 7);
+      break;
+
+    case 'VERIFIED':
+      if (round === 1) {
+        nextAction = 'SEND_MOV';
+        explanation = 'They "verified" without proof. Send a Method of Verification letter asking HOW they verified it.';
+        nextActionDate = addDays(new Date(), 3);
+        urgency = 'high';
+      } else if (round === 2) {
+        nextAction = 'ESCALATE_ROUND_3';
+        explanation = 'Verified again without documentation. Escalate with a letter citing FCRA procedural requirements.';
+        nextActionDate = addDays(new Date(), 3);
+        urgency = 'high';
+      } else if (round === 3) {
+        nextAction = 'FINAL_DEMAND';
+        explanation = 'Multiple verifications without proper proof. Send final demand with legal citations and consequences.';
+        nextActionDate = addDays(new Date(), 3);
+        urgency = 'high';
+      } else {
+        nextAction = 'FILE_COMPLAINT';
+        explanation = 'Four rounds without resolution. File complaints with CFPB and State AG.';
+        nextActionDate = addDays(new Date(), 7);
+        urgency = 'critical';
+      }
+      break;
+
+    case 'UPDATED':
+      nextAction = 'REVIEW_CHANGES';
+      explanation = 'Information was updated but not deleted. Review your credit report for the changes.';
+      nextActionDate = addDays(new Date(), 7);
+      break;
+
+    case 'NO_RESPONSE':
+      nextAction = 'VIOLATION_NOTICE';
+      explanation = '⚠️ They missed the 30-day deadline! This is an FCRA violation. Your next letter should cite this violation and demand immediate deletion.';
+      nextActionDate = addDays(new Date(), 3);
+      urgency = 'critical';
+      break;
+
+    case 'FRIVOLOUS':
+      nextAction = 'CHALLENGE_FRIVOLOUS';
+      explanation = 'They claimed "frivolous" to avoid investigating. Send a letter with specific details challenging this determination.';
+      nextActionDate = addDays(new Date(), 3);
+      urgency = 'high';
+      break;
+
+    case 'INVESTIGATING':
+    case 'PENDING':
+      nextAction = 'WAIT';
+      explanation = 'Still investigating (they have 30-45 days total). Mark your calendar and follow up if they miss the deadline.';
+      nextActionDate = addDays(new Date(), 14);
+      break;
+
+    default:
+      nextAction = 'REVIEW';
+      explanation = 'Review the response and determine next steps.';
+      nextActionDate = addDays(new Date(), 7);
+  }
+
+  // Add late response bonus action
+  if (wasLate && responseType !== 'DELETED') {
+    explanation += '\n\n📋 BONUS: Their response was LATE. Document this FCRA violation in your next letter for additional leverage.';
+    urgency = 'high';
+  }
+
+  return {
+    currentRound: round,
+    responseType,
+    wasLate,
+    nextAction,
+    nextRound: nextAction === 'CELEBRATE' ? null : Math.min(nextRound, 4),
+    nextActionDate,
+    explanation,
+    urgency,
+    canEscalate: round < 4 && responseType !== 'DELETED',
+    canFileComplaint: round >= 2,
+    suggestedStrategy: nextRound <= 4 ? getDefaultStrategy(nextRound, dispute.target) : 'LEGAL_ESCALATION',
+  };
+}
+
+/**
+ * Handle partial deletion
+ */
+async function handlePartialDeletion(dispute, userId) {
+  const negativeItem = await prisma.negativeItem.findUnique({
+    where: { id: dispute.negativeItemId },
+  });
+
+  // Create partial win record
+  await prisma.win.create({
+    data: {
+      userId,
+      negativeItemId: dispute.negativeItemId,
+      winType: 'PARTIAL_DELETION',
+      bureausAffected: dispute.bureau ? [dispute.bureau] : [],
+      roundAchieved: dispute.round,
+      description: `Partial update/removal for ${negativeItem.creditorName}`,
+    },
+  });
+
+  // Update item status
+  await prisma.negativeItem.update({
+    where: { id: dispute.negativeItemId },
+    data: { status: 'UPDATED' },
+  });
 }
 
 /**
