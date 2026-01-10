@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 const config = require('./config');
 
 // Create Express app
@@ -15,16 +16,38 @@ const app = express();
 app.set('trust proxy', 1);
 
 // ===========================================
+// STATIC FILE SERVING (Frontend) - MUST BE BEFORE HELMET
+// ===========================================
+
+// Serve frontend static files FIRST (before security middleware)
+app.use(express.static(path.join(__dirname, '../frontend'), {
+  maxAge: config.env === 'production' ? '1d' : 0,
+  etag: true,
+  setHeaders: (res, filePath) => {
+    // Set correct MIME types
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
+
+// ===========================================
 // SECURITY MIDDLEWARE
 // ===========================================
 
-// Helmet - Security headers
-app.use(helmet());
+// Helmet - Security headers (configured for serving frontend)
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "same-origin" },
+}));
 
-// CORS - Cross-Origin Resource Sharing
+// CORS - Allow same origin + local development
 app.use(cors({
   origin: config.env === 'production' 
-    ? config.frontendUrl 
+    ? true  // Allow same origin in production
     : ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -215,14 +238,39 @@ app.get('/api', (req, res) => {
 });
 
 // ===========================================
-// 404 HANDLER
+// SPA FALLBACK - Serve HTML for non-API routes
 // ===========================================
 
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: 'Endpoint not found',
-    path: req.path,
+// For any non-API request that doesn't match a static file, serve the requested HTML or index.html
+app.get('*', (req, res, next) => {
+  // Skip API routes
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({
+      success: false,
+      error: 'Endpoint not found',
+      path: req.path,
+    });
+  }
+  
+  // Try to serve the requested HTML file, or fall back to index.html
+  const requestedFile = path.join(__dirname, '../frontend', req.path);
+  const indexFile = path.join(__dirname, '../frontend/index.html');
+  
+  // If requesting a specific .html file, try to serve it
+  if (req.path.endsWith('.html')) {
+    return res.sendFile(requestedFile, (err) => {
+      if (err) {
+        res.sendFile(indexFile);
+      }
+    });
+  }
+  
+  // For paths without extension, try path.html first, then index.html
+  const htmlFile = requestedFile + '.html';
+  res.sendFile(htmlFile, (err) => {
+    if (err) {
+      res.sendFile(indexFile);
+    }
   });
 });
 

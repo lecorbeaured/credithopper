@@ -4,10 +4,8 @@
 // Frontend API client for communicating with backend
 
 const API = {
-  // Base URL - auto-detect production vs local
-  baseUrl: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? '/api'  // Local development (served from same origin)
-    : 'https://credithopper-production.up.railway.app/api',  // Production API
+  // Base URL - always use relative path (same origin)
+  baseUrl: '/api',
   
   // Auth token storage
   token: localStorage.getItem('ch_token'),
